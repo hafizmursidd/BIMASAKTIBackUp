@@ -1,0 +1,259 @@
+﻿@page "/GLR00300"
+@using R_BlazorFrontEnd.Controls.Events
+@using GLR00300Common
+@inherits R_Page
+
+<R_StackLayout>
+
+    <R_StackLayout>
+        <R_ItemLayout>
+            <R_Label>
+                Report Options
+            </R_Label>
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_GroupBox>
+
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>Trial Balance Type</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                <R_ComboBox Data="@_viewModelGLR00300.TrialBalanceList"
+                            ValueField="@nameof(GLR00300DTO.CCODE)"
+                            TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
+                            @bind-Value="_viewModelGLR00300.TrialBalanceType">
+                </R_ComboBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>Currency Type</R_Label>
+            </R_ItemLayout>
+            <R_StackLayout Row>
+                <R_ItemLayout xs="12">
+                    <R_RadioGroup Data="@_viewModelGLR00300.CurrencyTypeList"
+                                  @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
+                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
+                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)"
+                                  OnChanged="@OnChange">
+                    </R_RadioGroup>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>Journal Adjustment Mode</R_Label>
+            </R_ItemLayout>
+            <R_StackLayout Row>
+                <R_ItemLayout xs="12">
+                    <R_RadioGroup Data="@_viewModelGLR00300.JournalAdustModeList"
+                                  @bind-Value="_viewModelGLR00300.JournalAdjustModeValue"
+                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
+                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)"
+                                 >
+                    </R_RadioGroup>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_StackLayout>
+    </R_GroupBox>
+    
+    @*Period*@
+    <R_StackLayout>
+        <R_ItemLayout>
+            <R_Label>
+                Period
+            </R_Label>
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_GroupBox>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="1">
+                <R_Label>Year</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                <R_NumericTextBox Min="@_viewModelGLR00300.PeriodYearMinMax.IMIN_YEAR"
+                                  Max="@_viewModelGLR00300.PeriodYearMinMax.IMAX_YEAR"
+                                  @bind-Value="_viewModelGLR00300.PeriodYear"
+                                  ThousandSeparator="false"
+                                  OnChanged="@OnChange">
+                </R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                <R_ComboBox Data="@_viewModelGLR00300.GetPeriodList"
+                            @bind-Value="_viewModelGLR00300.PeriodId"
+                            ValueField="@nameof(GetPeriodDTO.Id)"
+                            TextField="@nameof(GetPeriodDTO.Id)">
+                </R_ComboBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+    </R_GroupBox>
+
+    @*Region Account*@
+    <R_StackLayout>
+        <R_ItemLayout>
+            <R_Label>
+                Account
+            </R_Label>
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_GroupBox>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>From</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="1">
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpAccount"
+                          R_After_Open_Lookup="@AfterOpenLookUpAccount">
+                    ...
+                </R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
+                R_ConductorSource="@_conductorBillingRuleRef"
+                Enabled="false">
+                </R_TextBox> *@
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>To</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="1">
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpAccount"
+                          R_After_Open_Lookup="@AfterOpenLookUpAccount">
+                    ...
+                </R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
+                R_ConductorSource="@_conductorBillingRuleRef"
+                Enabled="false">
+                </R_TextBox> *@
+            </R_ItemLayout>
+        </R_StackLayout>
+    </R_GroupBox>
+
+    @*Print By Center*@
+    <R_StackLayout Row="true">
+        <R_CheckBox @bind-Value="@_viewModelGLR00300.PrintByCenter"> </R_CheckBox>
+        <R_Label>Print By Center</R_Label>
+    </R_StackLayout>
+
+    <R_GroupBox Enabled="@_viewModelGLR00300.PrintByCenter">
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>From</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="1">
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupPrintByCenter"
+                          R_After_Open_Lookup="@AfterOpenLookUpPrintByCenter">
+                    ...
+                </R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
+                R_ConductorSource="@_conductorBillingRuleRef"
+                Enabled="false">
+                </R_TextBox> *@
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>To</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="1">
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupPrintByCenter"
+                          R_After_Open_Lookup="@AfterOpenLookUpPrintByCenter">
+                    ...
+                </R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
+                R_ConductorSource="@_conductorBillingRuleRef"
+                Enabled="false">
+                </R_TextBox> *@
+            </R_ItemLayout>
+        </R_StackLayout>
+    </R_GroupBox>
+    
+@*Print Method*@
+<R_StackLayout>
+    <R_ItemLayout>
+        <R_Label>
+            Print Method
+        </R_Label>
+    </R_ItemLayout>
+</R_StackLayout>
+<R_GroupBox>
+    <R_StackLayout >
+        <R_ItemLayout Class="mb-3" col="5">
+            <R_ComboBox Data="@_viewModelGLR00300.PrintMethodList"
+                        ValueField="@nameof(GLR00300DTO.CCODE)"
+                        TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
+                        @bind-Value="_viewModelGLR00300.PrintMethodValue">
+            </R_ComboBox>
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_StackLayout Row >
+        <R_ItemLayout xs="2">
+            <R_CheckBox @bind-Value="@_viewModelGLR00300.PrintBudget"> </R_CheckBox>
+            <R_Label>Print Budget</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout xs="1">
+            <R_Label>Budget No.</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout xs="3">
+            <R_ComboBox Data="@_viewModelGLR00300.BudgetNoList"
+                        ValueField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NO)"
+                        TextField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NAME_DISPLAY)"
+                        @bind-Value="_viewModelGLR00300.BudgetNoValue"
+                        Enabled="@_viewModelGLR00300.PrintBudget">
+            </R_ComboBox>
+        </R_ItemLayout>
+    </R_StackLayout>
+</R_GroupBox>
+
+  <R_StackLayout>
+        <R_ItemLayout>
+            <R_Label>
+                Output To
+            </R_Label>
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_GroupBox>
+
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>Trial Balance Type</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="2">
+                <R_ComboBox Data="@_viewModelGLR00300.TrialBalanceList"
+                            ValueField="@nameof(GLR00300DTO.CCODE)"
+                            TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
+                            @bind-Value="_viewModelGLR00300.TrialBalanceType">
+                </R_ComboBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout xs="2">
+                <R_Label>Currency Type</R_Label>
+            </R_ItemLayout>
+            <R_StackLayout Row>
+                <R_ItemLayout xs="12">
+                    <R_RadioGroup Data="@_viewModelGLR00300.CurrencyTypeList"
+                                  @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
+                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
+                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)">
+                    </R_RadioGroup>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_StackLayout>
+        <R_StackLayout Row Class="d-flex flex-row-reverse">
+            <R_Button
+                  OnClick="@GenerateReport">Print</R_Button>
+        </R_StackLayout>
+    </R_GroupBox>
+
+</R_StackLayout>

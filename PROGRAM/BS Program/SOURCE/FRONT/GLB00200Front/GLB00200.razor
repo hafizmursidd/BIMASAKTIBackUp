@@ -1,0 +1,141 @@
+﻿@page "/GLB00200"
+@inherits R_Page
+
+<R_StackLayout>
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label>Journal Period:</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="2">
+            <R_NumericTextBox ThousandSeparator="false" 
+                              Min="_viewModelGLB00200.loGetInitialProcess.IMIN_YEAR"
+                              Max="@_viewModelGLB00200.loGetInitialProcess.IMAX_YEAR"
+                              R_ConductorSource="@_conductorPeriod"
+                              @bind-Value="_viewModelGLB00200.PeriodYear">
+            </R_NumericTextBox>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_ComboBox 
+                Data="@_viewModelGLB00200.GetMonthList"
+                Value="_viewModelGLB00200.PeriodMonth"
+                ValueField="@nameof(GetMonthDTO.Id)"
+                TextField="@nameof(GetMonthDTO.Id)"
+                R_ConductorSource="@_conductorPeriod"
+                ValueChanged="@((string value) => OnChangedMonth(value))">
+            </R_ComboBox>
+        </R_ItemLayout>
+        <R_ItemLayout col="2" Class="me-3">
+            <R_TextBox MaxLength="30"
+                       @bind-Value="_viewModelGLB00200.lcSearchText">
+            </R_TextBox>
+        </R_ItemLayout>
+        <R_ItemLayout>
+            <R_Button 
+                OnClick="@GetList_ReversingJournalWithSearch"
+                Text="Search">
+            </R_Button>
+        </R_ItemLayout>
+        <R_ItemLayout> 
+            <R_Button 
+                OnClick="@GetList_ReversingJournalWithCustomPeriod"
+                Text="Show All">
+            </R_Button>
+        </R_ItemLayout>
+
+    </R_StackLayout>
+</R_StackLayout>
+<R_StackLayout>
+    <R_ItemLayout>
+        <R_Grid @ref="@_gridReversing"
+                DataSource="_viewModelGLB00200.ReversingJournalProcessList"
+                R_ConductorGridSource="@_conductorReversingJournal"
+                R_GridType="R_eGridType.Batch"
+                R_ServiceGetListRecord="GetList_ReversingJournal"
+                Pageable
+                R_RowRender="@((R_GridRowRenderEventArgs args) => R_RowForBackGround(args))"
+                AllowDeleteRow="false"
+                AllowAddNewRow="false"
+                AllowEditRow="false"
+                Height="400px"
+                >
+            <R_GridColumns>
+                <R_GridCheckBoxSelectColumn Width="100px" FieldName="LSELECTED"
+                                                                R_EnableEdit
+                                                                R_EnableAdd
+                                                                ShowSelectAllHeader>
+                </R_GridCheckBoxSelectColumn>
+                <R_GridTextColumn Width="150px" FieldName="CDEPT_CODE_NAME"
+                                  HeaderText="Department">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px" FieldName="CREF_NO"
+                                  HeaderText="Master Ref. No.">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px" FieldName="CDOC_NO"
+                                  HeaderText="Document No.">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px" FieldName="CDOC_DATE"
+                                  HeaderText="Document Date">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px" FieldName="CREVERSE_DATE"
+                                  HeaderText="Reversing Date">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="300px" FieldName="CTRANS_DESC"
+                                  HeaderText="Description">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="125px" FieldName="CCURRENCY_CODE"
+                                  HeaderText="Currency">
+                </R_GridTextColumn>
+                <R_GridNumericColumn Width="200px" FieldName="NTRANS_AMOUNT"
+                                     HeaderText="Amount">
+                </R_GridNumericColumn>
+                <R_GridTextColumn Width="125px" FieldName="CLOCAL_CURRENCY_CODE"
+                                  HeaderText="Local Currency">
+                </R_GridTextColumn>
+                <R_GridNumericColumn Width="200px" FieldName="NLTRANS_AMOUNT"
+                                     HeaderText="Local Amount">
+                </R_GridNumericColumn>
+                <R_GridTextColumn Width="200px" FieldName="CBASE_CURRENCY_CODE"
+                                  HeaderText="Base Currency">
+                </R_GridTextColumn>
+                <R_GridNumericColumn Width="200px" FieldName="NBTRANS_AMOUNT"
+                                     HeaderText="Base Amount">
+                </R_GridNumericColumn>
+            </R_GridColumns>
+        </R_Grid>
+    </R_ItemLayout>
+</R_StackLayout>
+
+<R_StackLayout Row>
+  <R_ItemLayout col="12">
+        <R_ProgressBar Label="@_viewModelGLB00200.Message" MaxValue="100" Value="@_viewModelGLB00200.Percentage"></R_ProgressBar>
+    </R_ItemLayout>
+    <R_ItemLayout>
+    </R_ItemLayout>
+</R_StackLayout>
+
+<R_StackLayout Row>
+    <R_ItemLayout>
+        <R_Button Enabled="_viewModelGLB00200.ButtonEnable" 
+                  R_ConductorGridSource="_conductorReversingJournal"
+                  OnClick="@OnClickProcess">
+             Process
+        </R_Button>
+    </R_ItemLayout>
+    <R_ItemLayout>
+        <R_Popup Enabled="_viewModelGLB00200.ButtonEnable" Class="ms-3"
+                 R_Before_Open_Popup="@ButtonDetail_GetList_ReversingJournal"
+                 R_ConductorGridSource="@_conductorReversingJournal"
+                 R_EnableHasData="false">
+            Detail
+        </R_Popup>
+    </R_ItemLayout>
+</R_StackLayout>
+
+
+<R_ConductorGrid @ref="_conductorReversingJournal"
+                 R_ViewModel="_viewModelGLB00200"
+                 R_IsHeader
+                 R_Display="Service_Display"
+                 R_BeforeSaveBatch="@BeforeSaveBatch"
+                 R_ServiceSaveBatch="@ServiceSaveBatch"
+                 R_AfterSaveBatch="@AfterSaveBatch"/>

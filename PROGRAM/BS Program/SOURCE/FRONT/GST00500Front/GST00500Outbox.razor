@@ -1,0 +1,92 @@
+﻿@inherits R_Page
+<R_ItemLayout>
+
+    <R_Grid @ref="@_gridOutboxTransRef"
+            DataSource="_viewModelGST00500Outbox.OutboxTransactionList"
+            R_ConductorGridSource="@_conductorOutboxTrans"
+            R_GridType="R_eGridType.Original"
+            R_ServiceGetListRecord="ServiceGetListOutboxTransaction"
+            Pageable
+            AllowDeleteRow="false"
+            AllowAddNewRow="false"
+            AllowEditRow="false"
+            Height="250px">
+        <R_GridColumns>
+            <R_GridTextColumn Width="250px"
+                              FieldName="CTRANSACTION_NAME"
+                              HeaderText="Transaction Name">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="250px"
+                              FieldName="CDEPT_CODE"
+                              HeaderText="Department">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="250px"
+                              FieldName="CREFERENCE_NO"
+                              HeaderText="Reference No">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="250px"
+                              FieldName="CREFERENCE_DATE"
+                              HeaderText="Reference Date">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="150px"
+                              FieldName="CTRANSACTION_STATUS_DESC"
+                              HeaderText="Status">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="150px"
+                              FieldName="CUPDATE_BY"
+                              HeaderText="Updated By">
+            </R_GridTextColumn>
+            <R_GridDatePickerColumn Width="150px"
+                                    FieldName="DUPDATE_DATE"
+                                    HeaderText="Updated Date">
+            </R_GridDatePickerColumn>
+        </R_GridColumns>
+    </R_Grid>
+    <R_StackLayout Row="true" Class="d-flex justify-content-end mt-1 mb-1">
+        <R_ItemLayout>
+            <R_Button>View</R_Button>
+        </R_ItemLayout>
+    </R_StackLayout>
+    </R_ItemLayout>
+
+    @*REGION Outbox Transaction Status*@
+<R_StackLayout>
+    <R_Label>
+        Approval Status
+    </R_Label>
+    <R_Grid @ref="@_gridOutboxTransStatusRef"
+            DataSource="_viewModelGST00500Outbox.OutboxApprovalStatusTransactionList"
+            R_ConductorGridSource="@_conductorOutboxTransStatus"
+            R_GridType="R_eGridType.Original"
+            R_ServiceGetListRecord="ServiceGetListOutboxTransactionStatus"
+            Pageable
+            AllowDeleteRow="false"
+            AllowAddNewRow="false"
+            AllowEditRow="false"
+            Height="175px"
+            Width="800px">
+        <R_GridColumns>
+            <R_GridTextColumn Width="150px" FieldName="CUSER_ID"
+                              HeaderText="Approve By">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="150px"
+                              FieldName="CUSER_NAME"
+                              HeaderText="Approve Name">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="200px"
+                              FieldName="CPOSITION"
+                              HeaderText="Position">
+            </R_GridTextColumn>
+            <R_GridTextColumn Width="150px"
+                              FieldName="CAPPROVAL_STATUS_DESC"
+                              HeaderText="Status">
+            </R_GridTextColumn>
+        </R_GridColumns>
+    </R_Grid>
+</R_StackLayout>
+
+    <R_ConductorGrid @ref="@_conductorOutboxTrans"
+                 R_ViewModel="@_viewModelGST00500Outbox"
+                 R_IsHeader="true"
+                 R_Display="Grid_DisplayOutbox">
+    </R_ConductorGrid>

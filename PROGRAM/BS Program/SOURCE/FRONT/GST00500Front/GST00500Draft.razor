@@ -1,0 +1,56 @@
+﻿@inherits R_Page
+
+<R_StackLayout>
+    <R_ItemLayout>
+
+        <R_Grid @ref="@_gridDraftTransRef"
+                DataSource="_viewModelGST00500Draft.DraftTransactionList"
+                R_ConductorGridSource="@_conductorDraftTrans"
+                R_GridType="R_eGridType.Original"
+                R_ServiceGetListRecord="ServiceGetListDraftTransaction"
+                Pageable
+                AllowDeleteRow="false"
+                AllowAddNewRow="false"
+                AllowEditRow="false"
+                Height="450px">
+            <R_GridColumns>
+                <R_GridTextColumn Width="250px"
+                                  FieldName="CTRANSACTION_NAME"
+                                  HeaderText="Transaction Name">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px"
+                                  FieldName="CDEPT_CODE"
+                                  HeaderText="Department">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px"
+                                  FieldName="CREFERENCE_NO"
+                                  HeaderText="Reference No">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="250px"
+                                  FieldName="CREFERENCE_DATE"
+                                  HeaderText="Reference Date">
+                </R_GridTextColumn>
+                <R_GridTextColumn Width="150px"
+                                  FieldName="CUPDATE_BY"
+                                  HeaderText="Updated By">
+                </R_GridTextColumn>
+                <R_GridDatePickerColumn Width="150px"
+                                        FieldName="DUPDATE_DATE"
+                                        HeaderText="Updated Date">
+                </R_GridDatePickerColumn>
+            </R_GridColumns>
+        </R_Grid>
+        </R_ItemLayout>
+
+
+        <R_StackLayout Row="true" Class="d-flex justify-content-end">
+        <R_ItemLayout>
+            <R_Button>View</R_Button>
+        </R_ItemLayout>
+        </R_StackLayout>
+        </R_StackLayout>
+
+        <R_ConductorGrid @ref="@_conductorDraftTrans"
+                 R_IsHeader="true"
+                 R_ViewModel="@_viewModelGST00500Draft">
+        </R_ConductorGrid>

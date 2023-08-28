@@ -1,0 +1,32 @@
+﻿@inherits R_Page
+@attribute [R_Page(Title = "Unit Charges")]
+
+
+
+<R_StackLayout Row>
+    <R_Grid @ref="@GridRef"
+            DataSource="_viewModelLML00200.UnitChargesList"
+            R_ServiceGetListRecord="R_ServiceGetListRecordAsync"
+            Pageable
+            PageSize="5"
+            Height="300px"
+            Width="600px">
+        <R_GridColumns>
+            <R_GridTextColumn Width="200px" FieldName="CCHARGES_ID" HeaderText="Charges Id"></R_GridTextColumn>
+            <R_GridTextColumn Width="350px" FieldName="CCHARGES_NAME" HeaderText="Charges Name"></R_GridTextColumn>
+        </R_GridColumns>
+    </R_Grid>
+    </R_StackLayout>
+
+    <R_StackLayout Row Class="justify-content-end">
+    <R_ItemLayout xs="2">
+        <R_Button  OnClick="Button_OnClickOkAsync">
+            OK
+        </R_Button>
+    </R_ItemLayout>
+    <R_ItemLayout xs="2">
+        <R_Button OnClick="Button_OnClickCloseAsync">
+            Cancel
+        </R_Button>
+    </R_ItemLayout>
+</R_StackLayout>
