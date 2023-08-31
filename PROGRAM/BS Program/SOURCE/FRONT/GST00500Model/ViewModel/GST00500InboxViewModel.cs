@@ -251,13 +251,24 @@ namespace GST00500Model.ViewModel
             try
             {
                 var loError = await _modelGST00500.GetErroListAsync(loParameter);
-                GetListErrorTransaction = loError.Data;
+                GetListErrorTransaction = loError;
+
+                if (GetListErrorTransaction.Count > 0)
+                {
+                    foreach (var item in GetListErrorTransaction)
+                    {
+                        string tempMessage = string.Format("This record With {0} And {1} And {2} And {3} has been failed when update status ", item.CCOMPANY_ID, item.CTRANSACTION_CODE, item.CDEPT_CODE, item.CREFERENCE_NO);
+                        loException.Add(new Exception(tempMessage));
+                        
+                    }
+                }
 
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
+        EndBlock:
             loException.ThrowExceptionIfErrors();
         }
         #endregion
@@ -279,10 +290,12 @@ namespace GST00500Model.ViewModel
             }
         }
 
-        public Task ProcessError(string pcKeyGuid, R_APIException ex)
+        public async Task ProcessError(string pcKeyGuid, R_APIException ex)
         {
             Message = string.Format("Process Error with GUID {0}", pcKeyGuid);
-            return Task.CompletedTask;
+            await GetError(pcKeyGuid);
+            await Task.CompletedTask;
+
         }
 
         public Task ReportProgress(int pnProgress, string pcStatus)

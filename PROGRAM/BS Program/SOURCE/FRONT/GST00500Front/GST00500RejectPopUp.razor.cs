@@ -1,5 +1,7 @@
-﻿using GST00500Common;
+﻿using BlazorClientHelper;
+using GST00500Common;
 using GST00500Model.ViewModel;
+using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
 using R_BlazorFrontEnd.Controls.Events;
@@ -18,6 +20,7 @@ namespace GST00500Front
         private GST00500InboxViewModel _viewModelGST00500Inbox = new();
 
         private bool IsRejectModalHidden = true;
+        [Inject] IClientHelper clientHelper { get; set; }
 
         protected override async Task R_Init_From_Master(object poParameter)
         {
@@ -25,6 +28,8 @@ namespace GST00500Front
 
             try
             {
+                _viewModelGST00500Inbox.CCOMPANYID = clientHelper.CompanyId;
+                _viewModelGST00500Inbox.CUSERID = clientHelper.UserId;
                 await PropertyDropdown_ServiceGetListRecord(null);
                 _viewModelGST00500Inbox.loInboxApprovaltBatchList = (List<GST00500DTO>)poParameter;
                 IsRejectModalHidden = false;

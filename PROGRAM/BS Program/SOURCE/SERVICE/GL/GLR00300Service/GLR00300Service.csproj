@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -11,7 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\BACK\GL\GLR00300Back\GLR00300Back.csproj" />
+	  <ProjectReference Include="..\..\..\BACK\GL\GLR00300Back\GLR00300Back.csproj" />
+	  <ProjectReference Include="..\..\..\COMMON\GL\GLR00300Common\GLR00300Common.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,6 +27,9 @@
 		</Reference>
 		<Reference Include="R_CommonFrontBackAPI">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_CommonFrontBackAPI.dll</HintPath>
+		</Reference>
+		<Reference Include="R_ReportFastReportBack">
+			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_ReportFastReportBack.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

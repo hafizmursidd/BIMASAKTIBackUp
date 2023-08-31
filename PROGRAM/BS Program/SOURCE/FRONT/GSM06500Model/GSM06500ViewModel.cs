@@ -83,7 +83,7 @@ namespace GSM06500Model
         public async Task<GSM06500DTO> GetTermOfPaymentOneRecord(GSM06500DTO poProperty)
         {
             var loEx = new R_Exception();
-            GSM06500DTO loResult = null;
+            GSM06500DTO loResult = new GSM06500DTO();
 
             try
             {

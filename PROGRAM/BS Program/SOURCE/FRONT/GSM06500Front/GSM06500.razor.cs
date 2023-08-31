@@ -70,10 +70,7 @@ namespace GSM06500Front
             try
             {
                 await PaymentTermViewModel.GetAllTermOfPaymentAsync();
-                //if (PaymentTermViewModel.PaymentOfTermList.Count!=0)
-                //{
                 eventArgs.ListEntityResult = PaymentTermViewModel.PaymentOfTermList;
-               // }
             }
             catch (Exception ex)
             {

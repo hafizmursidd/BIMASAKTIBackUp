@@ -170,6 +170,7 @@ namespace GST00500Front
         {
             var tempData = (List<GST00500DTO>)events.Data;
 
+
             if (tempData.Count < 1)
             {
                 var loTemp = R_MessageBox.Show("", "Data Not Found", R_eMessageBoxButtonType.OK);
@@ -182,7 +183,6 @@ namespace GST00500Front
             try
             {
                 _viewModelGST00500Inbox.loInboxApprovaltBatchList = (List<GST00500DTO>)eventArgs.Data;
-
                 if (isApprove)
                 {
                     await _viewModelGST00500Inbox.GetSelectedDataToSaveApproval();
@@ -200,15 +200,7 @@ namespace GST00500Front
             var loEx = new R_Exception();
             try
             {
-                if (_viewModelGST00500Inbox.GetListErrorTransaction.Count > 1)
-                {
-                    foreach (var item in _viewModelGST00500Inbox.GetListErrorTransaction)
-                    {
-                        Console.WriteLine(item.GetHashCode());
-                        string tempMessage = string.Format("This record With {0} And {1} And {2} And {3} has been failed when update status ", item.CCOMPANY_ID, item.CTRANSACTION_CODE, item.CDEPT_CODE, item.CREFERENCE_NO);
-                        loEx.Add(new Exception(tempMessage));
-                    }
-                }
+
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿
 using BlazorClientHelper;
+using GFF00900COMMON.DTOs;
 using LMM06000Common;
 using LMM06000Model.ViewModel;
 using Lookup_LMCOMMON.DTOs;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
 using R_BlazorFrontEnd.Controls.Events;
+using R_BlazorFrontEnd.Controls.MessageBox;
 using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
 using R_BlazorFrontEnd.Helpers;
@@ -414,10 +416,43 @@ namespace LMM06000Front
 
         #region Active/Inactive
 
-        private void R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
+        private async Task R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
         {
-            eventArgs.Parameter = "LMM06001";
-            eventArgs.TargetPageType = typeof(GFF00900FRONT.GFF00900);
+            R_Exception loException = new R_Exception();
+            try
+            {
+                var loValidateViewModel = new GFF00900Model.ViewModel.GFF00900ViewModel();
+                loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "GSM01501";
+                await loValidateViewModel.RSP_ACTIVITY_VALIDITYMethodAsync(); //Jika IAPPROVAL_CODE == 3, Akan keluar RSP_ERROR disini
+
+                RSP_ACTIVITY_VALIDITYDataDTO loUserApproval = new RSP_ACTIVITY_VALIDITYDataDTO();
+                loUserApproval = loValidateViewModel.loRspActivityValidityResult.Data.
+                    Where(x => x.CAPPROVAL_USER.Equals(clientHelper.UserId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                if (loUserApproval == null)
+                {
+                    if (loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().CAPPROVAL_USER == "ALL" && loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
+                    {
+                        await BillingRuleViewModel.ActiveInactiveProcessAsync();
+                        await _gridBillingRuleRef.R_RefreshGrid(null);
+                        return;
+                    }
+                    else
+                    {
+                        var loValidate = await R_MessageBox.Show("", "User Not Allowed", R_eMessageBoxButtonType.OK);
+                    }
+                }
+                else
+                {
+                    eventArgs.Parameter = "LMM06001";
+                    eventArgs.TargetPageType = typeof(GFF00900FRONT.GFF00900);
+                }
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            loException.ThrowExceptionIfErrors();
         }
 
         private async Task R_After_Open_ActivateInactive(R_AfterOpenPopupEventArgs eventArgs)
@@ -425,18 +460,47 @@ namespace LMM06000Front
             R_Exception loException = new R_Exception();
             try
             {
-                var result = (bool)eventArgs.Result;
-                if (result)
+                if (eventArgs.Success == false)
+                {
+                    return;
+                }
+                bool result = (bool)eventArgs.Result;
+                if (result == true)
+                {
                     await BillingRuleViewModel.ActiveInactiveProcessAsync();
+                }
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
-
             loException.ThrowExceptionIfErrors();
             await _gridBillingRuleRef.R_RefreshGrid(null);
         }
+
+        //private void R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
+        //{
+        //    eventArgs.Parameter = "LMM06001";
+        //    eventArgs.TargetPageType = typeof(GFF00900FRONT.GFF00900);
+        //}
+
+        //private async Task R_After_Open_ActivateInactive(R_AfterOpenPopupEventArgs eventArgs)
+        //{
+        //    R_Exception loException = new R_Exception();
+        //    try
+        //    {
+        //        var result = (bool)eventArgs.Result;
+        //        if (result)
+        //            await BillingRuleViewModel.ActiveInactiveProcessAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        loException.Add(ex);
+        //    }
+
+        //    loException.ThrowExceptionIfErrors();
+        //    await _gridBillingRuleRef.R_RefreshGrid(null);
+        //}
         #endregion
     }
 }

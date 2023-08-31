@@ -181,7 +181,6 @@ namespace GSM06500Back
                 loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 10, poParameter.CUSER_ID);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
-
                 loReturn = R_Utility.R_ConvertTo<GSM06500DTO>(loReturnTemp).ToList();
 
             }

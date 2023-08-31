@@ -60,8 +60,8 @@ namespace GST00500Back
 
                         using (TransactionScope TransScope = new TransactionScope(TransactionScopeOption.Required))
                         {
-                            llStatusApprove = UpdateEachApprovalStatus(item, loDb); //kirim koneksi yaitu LODB
-                            //llStatusApprove = false;
+                          //  llStatusApprove = UpdateEachApprovalStatus(item, loDb); //kirim koneksi yaitu LODB
+                            llStatusApprove = false;
 
                             if (llStatusApprove == false)
                             {

@@ -39,7 +39,7 @@ namespace GST00500Model
             throw new NotImplementedException();
         }
 
-        public GST00500ApprovalTransactionListDTO GetError(GST00500ParameterDBDTO loParam)
+        public IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loParam)
         {
             throw new NotImplementedException();
         }
@@ -114,14 +114,14 @@ namespace GST00500Model
             return loResult;
         }
 
-        public async Task<GST00500ApprovalTransactionListDTO> GetErroListAsync(GST00500ParameterDBDTO loParam)
+        public async Task<List<GST00500ApprovalTransactionDTO>> GetErroListAsync(GST00500ParameterDBDTO loParam)
         {
             var loEx = new R_Exception();
-            GST00500ApprovalTransactionListDTO loReturn = new GST00500ApprovalTransactionListDTO();
+            List<GST00500ApprovalTransactionDTO> loReturn = new List<GST00500ApprovalTransactionDTO>();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                loReturn = await R_HTTPClientWrapper.R_APIRequestObject<GST00500ApprovalTransactionListDTO, GST00500ParameterDBDTO>(
+                loReturn = await R_HTTPClientWrapper.R_APIRequestStreamingObject<GST00500ApprovalTransactionDTO, GST00500ParameterDBDTO>(
                     _RequestServiceEndPoint,
                     nameof(IGST00500.GetError),
                     loParam,

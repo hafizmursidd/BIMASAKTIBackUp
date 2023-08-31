@@ -178,7 +178,7 @@ namespace GSM04500Front
 
                 if (loValidate == R_eMessageBoxResult.Yes)
                 {
-                    await _viewModel.SaveFileBulkFile(clientHelper.CompanyId, clientHelper.UserId);
+                    await _viewModel.SaveFileBulk(clientHelper.CompanyId, clientHelper.UserId);
                     await this.Close(true, true);
                 }
             }

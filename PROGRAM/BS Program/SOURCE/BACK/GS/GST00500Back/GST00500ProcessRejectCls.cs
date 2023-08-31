@@ -25,9 +25,7 @@ namespace GST00500Back
             DbCommand loCommand = null;
             bool llStatusReject;
             List<GST00500ApprovalTransactionDTO> listRejectTransactionReturn = new();
-            string CCOMPANYID = poBatchProcessPar.Key.COMPANY_ID;
-            string CUSERID = poBatchProcessPar.Key.USER_ID;
-            string CGUID_ID = poBatchProcessPar.Key.KEY_GUID;
+        
             int Var_Step = 0;
             int lnErrorCount = 0;
             string loStatusFinish = null;
@@ -43,6 +41,10 @@ namespace GST00500Back
                 var loContext2 = poBatchProcessPar.UserParameters.Where((x) => x.Key.Equals(ContextConstant.TNOTES)).FirstOrDefault().Value;
                 string CREASON_CODE = ((JsonElement)loContext).GetString();
                 string TNOTES = ((JsonElement)loContext2).GetString();
+
+                string CCOMPANYID = poBatchProcessPar.Key.COMPANY_ID;
+                string CUSERID = poBatchProcessPar.Key.USER_ID;
+                string CGUID_ID = poBatchProcessPar.Key.KEY_GUID;
 
                 GST00500RejectTransactionDTO loRejectParam = new()
                 {
@@ -74,7 +76,7 @@ namespace GST00500Back
                         using (TransactionScope TransScope = new TransactionScope(TransactionScopeOption.Required))
                         {
                             //kirim  LoDb
-                            llStatusReject = UpdateEachRejectStatus(item, loRejectParam, loDb);
+                          //  llStatusReject = UpdateEachRejectStatus(item, loRejectParam, loDb);
                             llStatusReject = false;
 
                             if (llStatusReject == false)
@@ -107,12 +109,13 @@ namespace GST00500Back
                     Var_Step++;
                 }
 
+                //Chech if there is error on the process
                 var flag = (listRejectTransactionReturn.Count == 0) ? 1 : 9;
 
-                //Chech if there is error on the process
                 DbConnection loConn = null;
                 try
                 {
+                    loConn = loDb.GetConnection();
                     if (flag != 1)
                     {
                         loStatusFinish = "Finish Process Reject But Fail !";
@@ -123,6 +126,10 @@ namespace GST00500Back
                                   $"CDEPT_CODE VARCHAR(80), " +
                                   $"CREFERENCE_NO VARCHAR(80)," +
                                   $"LSUCCESSED BIT )";
+
+                        loCommand.CommandText = lcQuery;
+                        loCommand = loDb.GetCommand();
+                        loCommand.CommandType = CommandType.Text;
 
                         //Assign to temp table for get the detail error
                         loDb.SqlExecNonQuery(lcQuery, loConn, false);
@@ -195,8 +202,6 @@ namespace GST00500Back
                 loConn = loDb.GetConnection();
                 loCommand = poDb.GetCommand();
 
-                loDb.R_AddCommandParameter(loCommand, "CREASON_CODE", DbType.String, 50, poParam.CREASON_CODE);
-                loDb.R_AddCommandParameter(loCommand, "TNOTES", DbType.String, 255, poParam.TNOTES);
 
                 lcCmd = $"Select CCOMPANY_ID From {poEntity.CTABLE_NAME} (Updlock) " +
                         $"Where CCOMPANY_ID = '{poEntity.CCOMPANY_ID}' And CTRANSACTION_CODE = '{poEntity.CTRANSACTION_CODE}' " +
@@ -205,8 +210,12 @@ namespace GST00500Back
                         $"Set CAPPROVAL_STATUS= '03' , CREASON_CODE= @CREASON_CODE , " +
                         $"TNOTES= @TNOTES FROM GST_APPROVAL_I A (NOLOCK)";
 
+                loDb.R_AddCommandParameter(loCommand, "CREASON_CODE", DbType.String, 50, poParam.CREASON_CODE);
+                loDb.R_AddCommandParameter(loCommand, "TNOTES", DbType.String, 255, poParam.TNOTES);
+             
                 loCommand.CommandText = lcCmd;
                 loCommand.CommandType = CommandType.Text;
+             
                 loDb.SqlExecNonQuery(loConn, loCommand, false);
                 lbRtn = true;
             }

@@ -34,7 +34,11 @@ namespace GSM04500Model.ViewModel
         public List<GSM04500UploadToDBDTO> loUploadLJournalGroupList = new List<GSM04500UploadToDBDTO>();
         public Action StateChangeAction { get; set; }
 
-        #region Attach
+        private const string VALIDATE_TYPE = "VALIDATE_TYPE";
+        private const string SAVE_TYPE = "SAVE_TYPE";
+        private string TypeProsesbatch;
+
+        #region Validate
         public async Task ValidateFile()
         {
             var loEx = new R_Exception();
@@ -65,7 +69,8 @@ namespace GSM04500Model.ViewModel
                 loUploadPar.ClassName = "GSM04500Back.GSM04500ValidateUploadTemplateCls";
                 loUploadPar.BigObject = loUploadLJournalGroupList;
 
-                await loCls.R_BatchProcess<List<GSM04500UploadToDBDTO>>(loUploadPar,10);
+                TypeProsesbatch = VALIDATE_TYPE;
+                await loCls.R_BatchProcess<List<GSM04500UploadToDBDTO>>(loUploadPar, 10);
 
                 await ValidateDataList(loUploadLJournalGroupList);
             }
@@ -160,7 +165,7 @@ namespace GSM04500Model.ViewModel
 
                 foreach (var item in JournalGroupValidateUploadError)
                 {
-                   item.ErrorMessage = loError.Where(x => x.JournalGroup == item.JournalGroup).Select(x => x.ErrorMessage).FirstOrDefault();
+                    item.ErrorMessage = loError.Where(x => x.JournalGroup == item.JournalGroup).Select(x => x.ErrorMessage).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -169,7 +174,7 @@ namespace GSM04500Model.ViewModel
             }
         }
 
-        public async Task SaveFileBulkFile(string pcCompanyId, string pcUserId)
+        public async Task SaveFileBulk(string pcCompanyId, string pcUserId)
         {
             var loEx = new R_Exception();
             R_BatchParameter loBatchPar;
@@ -207,6 +212,8 @@ namespace GSM04500Model.ViewModel
                 loBatchPar.UserParameters = loBatchParUserParameters;
                 loBatchPar.ClassName = "GSM04500Back.GSM04500UploadJournalGroupCls";
                 loBatchPar.BigObject = ListFromExcel;
+
+                TypeProsesbatch = SAVE_TYPE;
                 await loCls.R_BatchProcess<List<GSM04500UploadErrorValidateDTO>>(loBatchPar, 10);
             }
             catch (Exception ex)
@@ -224,17 +231,40 @@ namespace GSM04500Model.ViewModel
 
         public async Task ProcessComplete(string pcKeyGuid, eProcessResultMode poProcessResultMode)
         {
-            if (poProcessResultMode == eProcessResultMode.Success)
+            switch (TypeProsesbatch)
             {
-                Message = string.Format("Process Complete and success with GUID {0}", pcKeyGuid);
-                await ValidateDataList(loUploadLJournalGroupList.ToList());
+                case VALIDATE_TYPE:
+                    if (poProcessResultMode == eProcessResultMode.Success)
+                    {
+                        Message = string.Format("Process Complete and success with GUID {0}", pcKeyGuid);
+                        await ValidateDataList(loUploadLJournalGroupList.ToList());
+                    }
+
+                    if (poProcessResultMode == eProcessResultMode.Fail)
+                    {
+                        Message = string.Format("Process Complete but fail with GUID {0}", pcKeyGuid);
+                        await GetError(pcKeyGuid);
+                    }
+                    break;
+
+                case SAVE_TYPE:
+                    if (poProcessResultMode == eProcessResultMode.Success)
+                    {
+                        Message = string.Format("Process Complete and success with GUID {0}", pcKeyGuid);
+                        await ValidateDataList(loUploadLJournalGroupList.ToList());
+                    }
+
+                    if (poProcessResultMode == eProcessResultMode.Fail)
+                    {
+                        Message = string.Format("Process Complete but fail with GUID {0}", pcKeyGuid);
+                        await GetError(pcKeyGuid);
+                    }
+                    break;
             }
 
-            if (poProcessResultMode == eProcessResultMode.Fail)
-            {
-                Message = string.Format("Process Complete but fail with GUID {0}", pcKeyGuid);
-                await GetError(pcKeyGuid);
-            }
+
+
+
             StateChangeAction();
             await Task.CompletedTask;
         }
