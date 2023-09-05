@@ -171,7 +171,7 @@ namespace Lookup_GSLBACK
                 var lcQuery = $"EXEC RSP_GS_GET_COA_LOOKUP_LIST " +
                     $"@CCOMPANY_ID = '{poEntity.CCOMPANY_ID}', " +
                     $"@CGL_ACCOUNT_TYPE = '{poEntity.CGLACCOUNT_TYPE}', " +
-                    $"@CUSER_LANGUAGE = '{poEntity.CUSER_LANGUAGE}', ";
+                    $"@CUSER_ID = '{poEntity.CUSER_LANGUAGE}' ";
 
 
                 loResult = loDb.SqlExecObjectQuery<GSL00510DTO>(lcQuery, loConn, true);

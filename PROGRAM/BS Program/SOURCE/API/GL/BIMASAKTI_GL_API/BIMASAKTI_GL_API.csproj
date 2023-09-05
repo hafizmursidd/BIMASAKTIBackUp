@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <RootNamespace>BIMASAKTI_GL_API</RootNamespace>
+	  <AssemblyName>BIMASAKTI_GL_API</AssemblyName>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -27,6 +29,12 @@
 		<Reference Include="R_HelperController">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_HelperController.dll</HintPath>
 		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Reports\GLR00300AccountTrialBalanceFormatA.frx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

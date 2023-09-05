@@ -2,7 +2,7 @@
 
 namespace GLR00300Common.GLR00300Print
 {
-    public class GLR00300AccountTrialBalanceDTO
+    public class GLR00300HeaderAccountTrialBalanceDTO
     {
         //HEADER
         public string CPERIOD { get; set; }
@@ -16,7 +16,7 @@ namespace GLR00300Common.GLR00300Print
         public string CJOURNAL_ADJ_MODE_NAME { get; set; }
         public string CPRINT_METHOD_NAME { get; set; }
         public string CBUDGET_NO { get; set; }
-        public List<GLR00300DataAccountTrialBalance> DataAccountTrialBalance { get; set; }
+    }
         //public string CTB_TYPE_NAME { get; set; }
         //public string CCURRENCY { get; set; }
         //public string CJOURNAL_ADJ_MODE_NAME { get; set; }
@@ -36,7 +36,6 @@ namespace GLR00300Common.GLR00300Print
         //    public string END_BALANCE { get; set; }
         //    public string MTD_BUDGET { get; set; }
         //}
-    }
 
     public class GLR00300DataAccountTrialBalance
     {

@@ -19,6 +19,16 @@ namespace GLR00300Common
         public string CBUDGET_NAME_DISPLAY { get; set; }
     }
 
+    public class GLR00300GetAllCenter
+    {
+        public string CCENTER_CODE { get; set; } = "";
+        public string CCENTER_NAME { get; set; } = "";
+    }
+    public class GLR00300GetAccountCOA
+    {
+        public string CGLACCOUNT_NO { get; set; }
+        public string CGLACCOUNT_NAME { get; set; }
+    }
     //public class GLR00300CurrencyDTO : R_APIResultBaseDTO
     //{
     //    public string CCODE { get; set; }

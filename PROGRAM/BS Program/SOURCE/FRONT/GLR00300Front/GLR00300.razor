@@ -22,10 +22,11 @@
                 <R_ComboBox Data="@_viewModelGLR00300.TrialBalanceList"
                             ValueField="@nameof(GLR00300DTO.CCODE)"
                             TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
-                            @bind-Value="_viewModelGLR00300.TrialBalanceType">
+                            Value="_viewModelGLR00300.TrialBalanceTypeValue"
+                            ValueChanged="@((string value) => IsTrialBalanceTypeNormal(value))">
                 </R_ComboBox>
             </R_ItemLayout>
-        </R_StackLayout>
+        </R_StackLayout>    
         <R_StackLayout Row>
             <R_ItemLayout xs="2">
                 <R_Label>Currency Type</R_Label>
@@ -34,8 +35,8 @@
                 <R_ItemLayout xs="12">
                     <R_RadioGroup Data="@_viewModelGLR00300.CurrencyTypeList"
                                   @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
-                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
-                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)"
+                                  ValueField="@nameof(GLR00300DTO.CCODE)"
+                                  TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
                                   OnChanged="@OnChange">
                     </R_RadioGroup>
                 </R_ItemLayout>
@@ -50,15 +51,14 @@
                 <R_ItemLayout xs="12">
                     <R_RadioGroup Data="@_viewModelGLR00300.JournalAdustModeList"
                                   @bind-Value="_viewModelGLR00300.JournalAdjustModeValue"
-                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
-                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)"
-                                 >
+                                  ValueField="@nameof(GLR00300DTO.CCODE)"
+                                  TextField="@nameof(GLR00300DTO.CDESCRIPTION)">
                     </R_RadioGroup>
                 </R_ItemLayout>
             </R_StackLayout>
         </R_StackLayout>
     </R_GroupBox>
-    
+
     @*Period*@
     <R_StackLayout>
         <R_ItemLayout>
@@ -67,7 +67,7 @@
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
-    <R_GroupBox>
+    <R_GroupBox Enabled="@_viewModelGLR00300._lIsTrialBalanceTypeIsNormal">
         <R_StackLayout Row>
             <R_ItemLayout xs="1">
                 <R_Label>Year</R_Label>
@@ -99,161 +99,160 @@
         </R_ItemLayout>
     </R_StackLayout>
     <R_GroupBox>
+        @*FROM Account*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout xs="1">
                 <R_Label>From</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="1">
-                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpAccount"
-                          R_After_Open_Lookup="@AfterOpenLookUpAccount">
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="_viewModelGLR00300.FromAccount.CGLACCOUNT_NO"
+                           Enabled="false">
+
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpFromAccount"
+                          R_After_Open_Lookup="@AfterOpenLookUpFromAccount">
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
-                R_ConductorSource="@_conductorBillingRuleRef"
-                Enabled="false">
-                </R_TextBox> *@
+            <R_ItemLayout xs="3">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.FromAccount.CGLACCOUNT_NAME"
+                           Enabled="false">
+                </R_TextBox>
             </R_ItemLayout>
         </R_StackLayout>
+
+        @*To Account*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout xs="1">
                 <R_Label>To</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="1">
-                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpAccount"
-                          R_After_Open_Lookup="@AfterOpenLookUpAccount">
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="_viewModelGLR00300.ToAccount.CGLACCOUNT_NO"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookUpToAccount"
+                          R_After_Open_Lookup="@AfterOpenLookUpToAccount">
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
-                R_ConductorSource="@_conductorBillingRuleRef"
-                Enabled="false">
-                </R_TextBox> *@
+            <R_ItemLayout xs="3">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.ToAccount.CGLACCOUNT_NAME"
+                           Enabled="false">
+                </R_TextBox>
             </R_ItemLayout>
         </R_StackLayout>
+
     </R_GroupBox>
 
     @*Print By Center*@
     <R_StackLayout Row="true">
-        <R_CheckBox @bind-Value="@_viewModelGLR00300.PrintByCenter"> </R_CheckBox>
+        <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintByCenter"
+                    OnChanged="@OnChangedCheckBox"> </R_CheckBox>
         <R_Label>Print By Center</R_Label>
     </R_StackLayout>
+    <R_GroupBox Enabled="@_viewModelGLR00300._lPrintByCenter">
 
-    <R_GroupBox Enabled="@_viewModelGLR00300.PrintByCenter">
+        @*FROM CENTER*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout xs="1">
                 <R_Label>From</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="1">
-                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupPrintByCenter"
-                          R_After_Open_Lookup="@AfterOpenLookUpPrintByCenter">
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="_viewModelGLR00300.FromCenter.CCENTER_CODE"
+                           Enabled="false">
+
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupFromPrintByCenter"
+                          R_After_Open_Lookup="@AfterOpenLookUpFromPrintByCenter">
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
-                R_ConductorSource="@_conductorBillingRuleRef"
-                Enabled="false">
-                </R_TextBox> *@
+            <R_ItemLayout xs="3">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.FromCenter.CCENTER_NAME"
+                           Enabled="false">
+                </R_TextBox>
             </R_ItemLayout>
         </R_StackLayout>
+
+        @*TO CENTER*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout xs="1">
                 <R_Label>To</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="1">
-                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupPrintByCenter"
-                          R_After_Open_Lookup="@AfterOpenLookUpPrintByCenter">
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="_viewModelGLR00300.ToCenter.CCENTER_CODE"
+                           Enabled="false">
+
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Lookup R_Before_Open_Lookup="@BeforeOpenLookupToPrintByCenter"
+                          R_After_Open_Lookup="@AfterOpenLookUpToPrintByCenter">
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                @*  <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
-                R_ConductorSource="@_conductorBillingRuleRef"
-                Enabled="false">
-                </R_TextBox> *@
+            <R_ItemLayout xs="3">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.ToCenter.CCENTER_NAME"
+                           Enabled="false">
+                </R_TextBox>
             </R_ItemLayout>
         </R_StackLayout>
     </R_GroupBox>
-    
-@*Print Method*@
-<R_StackLayout>
-    <R_ItemLayout>
-        <R_Label>
-            Print Method
-        </R_Label>
-    </R_ItemLayout>
-</R_StackLayout>
-<R_GroupBox>
-    <R_StackLayout >
-        <R_ItemLayout Class="mb-3" col="5">
-            <R_ComboBox Data="@_viewModelGLR00300.PrintMethodList"
-                        ValueField="@nameof(GLR00300DTO.CCODE)"
-                        TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
-                        @bind-Value="_viewModelGLR00300.PrintMethodValue">
-            </R_ComboBox>
-        </R_ItemLayout>
-    </R_StackLayout>
-    <R_StackLayout Row >
-        <R_ItemLayout xs="2">
-            <R_CheckBox @bind-Value="@_viewModelGLR00300.PrintBudget"> </R_CheckBox>
-            <R_Label>Print Budget</R_Label>
-        </R_ItemLayout>
-        <R_ItemLayout xs="1">
-            <R_Label>Budget No.</R_Label>
-        </R_ItemLayout>
-        <R_ItemLayout xs="3">
-            <R_ComboBox Data="@_viewModelGLR00300.BudgetNoList"
-                        ValueField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NO)"
-                        TextField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NAME_DISPLAY)"
-                        @bind-Value="_viewModelGLR00300.BudgetNoValue"
-                        Enabled="@_viewModelGLR00300.PrintBudget">
-            </R_ComboBox>
-        </R_ItemLayout>
-    </R_StackLayout>
-</R_GroupBox>
 
-  <R_StackLayout>
+    @*Print Method*@
+    <R_StackLayout>
         <R_ItemLayout>
             <R_Label>
-                Output To
+                Print Method
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
     <R_GroupBox>
-
-        <R_StackLayout Row>
-            <R_ItemLayout xs="2">
-                <R_Label>Trial Balance Type</R_Label>
-            </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                <R_ComboBox Data="@_viewModelGLR00300.TrialBalanceList"
+        <R_StackLayout>
+            <R_ItemLayout Class="mb-3" col="5">
+                <R_ComboBox Enabled="@_viewModelGLR00300._lIsTrialBalanceTypeIsNormal"
+                    Data="@_viewModelGLR00300.PrintMethodList"
                             ValueField="@nameof(GLR00300DTO.CCODE)"
                             TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
-                            @bind-Value="_viewModelGLR00300.TrialBalanceType">
+                            @bind-Value="_viewModelGLR00300.PrintMethodValue">
                 </R_ComboBox>
             </R_ItemLayout>
         </R_StackLayout>
         <R_StackLayout Row>
             <R_ItemLayout xs="2">
-                <R_Label>Currency Type</R_Label>
+                <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintBudget"> </R_CheckBox>
+                <R_Label>Print Budget</R_Label>
             </R_ItemLayout>
-            <R_StackLayout Row>
-                <R_ItemLayout xs="12">
-                    <R_RadioGroup Data="@_viewModelGLR00300.CurrencyTypeList"
-                                  @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
-                                  ValueField="@nameof(_viewModelGLR00300.CurrencyType.CCODE)"
-                                  TextField="@nameof(_viewModelGLR00300.CurrencyType.CDESCRIPTION)">
-                    </R_RadioGroup>
-                </R_ItemLayout>
-            </R_StackLayout>
-        </R_StackLayout>
-        <R_StackLayout Row Class="d-flex flex-row-reverse">
-            <R_Button
-                  OnClick="@GenerateReport">Print</R_Button>
+            <R_ItemLayout xs="1">
+                <R_Label>Budget No.</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout xs="3">
+                <R_ComboBox Data="@_viewModelGLR00300.BudgetNoList"
+                            ValueField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NO)"
+                            TextField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NAME_DISPLAY)"
+                            @bind-Value="_viewModelGLR00300.BudgetNoValue"
+                            Enabled="@_viewModelGLR00300._lPrintBudget">
+                </R_ComboBox>
+            </R_ItemLayout>
         </R_StackLayout>
     </R_GroupBox>
 
-</R_StackLayout>
+    <R_StackLayout Row Class="d-flex flex-row-reverse">
+        <R_Button OnClick="@GenerateReport">Print</R_Button>
+    </R_StackLayout>
+
+    </R_StackLayout>
+
+@*
+<R_Conductor
+    @ref="_conducterRef" 
+    R_IsHeader
+    R_Validation="@ServiceValidation">
+
+    </R_Conductor>  *@

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GLB00200Common;
 
 namespace GLR00300Model.ViewModel
 {
@@ -16,10 +17,8 @@ namespace GLR00300Model.ViewModel
 
         public ObservableCollection<GLR00300DTO> TrialBalanceList =
             new ObservableCollection<GLR00300DTO>();
-
         public ObservableCollection<GLR00300DTO> PrintMethodList =
             new ObservableCollection<GLR00300DTO>();
-
         public ObservableCollection<GLR00300BudgetNoDTO> BudgetNoList =
             new ObservableCollection<GLR00300BudgetNoDTO>();
 
@@ -32,17 +31,45 @@ namespace GLR00300Model.ViewModel
         { new GLR00300DTO { CCODE = "S", CDESCRIPTION = "Split" },
             new GLR00300DTO { CCODE = "M", CDESCRIPTION = "Merged" } };
 
+        public GLR00300GetAccountCOA FromAccount = new GLR00300GetAccountCOA();
+        public GLR00300GetAccountCOA ToAccount = new GLR00300GetAccountCOA();
+
+        public GLR00300GetAllCenter FromCenter = new GLR00300GetAllCenter();
+        public GLR00300GetAllCenter ToCenter = new GLR00300GetAllCenter();
         public List<GetPeriodDTO> GetPeriodList { get; set; }
 
-        public string TrialBalanceType = "N";
+        //public GLR00300DTO CurrentTrialBalance = new GLR00300DTO()
+        //{
+        //    CCODE = "N",
+        //    CDESCRIPTION = "Normal"
+        //};
+
+        public string TrialBalanceTypeValue = "N";
         public string CurrencyTypeValue = "L";
         public string JournalAdjustModeValue = "S";
         public int PeriodYear = DateTime.Now.Year;
         public string PeriodId = "01";
-        public bool PrintByCenter = false;
+        public bool _lPrintByCenter = false;
         public string PrintMethodValue = "00";
-        public bool PrintBudget = false;
+        public bool _lPrintBudget = false;
         public string BudgetNoValue = "";
+        public bool _lIsTrialBalanceTypeIsNormal = true;
+
+        public async Task GetTrialBalance()
+        {
+            R_Exception loException = new R_Exception();
+            try
+            {
+                var loResult = await _modelGLR00300Model.GetTrialBalanceTypeAsyncModel();
+                TrialBalanceList = new ObservableCollection<GLR00300DTO>(loResult.Data);
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            loException.ThrowExceptionIfErrors();
+        }
+
         public async Task GetPeriodYear()
         {
             R_Exception loException = new R_Exception();
@@ -58,20 +85,7 @@ namespace GLR00300Model.ViewModel
             }
             loException.ThrowExceptionIfErrors();
         }
-        public async Task GetTrialBalance()
-        {
-            R_Exception loException = new R_Exception();
-            try
-            {
-                var loResult = await _modelGLR00300Model.GetTrialBalanceTypeAsyncModel();
-                TrialBalanceList = new ObservableCollection<GLR00300DTO>(loResult.Data);
-            }
-            catch (Exception ex)
-            {
-                loException.Add(ex);
-            }
-            loException.ThrowExceptionIfErrors();
-        }
+
 
         public async Task GetPeriod()
         {
@@ -111,10 +125,10 @@ namespace GLR00300Model.ViewModel
 
                 var loResult = await _modelGLR00300Model.GetBudgetNoAsyncModel(loParam);
                 BudgetNoList = new ObservableCollection<GLR00300BudgetNoDTO>(loResult.Data);
-                if (BudgetNoList.Count > 0)
-                {
-                    BudgetNoValue = BudgetNoList[0].CBUDGET_NO;
-                }
+                //if (BudgetNoList.Count > 0)
+                //{
+                //    BudgetNoValue = BudgetNoList[0].CBUDGET_NO;
+                //}
             }
             catch (Exception ex)
             {

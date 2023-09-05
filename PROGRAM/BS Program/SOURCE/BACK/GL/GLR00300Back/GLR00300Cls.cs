@@ -150,7 +150,7 @@ namespace GLR00300Back
             try
             {
                 loDb = new R_Db();
-                var loConn = loDb.GetConnection();
+                var loConn = loDb.GetConnection("R_ReportConnectionString");
                 loCommand = loDb.GetCommand();
                 var lcQuery = @"RSP_GL_REP_TRIAL_BALANCE";
                 loCommand.CommandText = lcQuery;
@@ -160,9 +160,9 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 6, poParameter.CLANGUAGE_ID);
 
-                loDb.R_AddCommandParameter(loCommand, "@CTB_TYPE", DbType.String, 2, poParameter.CTB_TYPE);
-                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_ADJ_MODE", DbType.String, 2, poParameter.CJOURNAL_ADJ_MODE);
-                loDb.R_AddCommandParameter(loCommand, "@CCURRENCY_TYPE", DbType.String, 2, poParameter.CCURRENCY_TYPE);
+                loDb.R_AddCommandParameter(loCommand, "@CTB_TYPE", DbType.String, 2, poParameter.CTB_TYPE_NAME);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_ADJ_MODE", DbType.String, 2, poParameter.CJOURNAL_ADJ_MODE_NAME);
+                loDb.R_AddCommandParameter(loCommand, "@CCURRENCY_TYPE", DbType.String, 2, poParameter.CCURRENCY_TYPE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CFROM_ACCOUNT_NO", DbType.String, 20, poParameter.CFROM_ACCOUNT_NO);
                 loDb.R_AddCommandParameter(loCommand, "@CTO_ACCOUNT_NO", DbType.String, 20, poParameter.CTO_ACCOUNT_NO);
                 loDb.R_AddCommandParameter(loCommand, "@CFROM_CENTER_CODE", DbType.String, 20, poParameter.CFROM_CENTER_CODE);
@@ -171,7 +171,7 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CYEAR", DbType.String, 4, poParameter.CYEAR);
                 loDb.R_AddCommandParameter(loCommand, "@CFROM_PERIOD_NO", DbType.String, 2, poParameter.CFROM_PERIOD_NO);
                 loDb.R_AddCommandParameter(loCommand, "@CTO_PERIOD_NO", DbType.String, 2, poParameter.CTO_PERIOD_NO);
-                loDb.R_AddCommandParameter(loCommand, "@CPRINT_METHOD", DbType.String, 10, poParameter.CPRINT_METHOD);
+                loDb.R_AddCommandParameter(loCommand, "@CPRINT_METHOD", DbType.String, 10, poParameter.CPRINT_METHOD_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CBUDGET_NO", DbType.String, 20, poParameter.CBUDGET_NO);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);

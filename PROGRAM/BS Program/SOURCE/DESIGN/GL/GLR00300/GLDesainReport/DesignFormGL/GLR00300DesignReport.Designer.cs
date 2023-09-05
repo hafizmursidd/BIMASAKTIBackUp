@@ -22,31 +22,31 @@ namespace DesignFormGL
 
         private void InitializeComponent()
         {
-            btnProduct = new Button();
+            buttonFormatA = new Button();
             SuspendLayout();
             // 
-            // btnProduct
+            // buttonFormatA
             // 
-            btnProduct.Location = new Point(40, 94);
-            btnProduct.Name = "btnProduct";
-            btnProduct.Size = new Size(177, 23);
-            btnProduct.TabIndex = 3;
-            btnProduct.Text = "Product Object";
-            btnProduct.UseVisualStyleBackColor = true;
-            btnProduct.Click += btnProduct_Click;
+            buttonFormatA.Location = new Point(12, 12);
+            buttonFormatA.Name = "buttonFormatA";
+            buttonFormatA.Size = new Size(177, 23);
+            buttonFormatA.TabIndex = 3;
+            buttonFormatA.Text = "Fomart A Report";
+            buttonFormatA.UseVisualStyleBackColor = true;
+            buttonFormatA.Click += ButtonFormatAClick;
             // 
             // GLR00300DesignReport
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnProduct);
+            Controls.Add(buttonFormatA);
             Name = "GLR00300DesignReport";
             Text = "DesignForm";
             Load += GLDesainReport_Load;
             ResumeLayout(false);
         }
 
-        private Button btnProduct;
+        private Button buttonFormatA;
     }
 }
