@@ -1,6 +1,7 @@
 ﻿using GLB00200Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data;
@@ -10,163 +11,224 @@ using R_Common;
 using R_CommonFrontBackAPI;
 using System.Windows.Input;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace GLB00200Back
 {
     public class GLB00200ProcessingCls : R_IBatchProcess
     {
-        public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
+        private async Task _BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
-
             R_Exception loException = new R_Exception();
+            R_Exception loExceptionDt;
             string lcQuery = "";
             var loDb = new R_Db();
             DbCommand loCommand = null;
             bool loStatusProcess;
             string lcStatusProcess = null;
             string loStatusFinish = null;
+            DbConnection loConnection = null;
+            string lcCompany;
+            string lcUserId;
+            string lcGuidId;
+            int Var_Step = 0;
+            int Var_Total;
+            int lnErrorCount = 0;
+            string lsError;
+            string lcQueryMessage;
+
             var loTempListForProcess =
                 R_NetCoreUtility.R_DeserializeObjectFromByte<List<GLB00200DTO>>(poBatchProcessPar.BigObject);
+
             try
             {
-                int Var_Step = 0;
-                int Var_Total = loTempListForProcess.Count;
-                int lnErrorCount = 0;
+                await Task.Delay(100);
+
+                lcCompany = poBatchProcessPar.Key.COMPANY_ID;
+                lcUserId = poBatchProcessPar.Key.USER_ID;
+                lcGuidId = poBatchProcessPar.Key.KEY_GUID;
+                Var_Total = loTempListForProcess.Count;
 
                 loCommand = loDb.GetCommand();
-
+                loConnection = loDb.GetConnection();
 
                 lcQuery = "RSP_WRITEUPLOADPROCESSSTATUS";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
-                loDb.R_AddCommandParameter(loCommand, "@CoId", DbType.String, 50, poBatchProcessPar.Key.COMPANY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@UserId", DbType.String, 50, poBatchProcessPar.Key.USER_ID);
-                loDb.R_AddCommandParameter(loCommand, "@KeyGUID", DbType.String, 50, poBatchProcessPar.Key.KEY_GUID);
+                loDb.R_AddCommandParameter(loCommand, "@CoId", DbType.String, 50, lcCompany);
+                loDb.R_AddCommandParameter(loCommand, "@UserId", DbType.String, 50, lcUserId);
+                loDb.R_AddCommandParameter(loCommand, "@KeyGUID", DbType.String, 50, lcGuidId);
                 loDb.R_AddCommandParameter(loCommand, "@Step", DbType.Int32, 256, Var_Step);
                 loDb.R_AddCommandParameter(loCommand, "@Status", DbType.String, 500,
                     "Start Processing Reversing Journal");
                 loDb.R_AddCommandParameter(loCommand, "@Finish", DbType.Int32, 20, 0);
-                loDb.SqlExecNonQuery(loDb.GetConnection(), loCommand, true);
+
+                loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
 
-                string Company = poBatchProcessPar.Key.COMPANY_ID;
-                string UserId = poBatchProcessPar.Key.USER_ID;
-                string GuidId = poBatchProcessPar.Key.KEY_GUID;
 
                 Var_Step = 1;
                 foreach (var item in loTempListForProcess)
                 {
+                    loExceptionDt = new R_Exception();
                     try
                     {
-                        using (var TransScope = new TransactionScope(TransactionScopeOption.Required))
+                        lcStatusProcess = string.Format("Process data {0} of  {1} ..", Var_Step, Var_Total);
+                        lcQueryMessage = string.Format(
+                               "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
+                               Var_Step, lcStatusProcess);
+
+                        loCommand.CommandText = lcQueryMessage;
+                        loCommand.CommandType = CommandType.Text;
+                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
+
+                        //CALL METHOD TO EACH PROCESS JOURNAL
+                        loStatusProcess = ProcessEachReversing(lcCompany, lcUserId, item, lcGuidId, loConnection);
+
+                        //loStatusProcess = false;
+                        if (loStatusProcess == false)
                         {
+                            lnErrorCount += 1;
 
-                            lcStatusProcess = string.Format("Process data {0} of  {1} ..", Var_Step, Var_Total);
-                            var lcQueryMessage =
-                                string.Format(
-                                    "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
-                                    Var_Step, lcStatusProcess);
-
-                            loCommand.CommandText = lcQueryMessage;
-                            loCommand.CommandType = CommandType.Text;
-                            loDb.SqlExecNonQuery(loDb.GetConnection(), loCommand, true);
-
-                            //CALL METHOD TO EACH PROCESS JOURNAL
-                             loStatusProcess = ProcessEachReversing(Company, UserId, item, loDb);
-                            //loStatusProcess = false;
-                            if (loStatusProcess == false)
-                            {
-                                lnErrorCount += 1;
-
-                                //Send to Catch
-                                string lsError = string.Format("Failed to process Master Ref. No. CREF_NO {0} !!", item.CREF_NO);
-
-                                throw new Exception(lsError);
-                            }
-
-                            TransScope.Complete();
+                            lsError = string.Format("Failed to process Master Ref. No. CREF_NO {0} !!", item.CREF_NO);
                         }
+                        else
+                        {
+                            lsError = string.Format("Processing Master Ref. No. CREF_NO {0}: SUCCESSFUL!", item.CREF_NO);
+                        }
+
+                        lcQueryMessage = string.Format(
+                            "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
+                            Var_Step, lsError);
+
+                        loCommand.CommandText = lcQueryMessage;
+                        loCommand.CommandType = CommandType.Text;
+                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
                     }
                     catch (Exception ex)
                     {
-                        ///rollback the transaction from exception above
+                        loExceptionDt.Add(ex);
                     }
 
                 EndDetail:
+                //UNHANDLED Error
+                    if (loExceptionDt.Haserror)
+                    {
+                        lcQueryMessage = string.Format(
+                            "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
+                            Var_Step, loExceptionDt.ErrorList.FirstOrDefault().ErrDescp);
+
+                        loCommand.CommandText = lcQueryMessage;
+                        loCommand.CommandType = CommandType.Text;
+                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
+                    }
+
                     Var_Step += 1;
                 }
 
-                //Chech if there is error on the process
+                //Check if there is error on the process
                 var flag = (lnErrorCount == 0) ? 1 : 9;
 
-                DbConnection loConn = null;
-                try
+                if (flag == 1)
                 {
-                    loConn = loDb.GetConnection();
-
-                    if (flag == 1)
-                    {
-                        loStatusFinish = "Finish Processing Reversing Journal!!";
-                    }
-                    else
-                    {
-                        loStatusFinish = "Finish Processing Reversing Journal but fail !!";
-                    }
-
-                    //Close The Process to inform framework
-                    var lcQueryFinish =
-                        $@"EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, '{Var_Step}', '{loStatusFinish}', '{flag}'";
-                    loCommand.CommandText = lcQueryFinish;
-                    loCommand.CommandType = CommandType.Text;
-                    loDb.SqlExecNonQuery(loConn, loCommand, true);
+                    loStatusFinish = "Finish Processing Reversing Journal!!";
                 }
-                catch (Exception ex)
+                else
                 {
-                    loException.Add(ex);
+                    loStatusFinish = "Finish Processing Reversing Journal but fail !!";
                 }
-                finally
+
+                //Close The Process to inform framework
+                var lcQueryFinish =
+                    $@"EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, '{Var_Step}', '{loStatusFinish}', '{flag}'";
+                loCommand.CommandText = lcQueryFinish;
+                loCommand.CommandType = CommandType.Text;
+                loDb.SqlExecNonQuery(loConnection, loCommand, false);
+
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            finally
+            {
+                if (loConnection != null)
                 {
-                    if (loConn != null)
-                    {
-                        if (loConn.State != ConnectionState.Closed)
-                        {
-                            loConn.Close();
-                        }
+                    if (!(loConnection.State == ConnectionState.Closed))
+                        loConnection.Close();
+                    loConnection.Dispose();
+                    loConnection = null;
+                }
 
-                        loConn.Dispose();
-                        loConn = null;
-                    }
+                if (loCommand != null)
+                {
+                    loCommand.Dispose();
+                    loCommand = null;
+                }
+            }
 
-                    if (loCommand != null)
-                    {
-                        loCommand.Dispose();
-                        loCommand = null;
-                    }
+            if (loException.Haserror)
+            {
+                lcQuery = $"EXEC RSP_WriteUploadProcessStatus '{poBatchProcessPar.Key.COMPANY_ID}', " +
+                   $"'{poBatchProcessPar.Key.USER_ID}', " +
+                   $"'{poBatchProcessPar.Key.KEY_GUID}', " +
+                   $"100, '{loException.ErrorList[0].ErrDescp}', 9";
 
+                loDb.SqlExecNonQuery(lcQuery);
+            }
+        }
+
+        public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
+        {
+            R_Exception loException = new R_Exception();
+            R_Db  loDb = new R_Db();
+            try
+            {
+                if (loDb.R_TestConnection() == false)
+                {
+                    throw new Exception("Connection to database failed");
+                }
+                var loTask = Task.Run(() =>
+                {
+                    _BatchProcess(poBatchProcessPar);
+                });
+
+                while (!loTask.IsCompleted)
+                {
+                    Thread.Sleep(100);
+                }
+
+                if (loTask.IsFaulted)
+                {
+                    loException.Add(loTask.Exception.InnerException != null ?
+                        loTask.Exception.InnerException :
+                        loTask.Exception);
+
+                    goto EndBlock;
                 }
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
-
-
+            EndBlock:
             loException.ThrowExceptionIfErrors();
         }
-        public bool ProcessEachReversing(string Company, string UserId, GLB00200DTO item, R_Db poDb)
+
+        public bool ProcessEachReversing(string Company, string UserId, GLB00200DTO item, string pcGuid, DbConnection poConnection)
         {
             var loEx = new R_Exception();
-            R_Db loDb;
+            R_Db loDb = new R_Db();
             DbConnection loConn = null;
             DbCommand loCommand = null;
             bool lbRtn = false;
+            DataTable loTable = null;
             string lcQuery;
             try
             {
-                loDb = poDb;
+                loConn = poConnection;
                 loCommand = loDb.GetCommand();
-                loConn = poDb.GetConnection();
 
                 lcQuery = "RSP_GL_PROCESS_REVERSING_JRN";
 
@@ -175,11 +237,21 @@ namespace GLB00200Back
                 loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 25, item.CDEPT_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 25, item.CREF_NO);
                 loDb.R_AddCommandParameter(loCommand, "@CREC_ID", DbType.String, 50, item.CREC_ID);
+                loDb.R_AddCommandParameter(loCommand, "@INO", DbType.Int32, 100, item.INO);
+                loDb.R_AddCommandParameter(loCommand, "@CKEY_GUID", DbType.String, 50, pcGuid);
 
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
-                loDb.SqlExecNonQuery(loConn, loCommand, false);
-                lbRtn = true;
+                loTable = loDb.SqlExecQuery(loConn, loCommand, false);
+
+                if (loTable.Rows[0].Field<int>(0) > 0)
+                {
+                    lbRtn = false;
+                }
+                else
+                {
+                    lbRtn = true;
+                }
             }
             catch (Exception ex)
             {
@@ -187,15 +259,6 @@ namespace GLB00200Back
             }
             finally
             {
-                if (loConn != null)
-                {
-                    if (loConn.State != ConnectionState.Closed)
-                    {
-                        loConn.Close();
-                    }
-                    loConn.Dispose();
-                    loConn = null;
-                }
                 if (loCommand != null)
                 {
                     loCommand.Dispose();

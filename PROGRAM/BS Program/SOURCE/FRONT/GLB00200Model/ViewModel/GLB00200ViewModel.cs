@@ -14,7 +14,7 @@ using R_ProcessAndUploadFront;
 
 namespace GLB00200Model.ViewModel
 {
-    public class GLB00200ViewModel : R_ViewModel<GLB00200DTO>,R_IProcessProgressStatus
+    public class GLB00200ViewModel : R_ViewModel<GLB00200DTO>, R_IProcessProgressStatus
     {
         private GLB00200Model _modelGLB00200Model = new GLB00200Model();
 
@@ -29,7 +29,7 @@ namespace GLB00200Model.ViewModel
         public List<int> NO_Convert = new List<int>();
 
         public GLB00200InitalProcessDTO loGetInitialProcess = new GLB00200InitalProcessDTO();
-        public int PeriodYear = 2023;// DateTime.Now.Year;
+        public int PeriodYear = DateTime.Now.Year;
         public string PeriodMonth = DateTime.Now.Month.ToString("D2");
         public string lcSearchText = "";
         public List<GetMonthDTO> GetMonthList { get; set; }
@@ -47,7 +47,8 @@ namespace GLB00200Model.ViewModel
         public int Percentage = 0;
 
         public Action StateChangeAction { get; set; }
-        
+        public Action<R_Exception> DisplayErrorAction { get; set; }
+
         public async Task GetInitialprocess()
         {
             R_Exception loException = new R_Exception();
@@ -130,13 +131,15 @@ namespace GLB00200Model.ViewModel
             List<GLB00200DTO> tempDataSelected = new List<GLB00200DTO>();
             try
             {
-                foreach (var item in loProcessReversingList)
-                {
-                    if (item.LSELECTED == true)
-                    {
-                        tempDataSelected.Add(item);
-                    }
-                }
+                tempDataSelected = loProcessReversingList.Where(x => x.LSELECTED == true).ToList();
+
+                //foreach (var item in loProcessReversingList)
+                //{
+                //    if (item.LSELECTED == true)
+                //    {
+                //        tempDataSelected.Add(item);
+                //    }
+                //}
 
                 if (tempDataSelected.Count == 0)
                 {
@@ -146,6 +149,7 @@ namespace GLB00200Model.ViewModel
                 Var_Data_Count = tempDataSelected.Count;
 
                 InboxApprovaltBatchListSelected = tempDataSelected;
+
                 await ProcessDataSelected(COMPANYID, USERID);
             }
             catch (Exception ex)
@@ -160,8 +164,7 @@ namespace GLB00200Model.ViewModel
         public async Task ProcessDataSelected(string COMPANYID, string USERID)
         {
             var loEx = new R_Exception();
-            List<GLB00200DTO> loTemp = new List<GLB00200DTO>();
-            loTemp = InboxApprovaltBatchListSelected;
+            //List<GLB00200DTO> loTemp = InboxApprovaltBatchListSelected;
             try
             {
                 var loUserParameters = new List<R_KeyValue>();
@@ -179,9 +182,9 @@ namespace GLB00200Model.ViewModel
                 loUploadPar.USER_ID = USERID;
                 loUploadPar.UserParameters = loUserParameters;
                 loUploadPar.ClassName = "GLB00200Back.GLB00200ProcessingCls";
-                loUploadPar.BigObject = loTemp;
+                loUploadPar.BigObject = InboxApprovaltBatchListSelected;
 
-                await loCls.R_BatchProcess<List<GLB00200DTO>>(loUploadPar, loTemp.Count);
+                await loCls.R_BatchProcess<List<GLB00200DTO>>(loUploadPar, InboxApprovaltBatchListSelected.Count);
             }
             catch (Exception ex)
             {
@@ -202,6 +205,14 @@ namespace GLB00200Model.ViewModel
             if (poProcessResultMode == eProcessResultMode.Fail)
             {
                 Message = "Process Completed But Fail";
+                try
+                {
+                    await ServiceGetError(pcKeyGuid);
+                }
+                catch (R_Exception e)
+                {
+                    DisplayErrorAction.Invoke(e);
+                }
             }
             StateChangeAction();
             await Task.CompletedTask;
@@ -211,10 +222,11 @@ namespace GLB00200Model.ViewModel
         {
             Message = string.Format("Process Error with GUID {0}", pcKeyGuid);
 
-            foreach (R_APICommonDTO.R_Error item in ex.ErrorList)
-            {
-                Message = string.Format($"{item.ErrDescp}");
-            }
+            R_Exception loException = new R_Exception();
+
+            ex.ErrorList.ForEach(x => loException.Add(x.ErrNo, x.ErrDescp));
+            DisplayErrorAction.Invoke(loException);
+
             StateChangeAction();
 
             await Task.CompletedTask;
@@ -231,6 +243,45 @@ namespace GLB00200Model.ViewModel
 
             await Task.CompletedTask;
         }
+
+        private async Task ServiceGetError(string pcKeyGuid)
+        {
+            R_Exception loException = new R_Exception();
+
+            List<R_ErrorStatusReturn> loResultData;
+            R_GetErrorWithMultiLanguageParameter loParameterData;
+            R_ProcessAndUploadClient loCls;
+            try
+            {
+                loParameterData = new R_GetErrorWithMultiLanguageParameter()
+                {
+                    COMPANY_ID = COMPANYID,
+                    USER_ID = USERID,
+                    KEY_GUID = pcKeyGuid,
+                    RESOURCE_NAME = "RSP_GL_PROCESS_REVERSING_JRNResources"
+                };
+                 loCls = new R_ProcessAndUploadClient(
+                    pcModuleName: "GL",
+                    plSendWithContext: true,
+                    plSendWithToken: true,
+                    pcHttpClientName: "R_DefaultServiceUrlGL",
+                    poProcessProgressStatus: this);
+
+                loResultData = await loCls.R_GetStreamErrorProcess(loParameterData);
+
+                loResultData.ForEach(x => loException.Add(x.SeqNo.ToString(), x.ErrorMessage));
+                goto EndBlock;
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+
+        EndBlock:;
+            loException.ThrowExceptionIfErrors();
+
+        }
+
         #endregion
 
 

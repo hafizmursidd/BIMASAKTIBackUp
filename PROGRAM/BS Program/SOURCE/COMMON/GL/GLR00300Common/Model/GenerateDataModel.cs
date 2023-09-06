@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BaseHeaderReportCommon.BaseHeader;
+using BaseHeaderReportCommon.Model;
 using GLR00300Common.GLR00300Print;
 
 namespace GLR00300Common.Model
@@ -11,7 +13,7 @@ namespace GLR00300Common.Model
         {
             GLR00300AccountTrialBalanceResultDTO loData = new GLR00300AccountTrialBalanceResultDTO()
             {
-                Title = "ProductTitle",
+                Title = "Account Trial Balance Title",
                 Header = new GLR00300HeaderAccountTrialBalanceDTO()
                 {
                     CPERIOD = "Period",
@@ -36,15 +38,15 @@ namespace GLR00300Common.Model
                 loCollection.Add(new GLR00300DataAccountTrialBalance()
                     {
                         CGLACCOUNT_NO = $"15.000.1.00{i}",
-                        CGLACCOUNT_NAME = $"Electrical System {i}",
+                        CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {i}",
                         CDBCR = "D",
                         CBSIS = "BS",
-                        NBEGIN_BALANCE = 4000000m + i * 1.7m,
-                        NCREDIT = 4000000m + i * 1.1m,
-                        NDEBIT = 4000000m + i * 2.7m,
-                        NDEBIT_ADJ = 4000000m + i * 3.7m,
-                        NCREDIT_ADJ = 4000000m + i * 4.7m,
-                        NEND_BALANCE = 4000000m + i * 5.7m
+                        NBEGIN_BALANCE = 90000000m + i * 1.7m,
+                        NCREDIT = 40000000m + i * 1.100m,
+                        NDEBIT = 50000000m + i * 2.700m,
+                        NDEBIT_ADJ = 60000000m + i * 3.700m,
+                        NCREDIT_ADJ = 70000000m + i * 4.700m,
+                        NEND_BALANCE = 80000000m + i * 5.700m
 
                     }
                 );
@@ -56,22 +58,22 @@ namespace GLR00300Common.Model
             return loData;
         }
 
-        //public static GLR00300AccountTrialBalanceResultDTO DefaultDataWithHeader()
-        //{
-        //    //var loParam = new BaseHeaderDTO()
-        //    //{
-        //    //    CCOMPANY_NAME = "PT Realta Chackradarma",
-        //    //    CPRINT_CODE = "001",
-        //    //    CPRINT_NAME = "Center",
-        //    //    CUSER_ID = "ERC",
-        //    //};
+        public static GLR00300AccountTrialBalanceResultWithBaseHeaderDTO DefaultDataWithHeader()
+        {
+            var loParam = new BaseHeaderDTO()
+            {
+                CCOMPANY_NAME = "PT Realta Chackradarma",
+                CPRINT_CODE = "001",
+                CPRINT_NAME = "Account Trial Balance",
+                CUSER_ID = "HMC"
+            };
 
-        //    //GSM01500PrintCenterResultWithBaseHeaderPrintDTO loRtn = new GSM01500PrintCenterResultWithBaseHeaderPrintDTO();
-        //    //loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData(loParam).BaseHeaderData;
-        //    //loRtn.CenterData = GSM01500PrintCenterModelDummyData.DefaultDataCenter();
+            GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
+            loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData(loParam).BaseHeaderData;
+            loRtn.GLR00300AccountTrialBalanceResultData = DefaultData();
 
-        //    //return loRtn;
-        //}
+            return loRtn;
+        }
 
 
     }

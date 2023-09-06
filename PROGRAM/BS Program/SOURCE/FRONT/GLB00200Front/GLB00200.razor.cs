@@ -35,6 +35,10 @@ namespace GLB00200Front
         {
             StateHasChanged();
         }
+        private void DisplayErrorInvoke(R_Exception poException)
+        {
+            this.R_DisplayException(poException);
+        }
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -47,6 +51,7 @@ namespace GLB00200Front
                 _viewModelGLB00200.USERID = clientHelper.UserId;
 
                 _viewModelGLB00200.StateChangeAction = StateChangeInvoke;
+                _viewModelGLB00200.DisplayErrorAction = DisplayErrorInvoke;
                 await Task.CompletedTask;
             }
             catch (Exception ex)

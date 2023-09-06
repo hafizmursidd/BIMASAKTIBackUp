@@ -43,12 +43,6 @@ public class GLR00300ReportController : ControllerBase
         pcDataSourceName = "ResponseDataModel";
     }
 
-    //private void _ReportCls_R_SetMainParameter(ref Dictionary<string, object> poParameters)
-    //{
-    //    poParameters.Add("Parameter1", "Ini Parameter1");
-    //    poParameters.Add("Parameter2", "Ini Parameter2");
-    //}
-
     private void _ReportCls_R_SetNumberAndDateFormat(ref R_ReportFormatDTO poReportFormat)
     {
         poReportFormat.DecimalSeparator = R_BackGlobalVar.REPORT_FORMAT_DECIMAL_SEPARATOR;
@@ -99,10 +93,10 @@ public class GLR00300ReportController : ControllerBase
 
 
     #region Helper
-    private GLR00300AccountTrialBalanceResultWithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
+    private GLR00300AccountTrialBalanceResultDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
     {
         var loEx = new R_Exception();
-        GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
+        GLR00300AccountTrialBalanceResultDTO loRtn = new GLR00300AccountTrialBalanceResultDTO();
 
         try
         {
@@ -152,7 +146,7 @@ public class GLR00300ReportController : ControllerBase
             //poParam.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
             //poParam.CUSER_ID = R_BackGlobalVar.USER_ID;
             poParam.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
-            var loCollection = loCls.GetAllTrialBalanceReportData(poParam2);
+            var loCollection = loCls.GetAllTrialBalanceReportData(poParam);
 
 
             //
@@ -162,7 +156,7 @@ public class GLR00300ReportController : ControllerBase
 
             //  Assembly loAsm = Assembly.Load("BIMASAKTI_GL_API");
 
-            loRtn.GLR00300AccountTrialBalanceResult = loData;
+            loRtn = loData;
 
         }
         catch (Exception ex)

@@ -375,6 +375,7 @@ namespace GLR00300Front
                 var lcPeriodMonth = _viewModelGLR00300.PeriodId;
                 var lcConcatPeriod = lcPeriodYear + "-" + lcPeriodMonth;
 
+                #region GETVALUE&DESC
                 //GET VALUE TRIAL BALANCE TYPE (CODE DAN DESC)
                 GLR00300DTO loCurrentTrialBalanceType = _viewModelGLR00300.TrialBalanceList.FirstOrDefault(item
                     => item.CCODE == _viewModelGLR00300.TrialBalanceTypeValue);
@@ -384,10 +385,38 @@ namespace GLR00300Front
                 //GET VALUE ADJ MODE TYPE (CODE DAN DESC)
                 GLR00300DTO loCurrentAdjMode = _viewModelGLR00300.JournalAdustModeList.FirstOrDefault(item
                     => item.CCODE == _viewModelGLR00300.JournalAdjustModeValue);
+                //GET VALUE PRINT METHOD TYPE (CODE DAN DESC)
+                GLR00300DTO loCurrentPrintMethod = _viewModelGLR00300.PrintMethodList.FirstOrDefault(item
+                    => item.CCODE == _viewModelGLR00300.PrintMethodValue);
+                #endregion
 
+                //Inject Dummmy 
+                var loParam = new GLR00300ParamDBToGetReportDTO()
+                {
+                    CCOMPANY_ID = "RCD",
+                    CUSER_ID = "HMC",
+                    CPERIOD_NAME = "2023-03",
+                    CFROM_PERIOD_NO = "03",
+                    CTO_PERIOD_NO = "03",
+                    CTB_TYPE_CODE ="N",
+                    CTB_TYPE_NAME = "N",
+                    CCURRENCY_TYPE_CODE = "L",
+                    CCURRENCY_TYPE_NAME = "L",
+                    CJOURNAL_ADJ_MODE_CODE = "S",
+                    CJOURNAL_ADJ_MODE_NAME = "S",
+                    CYEAR = "2023",
+                    CFROM_ACCOUNT_NO = "15.10.0001",
+                    CTO_ACCOUNT_NO = "15.10.9999",
+
+                    CFROM_CENTER_CODE = "MMKT",// _viewModelGLR00300.FromCenter.CCENTER_CODE,
+                    CTO_CENTER_CODE = "MMKT", //_viewModelGLR00300.ToCenter.CCENTER_CODE,
+                    CPRINT_METHOD_CODE = "00",
+                    CPRINT_METHOD_NAME ="00",
+                    CBUDGET_NO = "B2023"
+                };
 
                 //set Parameter FROM FRONT TO BACK
-                var loParam = new GLR00300ParamDBToGetReportDTO()
+                var loParam2 = new GLR00300ParamDBToGetReportDTO()
                 {
                     CCOMPANY_ID = _clientHelper.CompanyId,
                     CUSER_ID = _clientHelper.UserId,
@@ -404,10 +433,10 @@ namespace GLR00300Front
                     CFROM_ACCOUNT_NO = _viewModelGLR00300.FromAccount.CGLACCOUNT_NO,
                     CTO_ACCOUNT_NO = _viewModelGLR00300.ToAccount.CGLACCOUNT_NO,
 
-                    CFROM_CENTER_CODE = _viewModelGLR00300.FromCenter.CCENTER_CODE,
-                    CTO_CENTER_CODE = _viewModelGLR00300.ToCenter.CCENTER_CODE,
-
-                    CPRINT_METHOD_NAME = "_viewModelGLR00300.PrintMethodValue",
+                    CFROM_CENTER_CODE = "MMKT",// _viewModelGLR00300.FromCenter.CCENTER_CODE,
+                    CTO_CENTER_CODE = "MMKT", //_viewModelGLR00300.ToCenter.CCENTER_CODE,
+                    CPRINT_METHOD_CODE = loCurrentPrintMethod.CCODE,
+                    CPRINT_METHOD_NAME = loCurrentPrintMethod.CDESCRIPTION,
                     CBUDGET_NO = _viewModelGLR00300.BudgetNoValue
                 };
                 var loValidate = await R_MessageBox.Show("", "Are you sure print this?", R_eMessageBoxButtonType.YesNo);

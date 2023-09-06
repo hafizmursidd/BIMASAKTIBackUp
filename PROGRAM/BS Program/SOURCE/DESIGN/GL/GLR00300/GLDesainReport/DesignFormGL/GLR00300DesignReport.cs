@@ -18,7 +18,7 @@ namespace DesignFormGL
         {
             ArrayList loData = new ArrayList
             {
-                GLR00300Common.Model.GenerateDataModel.DefaultData()
+                GLR00300Common.Model.GenerateDataModel.DefaultDataWithHeader()
             };
             _loReport.RegisterData(loData, "ResponseDataModel");
             _loReport.Design();

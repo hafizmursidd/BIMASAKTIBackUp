@@ -10,7 +10,6 @@
             <R_NumericTextBox ThousandSeparator="false" 
                               Min="_viewModelGLB00200.loGetInitialProcess.IMIN_YEAR"
                               Max="@_viewModelGLB00200.loGetInitialProcess.IMAX_YEAR"
-                              R_ConductorSource="@_conductorPeriod"
                               @bind-Value="_viewModelGLB00200.PeriodYear">
             </R_NumericTextBox>
         </R_ItemLayout>
@@ -61,10 +60,13 @@
                 >
             <R_GridColumns>
                 <R_GridCheckBoxSelectColumn Width="100px" FieldName="LSELECTED"
-                                                                R_EnableEdit
-                                                                R_EnableAdd
-                                                                ShowSelectAllHeader>
+                                            R_EnableEdit
+                                            R_EnableAdd
+                                            ShowSelectAllHeader>
                 </R_GridCheckBoxSelectColumn>
+                <R_GridNumericColumn Width="200px" FieldName="INO" HeaderText="No.">
+
+                </R_GridNumericColumn>
                 <R_GridTextColumn Width="150px" FieldName="CDEPT_CODE_NAME"
                                   HeaderText="Department">
                 </R_GridTextColumn>

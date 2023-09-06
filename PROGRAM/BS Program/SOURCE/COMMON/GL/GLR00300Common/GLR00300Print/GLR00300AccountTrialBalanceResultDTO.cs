@@ -13,8 +13,8 @@ namespace GLR00300Common.GLR00300Print
 
         //public GLR00300AccountTrialBalanceFooterDTO Footer { get; set; }
     }
-    public class GLR00300AccountTrialBalanceResultWithBaseHeaderDTO
+    public class GLR00300AccountTrialBalanceResultWithBaseHeaderDTO : BaseHeaderReportCommon.BaseHeader.BaseHeaderResult
     {
-        public GLR00300AccountTrialBalanceResultDTO GLR00300AccountTrialBalanceResult { get; set; }
+        public GLR00300AccountTrialBalanceResultDTO GLR00300AccountTrialBalanceResultData { get; set; }
     }
 }
