@@ -29,17 +29,14 @@ namespace GLR00300Model
         {
             throw new NotImplementedException();
         }
-
         public GenericList<GLR00300DTO> GetTrialBalanceType()
         {
             throw new NotImplementedException();
         }
-
         public GenericList<GLR00300DTO> GetPrintMethodType()
         {
             throw new NotImplementedException();
         }
-
         public GenericList<GLR00300BudgetNoDTO> GetBudgetNo(GLR00300DBParameterDTO loParamDB)
         {
             throw new NotImplementedException();

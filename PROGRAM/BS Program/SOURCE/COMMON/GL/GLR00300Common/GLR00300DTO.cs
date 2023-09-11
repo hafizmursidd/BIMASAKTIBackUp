@@ -26,12 +26,7 @@ namespace GLR00300Common
     }
     public class GLR00300GetAccountCOA
     {
-        public string CGLACCOUNT_NO { get; set; }
-        public string CGLACCOUNT_NAME { get; set; }
+        public string CGLACCOUNT_NO { get; set; } 
+        public string CGLACCOUNT_NAME { get; set; } = "Please Select Account Name.!";
     }
-    //public class GLR00300CurrencyDTO : R_APIResultBaseDTO
-    //{
-    //    public string CCODE { get; set; }
-    //    public string IMAX_YEAR { get; set; }
-    //}
 }

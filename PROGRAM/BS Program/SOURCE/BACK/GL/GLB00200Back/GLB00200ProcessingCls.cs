@@ -18,6 +18,48 @@ namespace GLB00200Back
 {
     public class GLB00200ProcessingCls : R_IBatchProcess
     {
+
+        public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
+        {
+            R_Exception loException = new R_Exception();
+            R_Db loDb = new R_Db();
+            try
+            {
+                if (loDb.R_TestConnection() == false)
+                {
+                    //cara 1
+                   // throw new Exception("Connection to database failed");
+
+                   //cara2
+                   loException.Add("", "Error where Connection to database");
+                   goto EndBlock;
+                }
+                var loTask = Task.Run(() =>
+                {
+                    _BatchProcess(poBatchProcessPar);
+                });
+
+                while (!loTask.IsCompleted)
+                {
+                    Thread.Sleep(100);
+                }
+
+                if (loTask.IsFaulted)
+                {
+                    loException.Add(loTask.Exception.InnerException != null ?
+                        loTask.Exception.InnerException :
+                        loTask.Exception);
+
+                    goto EndBlock;
+                }
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            EndBlock:
+            loException.ThrowExceptionIfErrors();
+        }
         private async Task _BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
             R_Exception loException = new R_Exception();
@@ -110,11 +152,14 @@ namespace GLB00200Back
                     {
                         loExceptionDt.Add(ex);
                     }
-
-                EndDetail:
+                    
                 //UNHANDLED Error
                     if (loExceptionDt.Haserror)
                     {
+                        //Lakukan penambahan untuk menulis error pada GST_UPLOAD_ERROR_STATUS
+                        //try catch ini digunakan untuk cek apakah ada error per data
+
+
                         lcQueryMessage = string.Format(
                             "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
                             Var_Step, loExceptionDt.ErrorList.FirstOrDefault().ErrDescp);
@@ -167,9 +212,12 @@ namespace GLB00200Back
                     loCommand = null;
                 }
             }
-
+            //HANDLE EXCEPTION IF THERE ANY ERROR ON TRY CATCH paling luar
             if (loException.Haserror)
             {
+                //Lakukan penambahan pada GST_UPLOAD_ERROR_STATUS untuk handle Try catch paling luar
+
+
                 lcQuery = $"EXEC RSP_WriteUploadProcessStatus '{poBatchProcessPar.Key.COMPANY_ID}', " +
                    $"'{poBatchProcessPar.Key.USER_ID}', " +
                    $"'{poBatchProcessPar.Key.KEY_GUID}', " +
@@ -178,44 +226,6 @@ namespace GLB00200Back
                 loDb.SqlExecNonQuery(lcQuery);
             }
         }
-
-        public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
-        {
-            R_Exception loException = new R_Exception();
-            R_Db  loDb = new R_Db();
-            try
-            {
-                if (loDb.R_TestConnection() == false)
-                {
-                    throw new Exception("Connection to database failed");
-                }
-                var loTask = Task.Run(() =>
-                {
-                    _BatchProcess(poBatchProcessPar);
-                });
-
-                while (!loTask.IsCompleted)
-                {
-                    Thread.Sleep(100);
-                }
-
-                if (loTask.IsFaulted)
-                {
-                    loException.Add(loTask.Exception.InnerException != null ?
-                        loTask.Exception.InnerException :
-                        loTask.Exception);
-
-                    goto EndBlock;
-                }
-            }
-            catch (Exception ex)
-            {
-                loException.Add(ex);
-            }
-            EndBlock:
-            loException.ThrowExceptionIfErrors();
-        }
-
         public bool ProcessEachReversing(string Company, string UserId, GLB00200DTO item, string pcGuid, DbConnection poConnection)
         {
             var loEx = new R_Exception();

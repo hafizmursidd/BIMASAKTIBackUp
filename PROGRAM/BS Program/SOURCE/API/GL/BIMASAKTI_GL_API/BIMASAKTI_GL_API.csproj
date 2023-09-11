@@ -33,6 +33,9 @@
 	  <None Update="Reports\GLR00300AccountTrialBalanceFormatA.frx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Reports\GLR00300AccountTrialBalanceFormatB.frx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

@@ -97,7 +97,7 @@ namespace GLR00300Front
             var loEx = new R_Exception();
             try
             {
-               
+
                 await ServiceGetGetBudgetNo();
             }
             catch (Exception ex)
@@ -144,15 +144,39 @@ namespace GLR00300Front
             }
             R_DisplayException(loEx);
         }
-        private Task OnChangedCheckBox()
+        private Task OnChangedCheckBoxPrintByCenter()
         {
             var loEx = new R_Exception();
             try
             {
                 if (!_viewModelGLR00300._lPrintByCenter)
                 {
-                    _viewModelGLR00300.FromCenter = new GLR00300GetAllCenter();
-                    _viewModelGLR00300.ToCenter = new GLR00300GetAllCenter();
+                    _viewModelGLR00300.FromCenter.CCENTER_CODE = "";
+                    _viewModelGLR00300.FromCenter.CCENTER_NAME= "";
+                    _viewModelGLR00300.ToCenter.CCENTER_CODE = "";
+                    _viewModelGLR00300.ToCenter.CCENTER_NAME = "";
+                }
+                else if (_viewModelGLR00300._lPrintByCenter && string.IsNullOrEmpty(_viewModelGLR00300.FromCenter.CCENTER_CODE) && string.IsNullOrEmpty(_viewModelGLR00300.ToCenter.CCENTER_CODE))
+                {
+                    _viewModelGLR00300.FromCenter.CCENTER_NAME = "Please Select Center Name.!";
+                    _viewModelGLR00300.ToCenter.CCENTER_NAME = "Please Select Center Name.!";
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            R_DisplayException(loEx);
+            return Task.CompletedTask;
+        }
+        private Task OnChangedCheckBoxPrintBudget()
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                if (!_viewModelGLR00300._lPrintBudget)
+                {
+                    _viewModelGLR00300.BudgetNoValue = "";
                 }
             }
             catch (Exception ex)
@@ -339,7 +363,6 @@ namespace GLR00300Front
         private async Task GenerateReport()
         {
             var loEx = new R_Exception();
-            bool isValueEmpty = false;
             try
             {
                 if (string.IsNullOrEmpty(_viewModelGLR00300.FromAccount.CGLACCOUNT_NO))
@@ -347,23 +370,27 @@ namespace GLR00300Front
                     loEx.Add(new Exception("Please select From Account No.!"));
                     goto EndBlock;
                 }
+
                 if (string.IsNullOrEmpty(_viewModelGLR00300.ToAccount.CGLACCOUNT_NO))
                 {
                     loEx.Add(new Exception("Please select To Account No.!"));
                     goto EndBlock;
                 }
+
                 if (string.IsNullOrEmpty(_viewModelGLR00300.FromCenter.CCENTER_CODE) &&
                     _viewModelGLR00300._lPrintByCenter)
                 {
                     loEx.Add(new Exception("Please select From Center Code.!"));
                     goto EndBlock;
                 }
+
                 if (string.IsNullOrEmpty(_viewModelGLR00300.ToCenter.CCENTER_CODE) &&
                     _viewModelGLR00300._lPrintByCenter)
                 {
                     loEx.Add(new Exception("Please select To Center Code.!"));
                     goto EndBlock;
                 }
+
                 if (string.IsNullOrEmpty(_viewModelGLR00300.BudgetNoValue) &&
                     _viewModelGLR00300._lPrintBudget)
                 {
@@ -372,83 +399,90 @@ namespace GLR00300Front
                 }
 
                 var lcPeriodYear = _viewModelGLR00300.PeriodYear.ToString();
-                var lcPeriodMonth = _viewModelGLR00300.PeriodId;
-                var lcConcatPeriod = lcPeriodYear + "-" + lcPeriodMonth;
-
-                #region GETVALUE&DESC
-                //GET VALUE TRIAL BALANCE TYPE (CODE DAN DESC)
-                GLR00300DTO loCurrentTrialBalanceType = _viewModelGLR00300.TrialBalanceList.FirstOrDefault(item
-                    => item.CCODE == _viewModelGLR00300.TrialBalanceTypeValue);
-                //GET VALUE Currency TYPE (CODE DAN DESC)
-                GLR00300DTO loCurrentCurrency = _viewModelGLR00300.CurrencyTypeList.FirstOrDefault(item
-                    => item.CCODE == _viewModelGLR00300.CurrencyTypeValue);
-                //GET VALUE ADJ MODE TYPE (CODE DAN DESC)
-                GLR00300DTO loCurrentAdjMode = _viewModelGLR00300.JournalAdustModeList.FirstOrDefault(item
-                    => item.CCODE == _viewModelGLR00300.JournalAdjustModeValue);
-                //GET VALUE PRINT METHOD TYPE (CODE DAN DESC)
-                GLR00300DTO loCurrentPrintMethod = _viewModelGLR00300.PrintMethodList.FirstOrDefault(item
-                    => item.CCODE == _viewModelGLR00300.PrintMethodValue);
-                #endregion
 
                 //Inject Dummmy 
-                var loParam = new GLR00300ParamDBToGetReportDTO()
-                {
-                    CCOMPANY_ID = "RCD",
-                    CUSER_ID = "HMC",
-                    CPERIOD_NAME = "2023-03",
-                    CFROM_PERIOD_NO = "03",
-                    CTO_PERIOD_NO = "03",
-                    CTB_TYPE_CODE ="N",
-                    CTB_TYPE_NAME = "N",
-                    CCURRENCY_TYPE_CODE = "L",
-                    CCURRENCY_TYPE_NAME = "L",
-                    CJOURNAL_ADJ_MODE_CODE = "S",
-                    CJOURNAL_ADJ_MODE_NAME = "S",
-                    CYEAR = "2023",
-                    CFROM_ACCOUNT_NO = "15.10.0001",
-                    CTO_ACCOUNT_NO = "15.10.9999",
-
-                    CFROM_CENTER_CODE = "MMKT",// _viewModelGLR00300.FromCenter.CCENTER_CODE,
-                    CTO_CENTER_CODE = "MMKT", //_viewModelGLR00300.ToCenter.CCENTER_CODE,
-                    CPRINT_METHOD_CODE = "00",
-                    CPRINT_METHOD_NAME ="00",
-                    CBUDGET_NO = "B2023"
-                };
+                //var loParam = new GLR00300ParamDBToGetReportDTO()
+                //{
+                //    CCOMPANY_ID = "RCD",
+                //    CUSER_ID = "HMC",
+                //    CTB_TYPE_CODE = "N",
+                //    CJOURNAL_ADJ_MODE_CODE = "S",
+                //    CCURRENCY_TYPE_CODE = "L",
+                //    CFROM_ACCOUNT_NO = "15.10.0001",
+                //    CTO_ACCOUNT_NO = "15.10.9999",
+                //    CFROM_CENTER_CODE = "MMKT",
+                //    CTO_CENTER_CODE = "MMKT",
+                //    CYEAR = "2023",
+                //    CFROM_PERIOD_NO = "03",
+                //    CTO_PERIOD_NO = "03",
+                //    CPRINT_METHOD_CODE = "00",
+                //    CBUDGET_NO = _viewModelGLR00300.BudgetNoValue
+                //};
 
                 //set Parameter FROM FRONT TO BACK
-                var loParam2 = new GLR00300ParamDBToGetReportDTO()
+                var loParam = new GLR00300ParamDBToGetReportDTO()
                 {
                     CCOMPANY_ID = _clientHelper.CompanyId,
                     CUSER_ID = _clientHelper.UserId,
-                    CPERIOD_NAME = lcConcatPeriod,
-                    CFROM_PERIOD_NO = lcPeriodMonth,
-                    CTO_PERIOD_NO = lcPeriodMonth,
-                    CTB_TYPE_CODE = loCurrentTrialBalanceType.CCODE,
-                    CTB_TYPE_NAME = loCurrentTrialBalanceType.CDESCRIPTION,
-                    CCURRENCY_TYPE_CODE = loCurrentCurrency.CCODE,
-                    CCURRENCY_TYPE_NAME = loCurrentCurrency.CDESCRIPTION,
-                    CJOURNAL_ADJ_MODE_CODE = loCurrentAdjMode.CCODE,
-                    CJOURNAL_ADJ_MODE_NAME = loCurrentAdjMode.CDESCRIPTION,
+                    CFROM_PERIOD_NO = _viewModelGLR00300.PeriodId,
+                    CTO_PERIOD_NO = _viewModelGLR00300.PeriodId,
+                    CTB_TYPE_CODE = _viewModelGLR00300.TrialBalanceTypeValue,
+                    CCURRENCY_TYPE_CODE = _viewModelGLR00300.CurrencyTypeValue,
+                    CJOURNAL_ADJ_MODE_CODE = _viewModelGLR00300.JournalAdjustModeValue,
                     CYEAR = lcPeriodYear,
                     CFROM_ACCOUNT_NO = _viewModelGLR00300.FromAccount.CGLACCOUNT_NO,
                     CTO_ACCOUNT_NO = _viewModelGLR00300.ToAccount.CGLACCOUNT_NO,
-
-                    CFROM_CENTER_CODE = "MMKT",// _viewModelGLR00300.FromCenter.CCENTER_CODE,
-                    CTO_CENTER_CODE = "MMKT", //_viewModelGLR00300.ToCenter.CCENTER_CODE,
-                    CPRINT_METHOD_CODE = loCurrentPrintMethod.CCODE,
-                    CPRINT_METHOD_NAME = loCurrentPrintMethod.CDESCRIPTION,
+                    CFROM_CENTER_CODE = _viewModelGLR00300.FromCenter.CCENTER_CODE,
+                    CTO_CENTER_CODE = _viewModelGLR00300.ToCenter.CCENTER_CODE,
+                    CPRINT_METHOD_CODE = _viewModelGLR00300.PrintMethodValue,
                     CBUDGET_NO = _viewModelGLR00300.BudgetNoValue
                 };
+
                 var loValidate = await R_MessageBox.Show("", "Are you sure print this?", R_eMessageBoxButtonType.YesNo);
 
                 if (loValidate == R_eMessageBoxResult.Yes)
                 {
-                    await _reportService.GetReport(
-                        "R_DefaultServiceUrlGL",
-                        "GL",
-                        "api/GLR00300Report/AllTrialBalanceReportPost",
-                        "api/GLR00300Report/AllTrialBalanceReportGet",
-                        loParam);
+                    if (loParam.CTB_TYPE_CODE == "N")
+                    {
+                        if (loParam.CJOURNAL_ADJ_MODE_CODE == "S")
+                        {
+                            if ((!_viewModelGLR00300._lPrintBudget) && (!_viewModelGLR00300._lPrintByCenter)) // (N,S,false,false)
+                            {
+                                //FORMAT A
+                                await _reportService.GetReport(
+                                    "R_DefaultServiceUrlGL",
+                                    "GL",
+                                    "api/GLR00300Report/AllTrialBalanceReportPost",
+                                    "api/GLR00300Report/AllTrialBalanceReportGet",
+                                    loParam);
+                            }
+                            else if (!_viewModelGLR00300._lPrintByCenter && _viewModelGLR00300._lPrintBudget) // (N,S,false,true)
+                            {
+                                //FORMAT B
+                                await _reportService.GetReport(
+                                    "R_DefaultServiceUrlGL",
+                                    "GL",
+                                    "api/GLR00300ReportFormatB/AllTrialBalanceReportPostFormatB",
+                                    "api/GLR00300ReportFormatB/AllTrialBalanceReportGetFormatB",
+                                    loParam);
+                            }
+                        }
+                        else if (loParam.CJOURNAL_ADJ_MODE_CODE == "M")
+                        {
+                            if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintByCenter)) // (N,M,false,false)
+                            {//FORMAT C
+                            }
+                            else if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintByCenter)) // (N,M,false,true)
+                            {//FORMAT D
+                            }
+                        }
+                    }
+
+                    else if (loParam.CTB_TYPE_CODE == "A")
+                    {
+
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -456,29 +490,8 @@ namespace GLR00300Front
                 loEx.Add(ex);
             }
 
-            EndBlock:
+        EndBlock:
             R_DisplayException(loEx);
-        }
-        public async Task ServiceValidation(R_ValidationEventArgs eventArgs)
-        {
-            var loEx = new R_Exception();
-            try
-            {
-             //   var loParam = (GLR00300ParamDBToGetReportDTO)eventArgs.Data;
-
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.FromAccount.CGLACCOUNT_NO))
-                    loEx.Add(new Exception("Fom Account is required."));
-                //if (string.IsNullOrEmpty(_viewModelGLR00300.FromAccount.CGLACCOUNT_NO))
-                //    loEx.Add(new Exception("Fom Account is required."));
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            eventArgs.Cancel = loEx.HasError;
-            loEx.ThrowExceptionIfErrors();
         }
 
         #endregion

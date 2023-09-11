@@ -16,5 +16,6 @@ namespace GLR00300Common.GLR00300Print
         public string Col_DEBIT_ADJ { get; set; } = "Debit Adj.";
         public string Col_CREDIT_ADJ { get; set; } = "Credit Adj.";
         public string Col_END_BALANCE { get; set; } = "End Balance";
+        public string Col_NBUDGET { get; set; } = "MTD Budget";
     }
 }

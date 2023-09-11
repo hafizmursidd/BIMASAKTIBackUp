@@ -6,6 +6,7 @@ using R_Common;
 using R_ReportFastReportBack;
 using System.Collections;
 using System.Reflection;
+using BaseHeaderReportCommon.BaseHeader;
 using GLR00300Back;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Distributed;
@@ -93,70 +94,77 @@ public class GLR00300ReportController : ControllerBase
 
 
     #region Helper
-    private GLR00300AccountTrialBalanceResultDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
+    private GLR00300AccountTrialBalanceResultWithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
     {
         var loEx = new R_Exception();
-        GLR00300AccountTrialBalanceResultDTO loRtn = new GLR00300AccountTrialBalanceResultDTO();
-
+        GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
+        GLR00300Cls loCls = null;
+        GLR00300AccountTrialBalanceResultDTO loData = null;
+        string lcPeriod;
         try
         {
-            GLR00300AccountTrialBalanceResultDTO loData = new GLR00300AccountTrialBalanceResultDTO()
-            {
-                Title = "Account Trial Balance",
-                Header = new GLR00300HeaderAccountTrialBalanceDTO()
-                {
-                    CPERIOD = poParam.CPERIOD_NAME,
-                    CFROM_ACCOUNT_NO = poParam.CFROM_ACCOUNT_NO,
-                    CTO_ACCOUNT_NO = poParam.CTO_ACCOUNT_NO,
-                    CFROM_CENTER_CODE = poParam.CFROM_CENTER_CODE,
-                    CTO_CENTER_CODE = poParam.CTO_CENTER_CODE,
-                    CTB_TYPE_NAME = poParam.CTB_TYPE_NAME,
-                    CCURRENCY = poParam.CCURRENCY_TYPE_CODE,
-                    CJOURNAL_ADJ_MODE_NAME = poParam.CJOURNAL_ADJ_MODE_NAME,
-                    CPRINT_METHOD_NAME = poParam.CPRINT_METHOD_NAME,
-                    CBUDGET_NO = poParam.CBUDGET_NO
-                },
-                Column = new AccountTrialBalanceColumnDTO()
-            };
-
-
-            GLR00300ParamDBToGetReportDTO poParam2 = new GLR00300ParamDBToGetReportDTO()
-            {
-
-            CCOMPANY_ID = "RCD",
-            CUSER_ID = "hmc",
-            CTB_TYPE_NAME = "N",
-            CJOURNAL_ADJ_MODE_NAME = "S",
-            CCURRENCY_TYPE_CODE = "L",
-            CFROM_ACCOUNT_NO = "15.10.0001",
-            CTO_ACCOUNT_NO = "15.10.9999",
-            CFROM_CENTER_CODE = "MMKT",
-            CTO_CENTER_CODE= "MMKT",
-            CYEAR = "2023",
-            CFROM_PERIOD_NO = "03",
-            CTO_PERIOD_NO= "03",
-            CPRINT_METHOD_CODE = "00",
-            CPRINT_METHOD_NAME = "ZZ",
-            CBUDGET_NO = "",
-            CLANGUAGE_ID = "en"
-            };
-
-            var loCls = new GLR00300Cls();
-
-            //poParam.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-            //poParam.CUSER_ID = R_BackGlobalVar.USER_ID;
+            loCls = new GLR00300Cls();
             poParam.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
-            var loCollection = loCls.GetAllTrialBalanceReportData(poParam);
+            var loCollectionFromDb = loCls.GetAllTrialBalanceReportData(poParam);
 
+            if (loCollectionFromDb.Count > 0)
+            {
+                GLR00300DataAccountTrialBalance getFirstDataToHeader = loCollectionFromDb.FirstOrDefault();
+                loData = new GLR00300AccountTrialBalanceResultDTO()
+                {
+                    Title = "Account Trial Balance",
+                    Header = new GLR00300HeaderAccountTrialBalanceDTO()
+                    {
+                        CPERIOD = getFirstDataToHeader.CPERIOD_NAME,
+                        CFROM_ACCOUNT_NO = getFirstDataToHeader.CFROM_ACCOUNT_NO,
+                        CTO_ACCOUNT_NO = getFirstDataToHeader.CTO_ACCOUNT_NO,
+                        CFROM_CENTER_CODE = getFirstDataToHeader.CFROM_CENTER_CODE,
+                        CTO_CENTER_CODE = getFirstDataToHeader.CTO_CENTER_CODE,
+                        CTB_TYPE_NAME = getFirstDataToHeader.CTB_TYPE_NAME,
+                        CCURRENCY = getFirstDataToHeader.CCURRENCY,
+                        CJOURNAL_ADJ_MODE_NAME = getFirstDataToHeader.CJOURNAL_ADJ_MODE_NAME,
+                        CPRINT_METHOD_NAME = getFirstDataToHeader.CPRINT_METHOD_NAME,
+                        CBUDGET_NO = getFirstDataToHeader.CBUDGET_NO,
+                    },
+                    Column = new AccountTrialBalanceColumnDTO()
+                };
 
-            //
+            }
+            else
+            {
+                lcPeriod = poParam.CYEAR + "-" + poParam.CTO_PERIOD_NO;
+                loData = new GLR00300AccountTrialBalanceResultDTO()
+                {
+                    Title = "Account Trial Balance",
+                    Header = new GLR00300HeaderAccountTrialBalanceDTO()
+                    {
+                        CPERIOD = lcPeriod,
+                        CFROM_ACCOUNT_NO = poParam.CFROM_ACCOUNT_NO,
+                        CTO_ACCOUNT_NO = poParam.CTO_ACCOUNT_NO,
+                        CFROM_CENTER_CODE = poParam.CFROM_CENTER_CODE,
+                        CTO_CENTER_CODE = poParam.CTO_CENTER_CODE,
+                        CTB_TYPE_NAME ="",
+                        CCURRENCY = "",
+                        CJOURNAL_ADJ_MODE_NAME = "",
+                        CPRINT_METHOD_NAME = "",
+                        CBUDGET_NO = poParam.CBUDGET_NO,
+                    },
+                    Column = new AccountTrialBalanceColumnDTO()
+                };
+            }
 
+            //Assign raw data to Data list 
+            loData.DataAccountTrialBalance = loCollectionFromDb;
+            var loParam = new BaseHeaderDTO()
+            {
+                CCOMPANY_NAME = "PT Realta Chackradarma",
+                CPRINT_CODE = "003",
+                CPRINT_NAME = "Account Trial Balance",
+                CUSER_ID = "HMC",
+            };
 
-            loData.DataAccountTrialBalance = loCollection;
-
-            //  Assembly loAsm = Assembly.Load("BIMASAKTI_GL_API");
-
-            loRtn = loData;
+            loRtn.BaseHeaderData = loParam;
+            loRtn.GLR00300AccountTrialBalanceResultData = loData;
 
         }
         catch (Exception ex)

@@ -62,7 +62,6 @@ namespace GLB00200Model.ViewModel
                 loException.Add(ex);
             }
         }
-
         public async Task GetAllReversingJournalProcess()
         {
             R_Exception loException = new R_Exception();
@@ -204,14 +203,14 @@ namespace GLB00200Model.ViewModel
 
             if (poProcessResultMode == eProcessResultMode.Fail)
             {
-                Message = "Process Completed But Fail";
+                Message = "Process Completed With Fail";
                 try
                 {
                     await ServiceGetError(pcKeyGuid);
                 }
-                catch (R_Exception e)
+                catch (R_Exception ex)
                 {
-                    DisplayErrorAction.Invoke(e);
+                    DisplayErrorAction.Invoke(ex);
                 }
             }
             StateChangeAction();
@@ -220,13 +219,13 @@ namespace GLB00200Model.ViewModel
 
         public async Task ProcessError(string pcKeyGuid, R_APIException ex)
         {
+            R_Exception loException = new R_Exception();
             Message = string.Format("Process Error with GUID {0}", pcKeyGuid);
 
-            R_Exception loException = new R_Exception();
 
             ex.ErrorList.ForEach(x => loException.Add(x.ErrNo, x.ErrDescp));
-            DisplayErrorAction.Invoke(loException);
 
+            DisplayErrorAction.Invoke(loException);
             StateChangeAction();
 
             await Task.CompletedTask;
@@ -260,12 +259,12 @@ namespace GLB00200Model.ViewModel
                     KEY_GUID = pcKeyGuid,
                     RESOURCE_NAME = "RSP_GL_PROCESS_REVERSING_JRNResources"
                 };
-                 loCls = new R_ProcessAndUploadClient(
-                    pcModuleName: "GL",
-                    plSendWithContext: true,
-                    plSendWithToken: true,
-                    pcHttpClientName: "R_DefaultServiceUrlGL",
-                    poProcessProgressStatus: this);
+                loCls = new R_ProcessAndUploadClient(
+                   pcModuleName: "GL",
+                   plSendWithContext: true,
+                   plSendWithToken: true,
+                   pcHttpClientName: "R_DefaultServiceUrlGL",
+                   poProcessProgressStatus: this);
 
                 loResultData = await loCls.R_GetStreamErrorProcess(loParameterData);
 

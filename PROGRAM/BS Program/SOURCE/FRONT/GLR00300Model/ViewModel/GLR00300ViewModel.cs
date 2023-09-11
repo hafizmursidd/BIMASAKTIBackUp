@@ -38,12 +38,6 @@ namespace GLR00300Model.ViewModel
         public GLR00300GetAllCenter ToCenter = new GLR00300GetAllCenter();
         public List<GetPeriodDTO> GetPeriodList { get; set; }
 
-        //public GLR00300DTO CurrentTrialBalance = new GLR00300DTO()
-        //{
-        //    CCODE = "N",
-        //    CDESCRIPTION = "Normal"
-        //};
-
         public string TrialBalanceTypeValue = "N";
         public string CurrencyTypeValue = "L";
         public string JournalAdjustModeValue = "S";
@@ -85,8 +79,6 @@ namespace GLR00300Model.ViewModel
             }
             loException.ThrowExceptionIfErrors();
         }
-
-
         public async Task GetPeriod()
         {
             GetPeriodList = new List<GetPeriodDTO>();
@@ -97,7 +89,6 @@ namespace GLR00300Model.ViewModel
                 GetPeriodDTO IdPeriod = new GetPeriodDTO { Id = IdTemp };
                 GetPeriodList.Add(IdPeriod);
             }
-
         }
         public async Task GetPrintMethod()
         {
@@ -125,10 +116,6 @@ namespace GLR00300Model.ViewModel
 
                 var loResult = await _modelGLR00300Model.GetBudgetNoAsyncModel(loParam);
                 BudgetNoList = new ObservableCollection<GLR00300BudgetNoDTO>(loResult.Data);
-                //if (BudgetNoList.Count > 0)
-                //{
-                //    BudgetNoValue = BudgetNoList[0].CBUDGET_NO;
-                //}
             }
             catch (Exception ex)
             {

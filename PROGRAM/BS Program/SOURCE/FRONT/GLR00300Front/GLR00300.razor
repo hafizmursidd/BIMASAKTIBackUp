@@ -26,7 +26,7 @@
                             ValueChanged="@((string value) => IsTrialBalanceTypeNormal(value))">
                 </R_ComboBox>
             </R_ItemLayout>
-        </R_StackLayout>    
+        </R_StackLayout>
         <R_StackLayout Row>
             <R_ItemLayout xs="2">
                 <R_Label>Currency Type</R_Label>
@@ -151,7 +151,7 @@
     @*Print By Center*@
     <R_StackLayout Row="true">
         <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintByCenter"
-                    OnChanged="@OnChangedCheckBox"> </R_CheckBox>
+                    OnChanged="@OnChangedCheckBoxPrintByCenter"> </R_CheckBox>
         <R_Label>Print By Center</R_Label>
     </R_StackLayout>
     <R_GroupBox Enabled="@_viewModelGLR00300._lPrintByCenter">
@@ -217,7 +217,7 @@
         <R_StackLayout>
             <R_ItemLayout Class="mb-3" col="5">
                 <R_ComboBox Enabled="@_viewModelGLR00300._lIsTrialBalanceTypeIsNormal"
-                    Data="@_viewModelGLR00300.PrintMethodList"
+                            Data="@_viewModelGLR00300.PrintMethodList"
                             ValueField="@nameof(GLR00300DTO.CCODE)"
                             TextField="@nameof(GLR00300DTO.CDESCRIPTION)"
                             @bind-Value="_viewModelGLR00300.PrintMethodValue">
@@ -226,7 +226,8 @@
         </R_StackLayout>
         <R_StackLayout Row>
             <R_ItemLayout xs="2">
-                <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintBudget"> </R_CheckBox>
+                <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintBudget"
+                            OnChanged="@OnChangedCheckBoxPrintBudget"> </R_CheckBox>
                 <R_Label>Print Budget</R_Label>
             </R_ItemLayout>
             <R_ItemLayout xs="1">
@@ -248,11 +249,3 @@
     </R_StackLayout>
 
     </R_StackLayout>
-
-@*
-<R_Conductor
-    @ref="_conducterRef" 
-    R_IsHeader
-    R_Validation="@ServiceValidation">
-
-    </R_Conductor>  *@

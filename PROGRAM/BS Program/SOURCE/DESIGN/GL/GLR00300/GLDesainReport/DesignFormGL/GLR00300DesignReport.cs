@@ -27,18 +27,5 @@ namespace DesignFormGL
 
     }
 
-        //private void GLR00300DesignReport_Load(object sender, EventArgs e)
-        //{
-
-
-    /*
-     *         private void LMM01000General_Click(object sender, EventArgs e)
-    {
-        ArrayList loData = new ArrayList();
-        loData.Add(LMM01000COMMON.Models.GenerateDataModel.DefaultDataWithHeader());
-        loReport.RegisterData(loData, "ResponseDataModel");
-        loReport.Design();
-    }
-     */
 
 }

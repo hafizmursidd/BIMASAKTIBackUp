@@ -13,7 +13,7 @@ namespace GLR00300Common.Model
         {
             GLR00300AccountTrialBalanceResultDTO loData = new GLR00300AccountTrialBalanceResultDTO()
             {
-                Title = "Account Trial Balance Title",
+                Title = "Account Trial Balance",
                 Header = new GLR00300HeaderAccountTrialBalanceDTO()
                 {
                     CPERIOD = "Period",
@@ -33,7 +33,7 @@ namespace GLR00300Common.Model
 
             List<GLR00300DataAccountTrialBalance> loCollection = new List<GLR00300DataAccountTrialBalance>();
            
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 20; i++)
             {
                 loCollection.Add(new GLR00300DataAccountTrialBalance()
                     {
@@ -41,12 +41,13 @@ namespace GLR00300Common.Model
                         CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {i}",
                         CDBCR = "D",
                         CBSIS = "BS",
-                        NBEGIN_BALANCE = 90000000m + i * 1.7m,
-                        NCREDIT = 40000000m + i * 1.100m,
-                        NDEBIT = 50000000m + i * 2.700m,
-                        NDEBIT_ADJ = 60000000m + i * 3.700m,
-                        NCREDIT_ADJ = 70000000m + i * 4.700m,
-                        NEND_BALANCE = 80000000m + i * 5.700m
+                        NBEGIN_BALANCE = 900000m + i * 1.7m,
+                        NCREDIT = 400000m + i * 1.100m,
+                        NDEBIT = 500000m + i * 2.700m,
+                        NDEBIT_ADJ = 600000m + i * 3.700m,
+                        NCREDIT_ADJ = 700000m + i * 4.700m,
+                        NEND_BALANCE = 800000m + i * 5.700m,
+                        NBUDGET = 80000.8m*1000*i
 
                     }
                 );

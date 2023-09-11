@@ -22,14 +22,12 @@ namespace GLB00200Front
     public partial class GLB00200 : R_Page
     {
         private GLB00200ViewModel _viewModelGLB00200 = new GLB00200ViewModel();
-        //  private GLB00200ProcessReversingViewModel _viewModelGLB00200Process = new();
         private R_Conductor _conductorPeriod;
 
         private R_Grid<GLB00200DTO> _gridReversing;
         private R_ConductorGrid _conductorReversingJournal;
 
         [Inject] IClientHelper clientHelper { get; set; }
-        //  public GLB00200DTO CurrentReversingJournal = new GLB00200DTO();
 
         private void StateChangeInvoke()
         {

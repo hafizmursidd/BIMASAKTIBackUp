@@ -160,8 +160,8 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 6, poParameter.CLANGUAGE_ID);
 
-                loDb.R_AddCommandParameter(loCommand, "@CTB_TYPE", DbType.String, 2, poParameter.CTB_TYPE_NAME);
-                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_ADJ_MODE", DbType.String, 2, poParameter.CJOURNAL_ADJ_MODE_NAME);
+                loDb.R_AddCommandParameter(loCommand, "@CTB_TYPE", DbType.String, 2, poParameter.CTB_TYPE_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_ADJ_MODE", DbType.String, 2, poParameter.CJOURNAL_ADJ_MODE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CCURRENCY_TYPE", DbType.String, 2, poParameter.CCURRENCY_TYPE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CFROM_ACCOUNT_NO", DbType.String, 20, poParameter.CFROM_ACCOUNT_NO);
                 loDb.R_AddCommandParameter(loCommand, "@CTO_ACCOUNT_NO", DbType.String, 20, poParameter.CTO_ACCOUNT_NO);

@@ -5,13 +5,9 @@
         public string CUSER_ID { get; set; }
         public string CCOMPANY_ID { get; set; }
         public string CLANGUAGE_ID { get; set; }
-        public string CPERIOD_NAME { get; set; }
         public string CTB_TYPE_CODE { get; set; }
-        public string CTB_TYPE_NAME { get; set; }
         public string CJOURNAL_ADJ_MODE_CODE { get; set; }
-        public string CJOURNAL_ADJ_MODE_NAME { get; set; }
         public string CCURRENCY_TYPE_CODE { get; set; }
-        public string CCURRENCY_TYPE_NAME { get; set; }
         public string CFROM_ACCOUNT_NO { get; set; }
         public string CTO_ACCOUNT_NO { get; set; }
         public string CFROM_CENTER_CODE { get; set; }
@@ -20,7 +16,6 @@
         public string CFROM_PERIOD_NO { get; set; }
         public string CTO_PERIOD_NO { get; set; }
         public string CPRINT_METHOD_CODE { get; set; }
-        public string CPRINT_METHOD_NAME { get; set; }
         public string CBUDGET_NO { get; set; }
     }
 }
