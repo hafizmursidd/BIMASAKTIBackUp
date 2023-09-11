@@ -159,6 +159,14 @@ namespace GLB00200Back
                         //Lakukan penambahan untuk menulis error pada GST_UPLOAD_ERROR_STATUS
                         //try catch ini digunakan untuk cek apakah ada error per data
 
+                        lcQueryMessage = $"INSERT INTO GST_UPLOAD_ERROR_STATUS (CCOMPANY_ID,CUSER_ID,CKEY_GUID,ISEQ_NO,CERROR_MESSAGE)" +
+                                         $"VALUES " +
+                                         $"( '{lcCompany}', '{lcUserId}','{lcGuidId}', {Var_Step}, '{loExceptionDt.ErrorList.FirstOrDefault().ErrDescp}') ;";
+
+                        loCommand.CommandText = lcQueryMessage;
+                        loCommand.CommandType = CommandType.Text;
+                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
+
 
                         lcQueryMessage = string.Format(
                             "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
@@ -217,6 +225,13 @@ namespace GLB00200Back
             {
                 //Lakukan penambahan pada GST_UPLOAD_ERROR_STATUS untuk handle Try catch paling luar
 
+                lcQueryMessage = $"INSERT INTO GST_UPLOAD_ERROR_STATUS(CCOMPANY_ID,CUSER_ID,CKEY_GUID,ISEQ_NO,CERROR_MESSAGE)" +
+                                 $"VALUES " +
+                                 $"( '{poBatchProcessPar.Key.COMPANY_ID}', '{poBatchProcessPar.Key.USER_ID}','{poBatchProcessPar.Key.KEY_GUID}', {100}, '{loException.ErrorList[0].ErrDescp}' );";
+
+                loCommand.CommandText = lcQueryMessage;
+                loCommand.CommandType = CommandType.Text;
+                loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                 lcQuery = $"EXEC RSP_WriteUploadProcessStatus '{poBatchProcessPar.Key.COMPANY_ID}', " +
                    $"'{poBatchProcessPar.Key.USER_ID}', " +
