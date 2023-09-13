@@ -9,6 +9,7 @@ using R_BlazorFrontEnd.Controls.Tab;
 using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
 using Microsoft.JSInterop;
+using BlazorClientHelper;
 
 namespace GSM04500Front
 {
@@ -22,6 +23,7 @@ namespace GSM04500Front
         private R_TabStrip _tabStrip;
         private R_TabPage _tabPageAccountSetting;
         [Inject] IJSRuntime JS { get; set; }
+        [Inject] IClientHelper clientHelper { get; set; }
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -218,7 +220,7 @@ namespace GSM04500Front
 
         private void Before_Open_AccountSetting(R_BeforeOpenTabPageEventArgs eventArgs)
         {
-            eventArgs.TargetPageType = typeof(GSM04500AccountSetting);;
+            eventArgs.TargetPageType = typeof(GSM04500AccountSetting); ;
             eventArgs.Parameter = journalGroupViewModel.JournalGroupCurrent;
         }
 
@@ -237,7 +239,7 @@ namespace GSM04500Front
         #region Template
         private async Task _Staff_TemplateBtn_OnClick()
         {
-           // var loData = new List<GSM04500DTO>();
+            var loEx = new R_Exception();
             try
             {
                 var loValidate = await R_MessageBox.Show("", "Are you sure download this template?", R_eMessageBoxButtonType.YesNo);
@@ -251,10 +253,12 @@ namespace GSM04500Front
                     await JS.downloadFileFromStreamHandler(saveFileName, loByteFile.FileBytes);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                loEx.Add(ex);
             }
+
+            R_DisplayException(loEx);
         }
         #endregion
 
@@ -264,7 +268,7 @@ namespace GSM04500Front
         {
             string propertyId = journalGroupViewModel.PropertyValueContext;
             GSM04500PropertyDTO loparam = (journalGroupViewModel.PropertyList).Find(p => p.CPROPERTY_ID == propertyId);
-           
+
             var param = new GSM004500ParamDTO()
             {
                 CCOMPANY_ID = journalGroupViewModel.JournalGroupCurrent.CCOMPANY_ID,
@@ -281,16 +285,14 @@ namespace GSM04500Front
         private async Task After_Open_Upload(R_AfterOpenPopupEventArgs eventArgs)
         {
             var loEx = new R_Exception();
-
             try
             {
-                  await _gridRef.R_RefreshGrid(null);
+                await _gridRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-
             R_DisplayException(loEx);
         }
 

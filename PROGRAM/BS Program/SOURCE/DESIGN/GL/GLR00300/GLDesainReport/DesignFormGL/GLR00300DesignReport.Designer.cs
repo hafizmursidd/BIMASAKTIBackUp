@@ -23,11 +23,12 @@ namespace DesignFormGL
         private void InitializeComponent()
         {
             buttonFormatA = new Button();
+            buttonFormatE_H = new Button();
             SuspendLayout();
             // 
             // buttonFormatA
             // 
-            buttonFormatA.Location = new Point(12, 12);
+            buttonFormatA.Location = new Point(12, 25);
             buttonFormatA.Name = "buttonFormatA";
             buttonFormatA.Size = new Size(177, 23);
             buttonFormatA.TabIndex = 3;
@@ -35,12 +36,23 @@ namespace DesignFormGL
             buttonFormatA.UseVisualStyleBackColor = true;
             buttonFormatA.Click += ButtonFormatAClick;
             // 
+            // buttonFormatE_H
+            // 
+            buttonFormatE_H.Location = new Point(12, 63);
+            buttonFormatE_H.Name = "buttonFormatE_H";
+            buttonFormatE_H.Size = new Size(177, 23);
+            buttonFormatE_H.TabIndex = 3;
+            buttonFormatE_H.Text = "Fomart E_A Report";
+            buttonFormatE_H.UseVisualStyleBackColor = true;
+            buttonFormatE_H.Click += ButtonFormatE_H_Click;
+            // 
             // GLR00300DesignReport
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(buttonFormatA);
+            Controls.Add(buttonFormatE_H);
             Name = "GLR00300DesignReport";
             Text = "DesignForm";
             Load += GLDesainReport_Load;
@@ -48,5 +60,6 @@ namespace DesignFormGL
         }
 
         private Button buttonFormatA;
+        private Button buttonFormatE_H;
     }
 }

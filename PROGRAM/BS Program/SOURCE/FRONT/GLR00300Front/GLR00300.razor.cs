@@ -152,7 +152,7 @@ namespace GLR00300Front
                 if (!_viewModelGLR00300._lPrintByCenter)
                 {
                     _viewModelGLR00300.FromCenter.CCENTER_CODE = "";
-                    _viewModelGLR00300.FromCenter.CCENTER_NAME= "";
+                    _viewModelGLR00300.FromCenter.CCENTER_NAME = "";
                     _viewModelGLR00300.ToCenter.CCENTER_CODE = "";
                     _viewModelGLR00300.ToCenter.CCENTER_NAME = "";
                 }
@@ -400,12 +400,12 @@ namespace GLR00300Front
 
                 var lcPeriodYear = _viewModelGLR00300.PeriodYear.ToString();
 
-                //Inject Dummmy 
+                // Inject Dummmy
                 //var loParam = new GLR00300ParamDBToGetReportDTO()
                 //{
                 //    CCOMPANY_ID = "RCD",
                 //    CUSER_ID = "HMC",
-                //    CTB_TYPE_CODE = "N",
+                //    CTB_TYPE_CODE = "A",
                 //    CJOURNAL_ADJ_MODE_CODE = "S",
                 //    CCURRENCY_TYPE_CODE = "L",
                 //    CFROM_ACCOUNT_NO = "15.10.0001",
@@ -446,7 +446,7 @@ namespace GLR00300Front
                     {
                         if (loParam.CJOURNAL_ADJ_MODE_CODE == "S")
                         {
-                            if ((!_viewModelGLR00300._lPrintBudget) && (!_viewModelGLR00300._lPrintByCenter)) // (N,S,false,false)
+                            if ((!_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (N,S,false,false)
                             {
                                 //FORMAT A
                                 await _reportService.GetReport(
@@ -469,10 +469,10 @@ namespace GLR00300Front
                         }
                         else if (loParam.CJOURNAL_ADJ_MODE_CODE == "M")
                         {
-                            if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintByCenter)) // (N,M,false,false)
+                            if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintBudget)) // (N,M,false,false)
                             {//FORMAT C
                             }
-                            else if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintByCenter)) // (N,M,false,true)
+                            else if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintBudget)) // (N,M,false,true)
                             {//FORMAT D
                             }
                         }
@@ -480,9 +480,32 @@ namespace GLR00300Front
 
                     else if (loParam.CTB_TYPE_CODE == "A")
                     {
-
+                        if (loParam.CJOURNAL_ADJ_MODE_CODE == "S")
+                        {
+                            if ((_viewModelGLR00300._lPrintByCenter) && !(_viewModelGLR00300._lPrintBudget)) // (A,S,True,false)
+                            {
+                                //FORMAT E
+                                await _reportService.GetReport(
+                                    "R_DefaultServiceUrlGL",
+                                    "GL",
+                                    "api/GLR00300ReportFormatE/AllTrialBalanceReportPostFormatE",
+                                    "api/GLR00300ReportFormatE/AllTrialBalanceReportGetFormatE",
+                                    loParam);
+                            }
+                            else if (_viewModelGLR00300._lPrintByCenter && _viewModelGLR00300._lPrintBudget) // (A,S,true,true)
+                            {//FORMAT F
+                            }
+                        }
+                        else if (loParam.CJOURNAL_ADJ_MODE_CODE == "M")
+                        {
+                            if ((_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (A,M,true,false)
+                            {//FORMAT G
+                            }
+                            else if ((_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintBudget)) // (A,M,true,true)
+                            {//FORMAT H
+                            }
+                        }
                     }
-
                 }
             }
             catch (Exception ex)

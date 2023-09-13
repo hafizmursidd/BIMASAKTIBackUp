@@ -131,15 +131,6 @@ namespace GLB00200Model.ViewModel
             try
             {
                 tempDataSelected = loProcessReversingList.Where(x => x.LSELECTED == true).ToList();
-
-                //foreach (var item in loProcessReversingList)
-                //{
-                //    if (item.LSELECTED == true)
-                //    {
-                //        tempDataSelected.Add(item);
-                //    }
-                //}
-
                 if (tempDataSelected.Count == 0)
                 {
                     loException.Add(new Exception("Please select Reversing Journal to process!"));
@@ -163,7 +154,6 @@ namespace GLB00200Model.ViewModel
         public async Task ProcessDataSelected(string COMPANYID, string USERID)
         {
             var loEx = new R_Exception();
-            //List<GLB00200DTO> loTemp = InboxApprovaltBatchListSelected;
             try
             {
                 var loUserParameters = new List<R_KeyValue>();
@@ -227,7 +217,6 @@ namespace GLB00200Model.ViewModel
 
             DisplayErrorAction.Invoke(loException);
             StateChangeAction();
-
             await Task.CompletedTask;
         }
 

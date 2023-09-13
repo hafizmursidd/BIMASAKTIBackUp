@@ -10,6 +10,7 @@ namespace GLR00300Common.GLR00300Print
         public string Col_ACCOUNT_NAME { get; set; } = "Account Name";
         public string Col_D_C { get; set; } = "D/C";
         public string Col_BS_IS { get; set; } = "BS/IS";
+        public string Col_Center { get; set; } = "Center";
         public string Col_BEG_BALANCE { get; set; } = "Beg. Balance";
         public string Col_DEBIT { get; set; } = "Debit";
         public string Col_CREDIT { get; set; } = "Credit";

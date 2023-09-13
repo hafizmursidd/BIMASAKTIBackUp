@@ -1,6 +1,7 @@
 ﻿@inherits R_Page
 @attribute [R_Page(Title = "Upload File")]
 
+<R_StackLayout>
 
 <R_StackLayout Row>
     <R_ItemLayout col="2" Class="d-inline">
@@ -8,12 +9,12 @@
     </R_ItemLayout>
 
     <R_ItemLayout col="3">
-        <R_TextBox @bind-Value="@_viewModel.CurrentObjectParam.CPROPERTY_ID"
+        <R_TextBox @bind-Value="@_viewModel.PropertyValue"
                    Enabled="false">
         </R_TextBox>
     </R_ItemLayout>
     <R_ItemLayout col="6">
-        <R_TextBox @bind-Value="@_viewModel.CurrentObjectParam.CPROPERTY_NAME"
+        <R_TextBox @bind-Value="@_viewModel.PropertyName"
                    Enabled="false">
         </R_TextBox>
     </R_ItemLayout>
@@ -29,7 +30,7 @@
         </R_TextBox>
     </R_ItemLayout>
     <R_ItemLayout col="2" Class="ms-2">
-        <R_InputFile OnChange="@_SourceUpload_OnChange" Accepts="@accepts"></R_InputFile>
+        <R_InputFile OnChange="@SourceUpload_OnChange" Accepts="@accepts"></R_InputFile>
     </R_ItemLayout>
 </R_StackLayout>
 
@@ -41,13 +42,13 @@
             R_GridType="@R_eGridType.Batch"
             Height="300px"
             Width="600px"
-            R_RowRender="@((R_GridRowRenderEventArgs args) => R_RowRender(args))"
             R_ServiceGetListRecord="@Upload_ServiceGetListRecord" >
         <R_GridColumns>
             <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.JournalGroup) Width="150px" HeaderText="Journal Group" ></R_GridTextColumn>
             <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.JournalGroupName) Width="150px" HeaderText="Journal Group Name" ></R_GridTextColumn>
             <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.EnableAccrual) Width="100px" HeaderText="Enable Accrual" ></R_GridTextColumn>
-            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorMessage) Width="300px" HeaderText="Notes"></R_GridTextColumn>
+            <R_GridCheckBoxColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorFlag) Width="300px" HeaderText="Error Flag" Visible="@_viewModel.VisibleError"></R_GridCheckBoxColumn>
+            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorMessage) Width="300px" HeaderText="Notes" Visible="@_viewModel.VisibleError"></R_GridTextColumn>
         </R_GridColumns>
     </R_Grid>
 </R_StackLayout>
@@ -57,33 +58,62 @@
         <R_ProgressBar Label="@_viewModel.Message" MaxValue="100" Value="@_viewModel.Percentage"></R_ProgressBar>
     </R_ItemLayout>
 </R_StackLayout>
+    <R_StackLayout Row>
+        <R_ItemLayout col="8">
+            <R_StackLayout Row>
+                <R_ItemLayout col="3">
+                    <R_Label>Total Row(s)</R_Label>
+                </R_ItemLayout>
+                <R_ItemLayout col="2">
+                    <R_NumericTextBox @bind-Value="@_viewModel.SumListExcel"
+                                      Arrows="false"
+                                      Enabled="false">
+                    </R_NumericTextBox>
+                </R_ItemLayout>
+                <R_ItemLayout col="1">
+                    <R_Label>Valid</R_Label>
+                </R_ItemLayout>
+                <R_ItemLayout col="2" Class="bg-success">
+                    <R_NumericTextBox @bind-Value="@_viewModel.SumValidDataExcel"
+                                      Arrows="false"
+                                      Enabled="false">
+                    </R_NumericTextBox>
+                </R_ItemLayout>
+                <R_ItemLayout col="1">
+                    <R_Label>Invalid</R_Label>
+                </R_ItemLayout>
+                <R_ItemLayout col="2" Class="badge bg-danger">
+                    <R_NumericTextBox @bind-Value="@_viewModel.SumInvalidDataExcel"
+                                      Arrows="false"
+                                      Enabled="false">
+                    </R_NumericTextBox>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_ItemLayout>
+        <R_ItemLayout col="4" hidden="@_viewModel.VisibleError">
+            <R_StackLayout Row Class="justify-content-end">
+                <R_ItemLayout>
+                    <R_Button OnClick="@Button_OnClickCloseAsync">
+                        Cancel
+                    </R_Button>
+                    <R_Button OnClick="Button_OnClickOkAsync" Enabled="@FileHasData">
+                        Proses
+                    </R_Button>
+                </R_ItemLayout>
+            </R_StackLayout>
+            </R_ItemLayout>
+            <R_ItemLayout col="4" hidden="@(!_viewModel.VisibleError)">
+            <R_StackLayout Row Class="justify-content-end">
+                <R_ItemLayout>
+                    <R_Button OnClick="@Button_OnClickCloseAsync">
+                        Cancel
+                    </R_Button>
+                    <R_Button OnClick="@Button_OnClickSaveAsync">
+                        Save To Excel
+                    </R_Button>
+                </R_ItemLayout>
+            </R_StackLayout>
+            </R_ItemLayout>
+            </R_StackLayout>
 
-
-<R_StackLayout Row>
-    <R_ItemLayout col="11">
-        <R_Label>Note : Red color indicate the record already exist in master Journal Group</R_Label>
-    </R_ItemLayout>
-</R_StackLayout>
-
-<R_StackLayout Row>
-    <R_ItemLayout col="5" Class="d-inline">
-        <R_CheckBox  @bind-Value="@_viewModel.IsOverWrite"
-                    Enabled="@_viewModel.ChecklistOverwrite">
-        </R_CheckBox>
-        <R_Label>Overwrite existing record</R_Label>
-    </R_ItemLayout>
-</R_StackLayout>
-
-
-<R_StackLayout Row Class="justify-content-end mt-2">
-    <R_ItemLayout col="2">
-        <R_Button OnClick="Button_OnClickCloseAsync">
-            Cancel
-        </R_Button>
-    </R_ItemLayout>
-    <R_ItemLayout col="2">
-        <R_Button Enabled="@(_viewModel.BtnSave||_viewModel.IsOverWrite)" OnClick="Button_OnClickOkAsync">
-            Save
-        </R_Button>
-    </R_ItemLayout>
 </R_StackLayout>

@@ -109,7 +109,7 @@ public class GLR00300ReportController : ControllerBase
 
             if (loCollectionFromDb.Count > 0)
             {
-                GLR00300DataAccountTrialBalance getFirstDataToHeader = loCollectionFromDb.FirstOrDefault();
+                GLR00300_DataDetail_AccountTrialBalance getFirstDataToHeader = loCollectionFromDb.FirstOrDefault();
                 loData = new GLR00300AccountTrialBalanceResultDTO()
                 {
                     Title = "Account Trial Balance",

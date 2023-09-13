@@ -14,7 +14,7 @@ namespace GSM04500Model
     public class GSM04500ViewModel : R_ViewModel<GSM04500DTO>
     {
         private GSM04500Model _model = new GSM04500Model();
-        private GSM04500ModelUploadTemplate _modelUploadTemplate = new GSM04500ModelUploadTemplate();
+        private GSM04500ModelTemplate _modelUploadTemplate = new GSM04500ModelTemplate();
         public List<GSM04500PropertyDTO> PropertyList { get; set; } = new List<GSM04500PropertyDTO>();
         public List<GSM04500JournalGroupTypeDTO> JournalGroupTypeList { get; set; } = new List<GSM04500JournalGroupTypeDTO>();
         

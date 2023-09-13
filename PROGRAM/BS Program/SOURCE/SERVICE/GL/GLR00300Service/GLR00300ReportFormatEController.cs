@@ -1,32 +1,32 @@
-﻿using GLR00300Common;
+﻿using BaseHeaderReportCommon.BaseHeader;
+using GLR00300Back;
+using GLR00300Common.GLR00300Print;
+using GLR00300Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using R_BackEnd;
+using R_Cache;
+using R_Common;
+using R_CommonFrontBackAPI;
+using R_ReportFastReportBack;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GLR00300Back;
-using GLR00300Common.GLR00300Print;
-using R_BackEnd;
-using R_CommonFrontBackAPI;
-using R_Common;
-using R_ReportFastReportBack;
-using System.Collections;
-using BaseHeaderReportCommon.BaseHeader;
-using Microsoft.AspNetCore.Authorization;
-using R_Cache;
 
 namespace GLR00300Service
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class GLR00300ReportFormatBController
+    public class GLR00300ReportFormatEController
     {
         private R_ReportFastReportBackClass _ReportCls;
         private GLR00300ParamDBToGetReportDTO _Parameter;
 
         #region instantiate
-        public GLR00300ReportFormatBController()
+        public GLR00300ReportFormatEController()
         {
             _ReportCls = new R_ReportFastReportBackClass();
             _ReportCls.R_InstantiateMainReportWithFileName += _ReportCls_R_InstantiateMainReportWithFileName;
@@ -38,7 +38,7 @@ namespace GLR00300Service
         #region Event Handler
         private void _ReportCls_R_InstantiateMainReportWithFileName(ref string pcFileTemplate)
         {
-            pcFileTemplate = "Reports\\GLR00300AccountTrialBalanceFormatB.frx";
+            pcFileTemplate = "Reports\\GLR00300AccountTrialBalanceFormatE.frx";
         }
 
         private void _ReportCls_R_GetMainDataAndName(ref ArrayList poData, ref string pcDataSourceName)
@@ -58,7 +58,7 @@ namespace GLR00300Service
         #endregion
 
         [HttpPost]
-        public R_DownloadFileResultDTO AllTrialBalanceReportPostFormatB(GLR00300ParamDBToGetReportDTO poParameter)
+        public R_DownloadFileResultDTO AllTrialBalanceReportPostFormatE(GLR00300ParamDBToGetReportDTO poParameter)
         {
             R_Exception loException = new R_Exception();
             R_DownloadFileResultDTO loRtn = null;
@@ -76,7 +76,7 @@ namespace GLR00300Service
         }
 
         [HttpGet, AllowAnonymous]
-        public FileStreamResult AllTrialBalanceReportGetFormatB(string pcGuid)
+        public FileStreamResult AllTrialBalanceReportGetFormatE(string pcGuid)
         {
             R_Exception loException = new R_Exception();
             FileStreamResult loRtn = null;
@@ -96,26 +96,31 @@ namespace GLR00300Service
         }
 
         #region Helper
-        private GLR00300AccountTrialBalanceResultWithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
+        private GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
         {
             var loEx = new R_Exception();
-            GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
+            GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO();
             GLR00300Cls loCls = null;
-            GLR00300AccountTrialBalanceResultDTO loData = null;
+            GLR00300AccountTrialBalanceResultFormat_EtoH_DTO loData = null;
+            List<GLRR00300DataAccountTrialBalance> loConvertData = null;
             string lcPeriod;
+
             try
             {
                 loCls = new GLR00300Cls();
                 poParam.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
+
                 var loCollectionFromDb = loCls.GetAllTrialBalanceReportData(poParam);
+                loConvertData = FromRaw_To_Display(loCollectionFromDb);
 
-
+                //CONDITIONAL IF DATA FROM USER TO DB NO RESULT (NULL)
                 if (loCollectionFromDb.Count > 0)
                 {
                     GLR00300_DataDetail_AccountTrialBalance getFirstDataToHeader = loCollectionFromDb.FirstOrDefault();
-                     loData = new GLR00300AccountTrialBalanceResultDTO()
+
+                    loData = new GLR00300AccountTrialBalanceResultFormat_EtoH_DTO()
                     {
-                        Title = "Account Trial Balance",
+                        Title = "Account Trial Balance Format E",
                         Header = new GLR00300HeaderAccountTrialBalanceDTO()
                         {
                             CPERIOD = getFirstDataToHeader.CPERIOD_NAME,
@@ -135,7 +140,7 @@ namespace GLR00300Service
                 else
                 {
                     lcPeriod = poParam.CYEAR + "-" + poParam.CTO_PERIOD_NO;
-                    loData = new GLR00300AccountTrialBalanceResultDTO()
+                    loData = new GLR00300AccountTrialBalanceResultFormat_EtoH_DTO()
                     {
                         Title = "Account Trial Balance",
                         Header = new GLR00300HeaderAccountTrialBalanceDTO()
@@ -155,8 +160,9 @@ namespace GLR00300Service
                     };
                 }
 
-                //Assign raw data to Data list 
-                loData.DataAccountTrialBalance = loCollectionFromDb;
+                //Assign raw data to Data list display
+                loData.Data = loConvertData;
+
                 var loParam = new BaseHeaderDTO()
                 {
                     CCOMPANY_NAME = "PT Realta Chackradarma",
@@ -166,7 +172,7 @@ namespace GLR00300Service
                 };
 
                 loRtn.BaseHeaderData = loParam;
-                loRtn.GLR00300AccountTrialBalanceResultData = loData;
+                loRtn.GLR00300AccountTrialBalanceResult_FormatEtoH_DataFormat = loData;
             }
             catch (Exception ex)
             {
@@ -178,5 +184,51 @@ namespace GLR00300Service
             return loRtn;
         }
         #endregion
+
+        private List<GLRR00300DataAccountTrialBalance> FromRaw_To_Display(List<GLR00300_DataDetail_AccountTrialBalance> poCollectionDataRaw)
+        {
+            var loEx = new R_Exception();
+            List<GLRR00300DataAccountTrialBalance> loReturn = null;
+            try
+            {
+                loReturn = new List<GLRR00300DataAccountTrialBalance>();
+
+                 loReturn = poCollectionDataRaw
+                    .GroupBy(data => new
+                    {
+                        data.CGLACCOUNT_NO,
+                        data.CGLACCOUNT_NAME,
+                        data.CDBCR,
+                        data.CBSIS,
+                    }).Select(dataDetail => new GLRR00300DataAccountTrialBalance
+                    {
+                        CGLACCOUNT_NO = dataDetail.Key.CGLACCOUNT_NO,
+                        CGLACCOUNT_NAME = dataDetail.Key.CGLACCOUNT_NAME,
+                        CDBCR = dataDetail.Key.CDBCR,
+                        CBSIS = dataDetail.Key.CBSIS,
+                        DataDetail = dataDetail.Select
+                        (itemDetail => new GLRR00300DataDetailAccountTrialBalance
+                        {
+                            CCENTER = itemDetail.CCENTER,
+                            NBEGIN_BALANCE = itemDetail.NBEGIN_BALANCE,
+                            NCREDIT = itemDetail.NCREDIT,
+                            NDEBIT = itemDetail.NDEBIT,
+                            NDEBIT_ADJ = itemDetail.NDEBIT_ADJ,
+                            NCREDIT_ADJ = itemDetail.NCREDIT_ADJ,
+                            NEND_BALANCE = itemDetail.NEND_BALANCE,
+                            NBUDGET = itemDetail.NBUDGET,
+                        }).ToList()
+                    }).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+
+            return loReturn;
+
+        }
     }
 }

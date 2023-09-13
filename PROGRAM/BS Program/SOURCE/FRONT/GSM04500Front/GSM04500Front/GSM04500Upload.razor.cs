@@ -9,6 +9,8 @@ using GSM04500Common;
 using GSM04500Model.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
+using R_APICommonDTO;
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.Enums;
@@ -23,20 +25,28 @@ namespace GSM04500Front
 {
     public partial class GSM04500Upload : R_Page
     {
-        private R_eFileSelectAccept[] accepts = { R_eFileSelectAccept.Excel };
         private GSM04500ViewModel_Upload _viewModel = new();
-        [Inject] IClientHelper clientHelper { get; set; }
-        [Inject] R_IExcel Excel { get; set; }
         private R_Grid<GSM04500UploadErrorValidateDTO> JournalGroup_gridRef;
-        private bool IsFileExist = false;
-        private bool IsUploadSuccesful = true;
 
-        public byte[] fileByte = null;
+        private R_eFileSelectAccept[] accepts = { R_eFileSelectAccept.Excel };
+        [Inject] IClientHelper clientHelper { get; set; }
+        [Inject] R_IExcel ExcelInject { get; set; }
+        [Inject] IJSRuntime JSRuntime { get; set; }
+
+        private bool FileHasData = false;
 
         private void StateChangeInvoke()
         {
             StateHasChanged();
         }
+
+        #region HandleError
+        private void DisplayErrorInvoke(R_Exception poException)
+        {
+            this.R_DisplayException(poException);
+        }
+        #endregion
+
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -44,11 +54,18 @@ namespace GSM04500Front
             try
             {
                 var Param = (GSM004500ParamDTO)poParameter;
-                _viewModel.CurrentObjectParam = Param;
-                _viewModel.CurrentObjectParam.CUSER_ID = clientHelper.UserId;
+
+                //Assign Company, User and others value for Parameters
+                _viewModel.CompanyId = Param.CCOMPANY_ID;
+                _viewModel.UserId = Param.CUSER_ID;
+                _viewModel.PropertyValue = Param.CPROPERTY_ID;
+                _viewModel.PropertyName = Param.CPROPERTY_NAME;
+                _viewModel.JournalGroupTypeValue = Param.CJRNGRP_TYPE;
 
                 _viewModel.StateChangeAction = StateChangeInvoke;
-                 await Task.CompletedTask;
+                _viewModel.ActionDataSetExcel = ActionFuncDataSetExcel;
+                _viewModel.DisplayErrorAction = DisplayErrorInvoke;
+                await Task.CompletedTask;
             }
             catch (Exception ex)
             {
@@ -57,7 +74,7 @@ namespace GSM04500Front
 
             R_DisplayException(loEx);
         }
-        private async Task _SourceUpload_OnChange(InputFileChangeEventArgs eventArgs)
+        private async Task SourceUpload_OnChange(InputFileChangeEventArgs eventArgs)
         {
             var loEx = new R_Exception();
 
@@ -69,104 +86,40 @@ namespace GSM04500Front
                 //import excel from user
                 var loMS = new MemoryStream();
                 await eventArgs.File.OpenReadStream().CopyToAsync(loMS);
-                fileByte = loMS.ToArray();
+                var fileByte = loMS.ToArray();
+                
+                //READ EXCEL
+                var loExcel = ExcelInject;
 
-                //validate type file
-                if (eventArgs.File.Name.Contains(".xlsx") == false)
-                {
-                    await R_MessageBox.Show("", "File Type must Microsoft Excel .xlsx", R_eMessageBoxButtonType.OK);
-                }
-                if (eventArgs.File.Name.Length > 0)
-                {
-                    IsFileExist = true;
-                }
-                else
-                {
-                    IsFileExist = false;
-                }
+                var loDataSet = loExcel.R_ReadFromExcel(fileByte, new[] { "JournalGroup" });
+                var loResult = R_FrontUtility.R_ConvertTo<GSM04500UploadFromExcelDTO>(loDataSet.Tables[0]);
 
-                ReadExcelFile();
-                await JournalGroup_gridRef.R_RefreshGrid(null);
+                FileHasData = loResult.Count > 0 ? true : false;
+
+                await JournalGroup_gridRef.R_RefreshGrid(loResult);
             }
             catch (Exception ex)
             {
-                if (_viewModel.IsErrorEmptyFile)
-                {
-                    await R_MessageBox.Show("", "File is Empty", R_eMessageBoxButtonType.OK);
-                }
-                else
-                {
-                    loEx.Add(ex);
-                }
+                loEx.Add(ex);
             }
-        B:
             loEx.ThrowExceptionIfErrors();
         }
+
         private async Task Upload_ServiceGetListRecord(R_ServiceGetListRecordEventArgs eventArgs)
         {
-            var loEx = new R_Exception();
-
+            R_Exception loEx = new R_Exception();
             try
             {
-                await _viewModel.ValidateFile();
+                List<GSM04500UploadFromExcelDTO> loData = (List<GSM04500UploadFromExcelDTO>)eventArgs.Parameter;
+
+                await _viewModel.ConvertGrid(loData);
                 eventArgs.ListEntityResult = _viewModel.JournalGroupValidateUploadError;
-                //Enable checklist overwrite
-                _viewModel.ChecklistOverwrite = true;
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-
             R_DisplayException(loEx);
-
-        }
-
-        #region ReadExcel
-
-        public void ReadExcelFile()
-        {
-            var loEx = new R_Exception();
-            List<GSM04500UploadFromExcelDTO> loExtract = new List<GSM04500UploadFromExcelDTO>();
-            try
-            {
-                var loDataSet = Excel.R_ReadFromExcel(fileByte, new string[] { "JournalGroup" });
-                var loResult = R_FrontUtility.R_ConvertTo<GSM04500UploadFromExcelDTO>(loDataSet.Tables[0]);
-                loExtract = new List<GSM04500UploadFromExcelDTO>(loResult);
-
-                ////Convert to DTO for DB
-                _viewModel.loUploadLJournalGroupList = loExtract.Select(x => new GSM04500UploadToDBDTO()
-                {
-                    JournalGroup = x.JournalGroup,
-                    JournalGroupName = x.JournalGroupName,
-                    EnableAccrual = x.EnableAccrual
-                }).ToList();
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-                var loMatchingError = loEx.ErrorList.FirstOrDefault(x => x.ErrDescp == "SkipNumberOfRowsStart was out of range: 0");
-                _viewModel.IsErrorEmptyFile = loMatchingError != null;
-            }
-            loEx.ThrowExceptionIfErrors();
-        }
-
-        #endregion
-        private void R_RowRender(R_GridRowRenderEventArgs eventArgs)
-        {
-            var loData = (GSM04500UploadErrorValidateDTO)eventArgs.Data;
-
-            if (loData.Var_Exists)
-            {
-                eventArgs.RowStyle = new R_GridRowRenderStyle
-                {
-                    FontColor = "red"
-                };
-            }
-            else
-            {
-                _viewModel.BtnSave = true;
-            }
         }
 
         public async Task Button_OnClickOkAsync()
@@ -178,8 +131,12 @@ namespace GSM04500Front
 
                 if (loValidate == R_eMessageBoxResult.Yes)
                 {
-                    await _viewModel.SaveFileBulk(clientHelper.CompanyId, clientHelper.UserId);
-                    await this.Close(true, true);
+                    await _viewModel.SaveFileBulk();
+
+                    if (_viewModel.VisibleError)
+                    {
+                        await R_MessageBox.Show("", "Journal Group uploaded successfully!", R_eMessageBoxButtonType.OK);
+                    }
                 }
             }
             catch (Exception ex)
@@ -189,6 +146,36 @@ namespace GSM04500Front
 
             loEx.ThrowExceptionIfErrors();
         }
+
+        public async Task Button_OnClickSaveAsync()
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                var loValidate = await R_MessageBox.Show("", "Are you sure want to save to excel again?", R_eMessageBoxButtonType.YesNo);
+
+                if (loValidate == R_eMessageBoxResult.Yes)
+                {
+                    await ActionFuncDataSetExcel();
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            loEx.ThrowExceptionIfErrors();
+        }
+
+        // Create Method Action For Download Excel if Has Error
+        private async Task ActionFuncDataSetExcel()
+        {
+            var loByte = ExcelInject.R_WriteToExcel(_viewModel.ExcelDataSet);
+            var lcName = $"Journal Group {_viewModel.PropertyValue}" + ".xlsx";
+
+            await JSRuntime.downloadFileFromStreamHandler(lcName, loByte);
+        }
+
         public async Task Button_OnClickCloseAsync()
         {
             await this.Close(true, false);

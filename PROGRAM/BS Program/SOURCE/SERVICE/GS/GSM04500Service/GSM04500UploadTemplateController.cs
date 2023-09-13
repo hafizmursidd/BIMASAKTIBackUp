@@ -14,7 +14,7 @@ namespace GSM04500Service
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class GSM04500UploadTemplateController : ControllerBase, IGSM04500UploadTemplate 
+    public class GSM04500UploadTemplateController : ControllerBase, IGSM04500Template 
     {
         [HttpPost]
         public GSM04500UploadFileDTO DownloadTemplateFile()
@@ -46,59 +46,5 @@ namespace GSM04500Service
             return loRtn;
         }
 
-        [HttpPost]
-        public GSM04500ListDTO GetJournalGroupUploadList()
-        {
-            var loEx = new R_Exception();
-            GSM04500ListDTO loRtn = null;
-            var loParameter = new GSM04500DBParameter();
-
-            try
-            {
-                var loCls = new GSM04500ValidateUploadTemplateCls();
-                loRtn = new GSM04500ListDTO();
-
-                loParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-                loParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
-                loParameter.CPROPERTY_ID = R_Utility.R_GetContext<string>(ContextConstant.CPROPERTY_ID);
-                loParameter.CJRNGRP_TYPE = R_Utility.R_GetContext<string>(ContextConstant.CJRNGRP_TYPE);
-
-                loRtn = loCls.GetUploadJournalGroupList(loParameter);
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            loEx.ThrowExceptionIfErrors();
-
-            return loRtn;
-        }
-
-        [HttpPost]
-        public GSM04500ListUploadErrorValidateDTO GetErrorProcess()
-        {
-            var loEx = new R_Exception();
-            GSM04500ListUploadErrorValidateDTO loRtn = null;
-
-            try
-            {
-                var lcKeyGuid = R_Utility.R_GetContext<string>("KeyGuid");
-
-                var loCls = new GSM04500ValidateUploadTemplateCls();
-                loRtn = new GSM04500ListUploadErrorValidateDTO();
-
-                var loResult = loCls.GetErrorProcess(R_BackGlobalVar.COMPANY_ID, R_BackGlobalVar.USER_ID, lcKeyGuid);
-                     loRtn.Data = loResult;
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            loEx.ThrowExceptionIfErrors();
-
-            return loRtn;
-        }
     }
 }

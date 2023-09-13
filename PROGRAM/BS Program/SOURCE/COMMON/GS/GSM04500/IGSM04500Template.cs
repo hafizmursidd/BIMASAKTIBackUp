@@ -4,10 +4,8 @@ using System.Text;
 
 namespace GSM04500Common
 {
-    public interface IGSM04500UploadTemplate
+    public interface IGSM04500Template
     {
         GSM04500UploadFileDTO DownloadTemplateFile();
-        GSM04500ListDTO GetJournalGroupUploadList();
-        GSM04500ListUploadErrorValidateDTO GetErrorProcess();
     }
 }

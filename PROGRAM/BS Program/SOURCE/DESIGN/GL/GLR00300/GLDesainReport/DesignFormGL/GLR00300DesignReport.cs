@@ -24,6 +24,15 @@ namespace DesignFormGL
             _loReport.Design();
         }
 
+        private void ButtonFormatE_H_Click(object sender, EventArgs e)
+        {
+            ArrayList loData = new ArrayList
+            {
+                GLR00300Common.Model.GenerateDataModel.DefaultDataWithHeaderFormat_EtoH()
+            };
+            _loReport.RegisterData(loData, "ResponseDataModel");
+            _loReport.Design();
+        }
 
     }
 

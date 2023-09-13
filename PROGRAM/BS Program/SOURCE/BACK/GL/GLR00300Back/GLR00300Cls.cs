@@ -141,10 +141,10 @@ namespace GLR00300Back
             return loResult;
         }
 
-        public List<GLR00300DataAccountTrialBalance> GetAllTrialBalanceReportData(GLR00300ParamDBToGetReportDTO poParameter)
+        public List<GLR00300_DataDetail_AccountTrialBalance> GetAllTrialBalanceReportData(GLR00300ParamDBToGetReportDTO poParameter)
         {
             R_Exception loException = new R_Exception();
-            List<GLR00300DataAccountTrialBalance> loResult = null;
+            List<GLR00300_DataDetail_AccountTrialBalance> loResult = null;
             R_Db loDb;
             DbCommand loCommand;
             try
@@ -175,7 +175,7 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CBUDGET_NO", DbType.String, 20, poParameter.CBUDGET_NO);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
-                loResult = R_Utility.R_ConvertTo<GLR00300DataAccountTrialBalance>(loReturnTemp).ToList();
+                loResult = R_Utility.R_ConvertTo<GLR00300_DataDetail_AccountTrialBalance>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {
