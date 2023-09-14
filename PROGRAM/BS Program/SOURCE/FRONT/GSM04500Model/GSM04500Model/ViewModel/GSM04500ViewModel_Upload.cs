@@ -30,11 +30,13 @@ namespace GSM04500Model.ViewModel
         public DataSet ExcelDataSet { get; set; }
         public Func<Task> ActionDataSetExcel { get; set; }
         public Action<R_Exception> DisplayErrorAction { get; set; }
+
         public string PropertyValue { get; set; } = "";
         public string PropertyName { get; set; } = "";
         public string JournalGroupTypeValue { get; set; } = "";
         public string CompanyId { get; set; }
         public string UserId { get; set; }
+
         public int SumListExcel { get; set; }
         public bool VisibleError { get; set; } = false;
         public int SumValidDataExcel { get; set; }
@@ -139,7 +141,7 @@ namespace GSM04500Model.ViewModel
                 if (poProcessResultMode == eProcessResultMode.Fail)
                 {
                     Message = $"Process Complete but fail with GUID {pcKeyGuid}";
-                    await ServiceGetError(pcKeyGuid);
+                   await ServiceGetError(pcKeyGuid);
                     VisibleError = true;
                 }
             }

@@ -13,14 +13,7 @@ namespace GSM04500Common
 
     }
 
-    public class GSM04500FieldTemporaryTableDTO
-    {
-        public int No { get; set; }
-        public string JournalGroup { get; set; }
-        public string JournalGroupName { get; set; }
-        public bool EnableAccrual { get; set; }
 
-    }
     public class GSM04500UploadErrorValidateDTO
     {
         public int No { get; set; }
@@ -30,6 +23,15 @@ namespace GSM04500Common
         public string ErrorMessage { get; set; }
         public bool ErrorFlag { get; set; }
     }
+    public class GSM04500FieldTemporaryTableDTO
+    {
+        public int No { get; set; }
+        public string JournalGroup { get; set; }
+        public string JournalGroupName { get; set; }
+        public bool EnableAccrual { get; set; }
+
+    }
+
     public class GSM04500ListUploadErrorValidateDTO : R_APIResultBaseDTO
     {
         public List<GSM04500UploadErrorValidateDTO> Data { get; set; }

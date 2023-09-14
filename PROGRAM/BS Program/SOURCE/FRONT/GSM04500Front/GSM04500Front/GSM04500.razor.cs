@@ -175,15 +175,7 @@ namespace GSM04500Front
 
             loEx.ThrowExceptionIfErrors();
         }
-        //private async Task ServiceBeforeAdd(R_AfterAddEventArgs eventArgs)
-        //{
-        //    eventArgs.Data = new GSM04500DTO()
-        //    {
-        //        DCREATE_DATE = DateTime.Now,
-        //        DUPDATE_DATE = DateTime.Now
-        //    };
-        //}
-
+      
         private async Task Grid_Display(R_DisplayEventArgs eventArgs)
         {
             if (eventArgs.ConductorMode == R_eConductorMode.Normal)
@@ -272,7 +264,7 @@ namespace GSM04500Front
             var param = new GSM004500ParamDTO()
             {
                 CCOMPANY_ID = journalGroupViewModel.JournalGroupCurrent.CCOMPANY_ID,
-                CUSER_ID = journalGroupViewModel.JournalGroupCurrent.CUSER_ID,
+                CUSER_ID = clientHelper.UserId,
                 CJRNGRP_TYPE = journalGroupViewModel.JournalGroupCurrent.CJRNGRP_TYPE,
                 CPROPERTY_ID = loparam.CPROPERTY_ID,
                 CPROPERTY_NAME = loparam.CPROPERTY_NAME

@@ -20,16 +20,14 @@ namespace GSM04500Model
         
         public ObservableCollection<GSM04500DTO> JournalGroupList = new ObservableCollection<GSM04500DTO>();
         public GSM04500DTO JournalGroup { get; set; } = new GSM04500DTO();
-
-        public GSM04500DTO JournalGroupCurrent  = new GSM04500DTO();
         public GSM04500PropertyDTO CurrentProperty = new GSM04500PropertyDTO();
+        public GSM04500DTO JournalGroupCurrent  = new GSM04500DTO();
 
         public string PropertyValueContext = "";
         public string JournalGroupTypeValue = "";
         public string JournalGroupCodeValue = "";
         public bool DropdownGroupType = true;
         public bool DropdownProperty = true;
-        public bool btnUploadEnable = false;
 
         public bool VisibleColumn_LACCRUAL = false;
 

@@ -29,7 +29,7 @@ namespace GSM04500Front
         private R_Grid<GSM04500UploadErrorValidateDTO> JournalGroup_gridRef;
 
         private R_eFileSelectAccept[] accepts = { R_eFileSelectAccept.Excel };
-        [Inject] IClientHelper clientHelper { get; set; }
+        
         [Inject] R_IExcel ExcelInject { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
 
