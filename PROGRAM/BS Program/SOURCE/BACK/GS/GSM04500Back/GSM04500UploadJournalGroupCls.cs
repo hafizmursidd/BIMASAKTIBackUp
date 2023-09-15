@@ -22,7 +22,7 @@ namespace GSM04500Back
             {
                 if (loDb.R_TestConnection() == false)
                 {
-                    loException.Add("01", "Database Connection Failed");
+                    loException.Add("000", "Database Connection Failed");
                     goto EndBlock;
                 }
 
@@ -41,17 +41,15 @@ namespace GSM04500Back
                     loException.Add(loTask.Exception.InnerException != null ?
                         loTask.Exception.InnerException :
                         loTask.Exception);
-
                     goto EndBlock;
                 }
+
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
-
         EndBlock:
-
             loException.ThrowExceptionIfErrors();
         }
 
@@ -59,7 +57,7 @@ namespace GSM04500Back
         {
             R_Exception loException = new R_Exception();
             string lcQuery = "";
-            var loDb = new R_Db();
+            R_Db loDb = new R_Db();
             DbConnection loConn = null;
             DbCommand loCommand = null;
             try
@@ -72,7 +70,6 @@ namespace GSM04500Back
                 var loTempObject = R_NetCoreUtility.R_DeserializeObjectFromByte<List<GSM04500UploadErrorValidateDTO>>(poBatchProcessPar.BigObject);
                 //CONVERT DATA, SO TO BE READY INSERT TO TEMPORARY TABLE 
                 var loObject = R_Utility.R_ConvertCollectionToCollection<GSM04500UploadErrorValidateDTO, GSM04500FieldTemporaryTableDTO>(loTempObject);
-
 
                 #region GetParameterPropert
                 //get parameter
@@ -91,7 +88,7 @@ namespace GSM04500Back
 
                 loDb.SqlExecNonQuery(lcQuery, loConn, false);
 
-                loDb.R_BulkInsert<GSM04500FieldTemporaryTableDTO>((SqlConnection)loConn, "#JRNLGROUP", loObject);
+                loDb.R_BulkInsert((SqlConnection)loConn, "#JRNLGROUP", loObject);
 
                 lcQuery = "RSP_GS_UPLOAD_JOURNAL_GROUP";
                 loCommand.CommandText = lcQuery;
@@ -101,8 +98,9 @@ namespace GSM04500Back
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 20, poBatchProcessPar.Key.USER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, lcPropertyId);
                 loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_GROUP_TYPE", DbType.String, 20, lcJournalGroupType);
-                loDb.R_AddCommandParameter(loCommand, "@CKEY_GUID", DbType.String, 20, poBatchProcessPar.Key.KEY_GUID);
-                loDb.SqlExecNonQuery(loConn, loCommand, false);
+                loDb.R_AddCommandParameter(loCommand, "@CKEY_GUID", DbType.String, 50, poBatchProcessPar.Key.KEY_GUID);
+                
+                var abc = loDb.SqlExecNonQuery(loConn, loCommand, false);
 
             }
             catch (Exception ex)

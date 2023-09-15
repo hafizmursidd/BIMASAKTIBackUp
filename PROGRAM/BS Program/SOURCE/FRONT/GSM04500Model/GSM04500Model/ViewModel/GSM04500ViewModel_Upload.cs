@@ -24,9 +24,7 @@ namespace GSM04500Model.ViewModel
 
         public string Message = "";
         public int Percentage = 0;
-        public string SourceFileName = "";
         public Action StateChangeAction { get; set; }
-
         public DataSet ExcelDataSet { get; set; }
         public Func<Task> ActionDataSetExcel { get; set; }
         public Action<R_Exception> DisplayErrorAction { get; set; }
@@ -54,6 +52,8 @@ namespace GSM04500Model.ViewModel
                 SumValidDataExcel = 0;
                 SumInvalidDataExcel = 0;
 
+                var loTemp = poEntity;
+                
                 // Convert Excel DTO and add SeqNo
                 List<GSM04500UploadErrorValidateDTO> Data = poEntity.Select((item, i)
                     => new GSM04500UploadErrorValidateDTO
@@ -194,14 +194,14 @@ namespace GSM04500Model.ViewModel
                     COMPANY_ID = CompanyId,
                     USER_ID = UserId,
                     KEY_GUID = pcKeyGuid,
-                    RESOURCE_NAME = "RSP_LM_UPLOAD_STAFFResources"
+                    RESOURCE_NAME = "RSP_GS_UPLOAD_JOURNAL_GROUPResources"
                 };
 
                 loCls = new R_ProcessAndUploadClient(
                     pcModuleName: "GS",
                     plSendWithContext: true,
                     plSendWithToken: true,
-                    pcHttpClientName: "R_DefaultServiceUrlGS");
+                    pcHttpClientName: "R_DefaultServiceUrl");
 
                 // Get error result
                 loResultData = await loCls.R_GetStreamErrorProcess(loParameterData);
@@ -223,7 +223,7 @@ namespace GSM04500Model.ViewModel
                         if (loResultData.Any(y => y.SeqNo == x.No))
                         {
                             x.ErrorMessage = loResultData.Where(y => y.SeqNo == x.No).FirstOrDefault().ErrorMessage;
-                            x.ErrorFlag = true;
+                            x.ErrorFlag = "N";
                             SumInvalidDataExcel++;
                         }
                         else
@@ -233,20 +233,20 @@ namespace GSM04500Model.ViewModel
                     });
 
                     //Set DataSetTable and get error
-                    var loExcelData =
-                        R_FrontUtility.ConvertCollectionToCollection<GSM04500UploadFromExcelDTO>(JournalGroupValidateUploadError);
+                    //var loExcelData =
+                    //    R_FrontUtility.ConvertCollectionToCollection<GSM04500UploadFromExcelDTO>(JournalGroupValidateUploadError);
 
-                    var loDataTable = R_FrontUtility.R_ConvertTo(loExcelData);
-                    loDataTable.TableName = "Staff";
+                    //var loDataTable = R_FrontUtility.R_ConvertTo(loExcelData);
+                    //loDataTable.TableName = "Staff";
 
-                    var loDataSet = new DataSet();
-                    loDataSet.Tables.Add(loDataTable);
+                    //var loDataSet = new DataSet();
+                    //loDataSet.Tables.Add(loDataTable);
 
-                    // Assign Dataset
-                    ExcelDataSet = loDataSet;
+                    //// Assign Dataset
+                    //ExcelDataSet = loDataSet;
 
-                    // Download if get Error
-                    await ActionDataSetExcel.Invoke();
+                    //// Download if get Error
+                    //await ActionDataSetExcel.Invoke();
                 }
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ namespace GSM04500Common
         public string JournalGroupName { get; set; }
         public bool EnableAccrual { get; set; }
         public string ErrorMessage { get; set; }
-        public bool ErrorFlag { get; set; }
+        public string ErrorFlag { get; set; } = "Y";
     }
     public class GSM04500FieldTemporaryTableDTO
     {

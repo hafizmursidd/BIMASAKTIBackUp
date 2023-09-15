@@ -81,7 +81,7 @@ namespace GSM04500Front
             try
             {
                 //get file name
-                _viewModel.SourceFileName = eventArgs.File.Name;
+               // _viewModel.SourceFileName = eventArgs.File.Name;
 
                 //import excel from user
                 var loMS = new MemoryStream();
