@@ -8,6 +8,6 @@ namespace GST00500Common
     public interface IGST00500Outbox : R_IServiceCRUDBase<GST00500DTO>
     {
         IAsyncEnumerable<GST00500DTO> ApprovalOutboxListStream();
-        GST00500ApprovalStatusListDTO GetApprovalStatus();
+        List<GST00500ApprovalStatusDTO> GetApprovalStatusList();
     }
 }

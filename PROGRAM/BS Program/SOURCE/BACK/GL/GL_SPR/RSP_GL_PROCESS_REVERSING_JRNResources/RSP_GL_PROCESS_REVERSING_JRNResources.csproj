@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -7,16 +7,16 @@
 
   <ItemGroup>
     <Compile Update="RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.Designer.cs">
-      <DependentUpon>RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.resx">
-      <LastGenOutput>RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RSP_GL_PROCESS_REVERSING_JRNResources_msgrsc.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

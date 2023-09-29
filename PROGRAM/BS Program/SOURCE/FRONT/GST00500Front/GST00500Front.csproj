@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\COMMON\GS\GST00500Common\GST00500Common.csproj" />
+    <ProjectReference Include="..\GSM04500Front\GSM04500Front\GSM04500Front.csproj" />
     <ProjectReference Include="..\GST00500Model\GST00500Model.csproj" />
   </ItemGroup>
 	

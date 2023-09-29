@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\COMMON\LM\LMM06000Common\LMM06000Common.csproj" />
+    <ProjectReference Include="..\LM_SPR\RSP_LM_MAINTAIN_UNIT_TYPE_BILLING_RULEResources\RSP_LM_MAINTAIN_UNIT_TYPE_BILLING_RULEResources.csproj" />
   </ItemGroup>
 
   <ItemGroup>

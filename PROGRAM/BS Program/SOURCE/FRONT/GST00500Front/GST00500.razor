@@ -32,12 +32,12 @@
                     Height="450px">
                 <R_GridColumns>
                     <R_GridCheckBoxSelectColumn Width="75px" FieldName="LSELECTED"
-                                                                    R_EnableEdit
-                                                                    R_EnableAdd
-                                                                    ShowSelectAllHeader>
+                                                R_EnableEdit
+                                                R_EnableAdd
+                                                ShowSelectAllHeader>
                     </R_GridCheckBoxSelectColumn>
                     <R_GridTextColumn Width="250px"
-                                      FieldName="CTRANSACTION_NAME"
+                                      FieldName="CTRANS_NAME"
                                       HeaderText="Transaction Name">
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="200px"
@@ -45,21 +45,21 @@
                                       HeaderText="Department">
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="250px"
-                                      FieldName="CREFERENCE_NO"
+                                      FieldName="CREF_NO"
                                       HeaderText="Reference No">
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="250px"
-                                      FieldName="CREFERENCE_DATE"
+                                      FieldName="CREF_DATE"
                                       HeaderText="Reference Date">
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="150px"
-                                      FieldName="CCREATE_BY"
-                                      HeaderText="Created By">
+                                      FieldName="CUPDATE_BY"
+                                      HeaderText="Updated By">
                     </R_GridTextColumn>
-                    <R_GridDatePickerColumn Width="150px"
-                                            FieldName="DCREATE_DATE"
-                                            HeaderText="Created Date">
-                    </R_GridDatePickerColumn>
+                    <R_GridDateTimePickerColumn Width="150px"
+                                                FieldName="DUPDATE_DATE"
+                                                HeaderText="Updated Date">
+                    </R_GridDateTimePickerColumn>
                 </R_GridColumns>
             </R_Grid>
         </R_ItemLayout>
@@ -68,7 +68,7 @@
             <R_StackLayout Row="true">
                 <R_ItemLayout>
                     <R_Button Enabled="@_viewModelGST00500Inbox.BtnApprove"
-                        R_ConductorGridSource="@_conductorInboxTrans"
+                              R_ConductorGridSource="@_conductorInboxTrans"
                               OnClick="@OnClickApprove">Approve</R_Button>
                 </R_ItemLayout>
                 <R_ItemLayout>
@@ -89,8 +89,8 @@
     </R_TabStripTab>
 
     <R_TabStripTab Title="Outbox" Id="TabOutbox">
-        <R_TabPage @ref="@_tabPageOutbox"
-                   R_Before_Open_TabPage="@R_Before_Open_TabPageOutbox">
+        <R_TabPage
+            R_Before_Open_TabPage="@R_Before_Open_TabPageOutbox">
         </R_TabPage>
     </R_TabStripTab>
 
@@ -99,8 +99,8 @@
                    R_Before_Open_TabPage="@R_Before_Open_TabPageDraft">
         </R_TabPage>
     </R_TabStripTab>
-</R_TabStrip>
 
+</R_TabStrip>
 
 <R_ConductorGrid @ref="@_conductorInboxTrans"
                  R_ViewModel="@_viewModelGST00500Inbox"

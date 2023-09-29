@@ -10,6 +10,7 @@ namespace GSM04500Common
         public string JournalGroup { get; set; }
         public string JournalGroupName { get; set; }
         public bool EnableAccrual { get; set; }
+        public string Notes { get; set; }
 
     }
 
@@ -19,7 +20,7 @@ namespace GSM04500Common
         public int No { get; set; }
         public string JournalGroup { get; set; }
         public string JournalGroupName { get; set; }
-        public bool EnableAccrual { get; set; }
+        public bool EnableAccrual { get; set; }//From Excel
         public string ErrorMessage { get; set; }
         public string ErrorFlag { get; set; } = "Y";
     }

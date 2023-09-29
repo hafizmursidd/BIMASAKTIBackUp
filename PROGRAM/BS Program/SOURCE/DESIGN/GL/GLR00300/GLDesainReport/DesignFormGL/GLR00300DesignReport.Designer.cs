@@ -32,7 +32,7 @@ namespace DesignFormGL
             buttonFormatA.Name = "buttonFormatA";
             buttonFormatA.Size = new Size(177, 23);
             buttonFormatA.TabIndex = 3;
-            buttonFormatA.Text = "Fomart A Report";
+            buttonFormatA.Text = "Fomart A_D Report";
             buttonFormatA.UseVisualStyleBackColor = true;
             buttonFormatA.Click += ButtonFormatAClick;
             // 
@@ -42,7 +42,7 @@ namespace DesignFormGL
             buttonFormatE_H.Name = "buttonFormatE_H";
             buttonFormatE_H.Size = new Size(177, 23);
             buttonFormatE_H.TabIndex = 3;
-            buttonFormatE_H.Text = "Fomart E_A Report";
+            buttonFormatE_H.Text = "Fomart E_H Report";
             buttonFormatE_H.UseVisualStyleBackColor = true;
             buttonFormatE_H.Click += ButtonFormatE_H_Click;
             // 

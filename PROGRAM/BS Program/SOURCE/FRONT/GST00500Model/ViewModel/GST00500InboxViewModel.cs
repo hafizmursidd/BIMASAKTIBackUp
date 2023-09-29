@@ -11,6 +11,7 @@ using R_BlazorFrontEnd.Helpers;
 using R_CommonFrontBackAPI;
 using R_ProcessAndUploadFront;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace GST00500Model.ViewModel
 {
@@ -22,22 +23,19 @@ namespace GST00500Model.ViewModel
 
         public List<GST00500DTO> loInboxApprovaltBatchList = new List<GST00500DTO>();
         public List<GST00500RejectDTO> ReasonOfRejectList = new List<GST00500RejectDTO>();
-        public GST00500RejectTransactionDTO ParamRejectTransactionStatus = new GST00500RejectTransactionDTO();
 
-        public List<GST00500ApprovalTransactionDTO> GetListErrorTransaction = new List<GST00500ApprovalTransactionDTO>();
-
+        //Assign on RejectPopUp.razor
+        public GST00500ReasonRejectDTO ParamRejectTransactionStatus = new GST00500ReasonRejectDTO();
+        public Action<R_Exception> DisplayErrorAction { get; set; }
         public bool BtnReject = true;
         public bool BtnApprove = true;
-
         public string CCOMPANYID = "";
         public string CUSERID = "";
-
         public string Message = "";
         public int Percentage = 0;
+        private enum TYPE_APPROVE { Approve, Reject }
 
-        public string GUID_ID = null;
-
-        public string ResultSuccesTransaction = "";
+        private TYPE_APPROVE TipeApprove;
 
         public async Task GetAllInboxTransaction()
         {
@@ -87,23 +85,37 @@ namespace GST00500Model.ViewModel
         }
 
         #region Seprated Data Selected
+        public bool IsDataSelectedExist()
+        {
+            R_Exception loException = new R_Exception();
+            bool isSelected = false;
+            try
+            {
+                var loTempListToCheck = InboxTransactionList.ToList();
+                isSelected = loTempListToCheck.Any(item => item.LSELECTED == true);
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+        EndBlock:
+            loException.ThrowExceptionIfErrors();
 
+            return isSelected;
+        }
+        #endregion
 
-        public async Task GetSelectedDataToSaveApproval()
+        #region Seprated Data Selected and Process (Approve and Reject)
+        public async Task ProcessApproval()
         {
             R_Exception loException = new R_Exception();
             List<GST00500DTO> loInboxApprovaltBatchListSelected = new List<GST00500DTO>();
 
             try
             {
-                foreach (GST00500DTO item in loInboxApprovaltBatchList)
-                {
-                    if (item.LSELECTED == true)
-                    {
-                        item.VAR_SELECTED = 1;
-                        loInboxApprovaltBatchListSelected.Add(item);
-                    }
-                }
+
+                loInboxApprovaltBatchListSelected = loInboxApprovaltBatchList.Where(x => x.LSELECTED == true).ToList();
+
                 await ProcessApproveTransaction(loInboxApprovaltBatchListSelected);
             }
             catch (Exception ex)
@@ -117,18 +129,23 @@ namespace GST00500Model.ViewModel
         public async Task GetSelectedDataToRejectApproval()
         {
             R_Exception loException = new R_Exception();
-            List<GST00500DTO> loInboxRejectListSelected = new List<GST00500DTO>();
+            List<GST00500DataRejectDTO> loInboxRejectListSelected = null;
 
             try
             {
-                foreach (GST00500DTO item in loInboxApprovaltBatchList)
+                var loTEmpInboxRejectListSelected = loInboxApprovaltBatchList.Where(x => x.LSELECTED == true).ToList();
+
+                var loTempSelected =
+                    R_FrontUtility.ConvertCollectionToCollection<GST00500DataRejectDTO>(loTEmpInboxRejectListSelected).ToList();
+
+                //Add Reason Rejected code and reason_reject_notes
+                loInboxRejectListSelected = loTempSelected.Select(item =>
                 {
-                    if (item.LSELECTED == true)
-                    {
-                        item.VAR_SELECTED = 1;
-                        loInboxRejectListSelected.Add(item);
-                    }
-                }
+                    item.CREASON_CODE = ParamRejectTransactionStatus.CREASON_CODE;
+                    item.TNOTES = ParamRejectTransactionStatus.TNOTES;
+                    return item;
+                }).ToList();
+
                 await ProcessRejectTransaction(loInboxRejectListSelected);
             }
             catch (Exception ex)
@@ -138,27 +155,8 @@ namespace GST00500Model.ViewModel
         EndBlock:
             loException.ThrowExceptionIfErrors();
         }
-
-        //To know if there is any data selected
-        public bool IsDataSelectedExist()
-        {
-            R_Exception loException = new R_Exception();
-            bool isSelected = false;
-            try
-            {
-                var TempListToCheck = InboxTransactionList.ToList();
-                isSelected = TempListToCheck.Any(item => item.LSELECTED == true);
-            }
-            catch (Exception ex)
-            {
-                loException.Add(ex);
-            }
-        EndBlock:
-            loException.ThrowExceptionIfErrors();
-
-            return isSelected;
-        }
         #endregion
+
         #region Approve
         public async Task ProcessApproveTransaction(List<GST00500DTO> loInboxApprovaltBatchListSelected)
         {
@@ -187,7 +185,8 @@ namespace GST00500Model.ViewModel
                 loUploadPar.ClassName = "GST00500Back.GST00500ProcessApproveCls";
                 loUploadPar.BigObject = loInboxApprovaltBatchListSelected;
 
-                GUID_ID = await loCls.R_BatchProcess<List<GST00500DTO>>(loUploadPar, loInboxApprovaltBatchListSelected.Count);
+                TipeApprove = TYPE_APPROVE.Approve;
+                await loCls.R_BatchProcess<List<GST00500DTO>>(loUploadPar, loInboxApprovaltBatchListSelected.Count);
             }
             catch (Exception ex)
             {
@@ -196,9 +195,8 @@ namespace GST00500Model.ViewModel
         }
         #endregion
 
-        #region Reject
-        //Proses Transaction
-        public async Task ProcessRejectTransaction(List<GST00500DTO> loInboxRejectBatchListSelected)
+        #region REJECT
+        public async Task ProcessRejectTransaction(List<GST00500DataRejectDTO> loInboxRejectBatchListSelected)
         {
             var loEx = new R_Exception();
             R_BatchParameter loUploadPar;
@@ -207,10 +205,6 @@ namespace GST00500Model.ViewModel
 
             try
             {
-                loUserParameters = new List<R_KeyValue>();
-                loUserParameters.Add(new R_KeyValue() { Key = ContextConstant.CREASON_CODE, Value = ParamRejectTransactionStatus.CREASON_CODE });
-                loUserParameters.Add(new R_KeyValue() { Key = ContextConstant.TNOTES, Value = ParamRejectTransactionStatus.TNOTES });
-
                 //Instantiate ProcessClient
                 loCls = new R_ProcessAndUploadClient(
                     pcModuleName: "GS",
@@ -223,11 +217,11 @@ namespace GST00500Model.ViewModel
                 loUploadPar = new R_BatchParameter();
                 loUploadPar.COMPANY_ID = CCOMPANYID;
                 loUploadPar.USER_ID = CUSERID;
-                loUploadPar.UserParameters = loUserParameters;
                 loUploadPar.ClassName = "GST00500Back.GST00500ProcessRejectCls";
                 loUploadPar.BigObject = loInboxRejectBatchListSelected;
 
-                GUID_ID = await loCls.R_BatchProcess<List<GST00500DTO>>(loUploadPar, loInboxRejectBatchListSelected.Count);
+                TipeApprove = TYPE_APPROVE.Reject;
+                await loCls.R_BatchProcess<List<GST00500DataRejectDTO>>(loUploadPar, loInboxRejectBatchListSelected.Count);
             }
             catch (Exception ex)
             {
@@ -236,72 +230,115 @@ namespace GST00500Model.ViewModel
         }
         #endregion
 
+        #region ProgressStatus
 
+        public async Task ProcessComplete(string pcKeyGuid, eProcessResultMode poProcessResultMode)
+        {
+            if (TipeApprove == TYPE_APPROVE.Approve)
+            {
+                if (poProcessResultMode == eProcessResultMode.Success)
+                {
+                    Message = string.Format("Finish Process Approving!” ");
+                }
 
-        #region GET_ERROR
-        private async Task GetError(string pcKeyGuid)
+                if (poProcessResultMode == eProcessResultMode.Fail)
+                {
+                    Message = ("Process Approve Complete but fail with");
+                    try
+                    {
+                         await ServiceGetError(pcKeyGuid);
+                    }
+                    catch (R_Exception ex)
+                    {
+                          DisplayErrorAction.Invoke(ex);
+                    }
+                }
+            }
+            else if (TipeApprove == TYPE_APPROVE.Reject)
+            {
+                if (poProcessResultMode == eProcessResultMode.Success)
+                {
+                    Message = string.Format("Finish Process Reject!” ");
+                }
+
+                if (poProcessResultMode == eProcessResultMode.Fail)
+                {
+                    Message = string.Format("Process Reject Complete but fail");
+                    try
+                    {
+                         await ServiceGetError(pcKeyGuid);
+                    }
+                    catch (R_Exception ex)
+                    {
+                          DisplayErrorAction.Invoke(ex);
+                    }
+                }
+            }
+            await Task.CompletedTask;
+        }
+        public async Task ProcessError(string pcKeyGuid, R_APIException ex)
+        {
+            R_Exception loException = new R_Exception();
+            Message = string.Format("Process Error with GUID {0}", pcKeyGuid);
+            if (TipeApprove == TYPE_APPROVE.Approve)
+            {
+                ex.ErrorList.ForEach(x => loException.Add(x.ErrNo, x.ErrDescp));
+            }
+            else if (TipeApprove == TYPE_APPROVE.Reject)
+            {
+                ex.ErrorList.ForEach(x => loException.Add(x.ErrNo, x.ErrDescp));
+            }
+
+            DisplayErrorAction.Invoke(loException);
+            await Task.CompletedTask;
+        }
+        public Task ReportProgress(int pnProgress, string pcStatus)
+        {
+            if (TipeApprove == TYPE_APPROVE.Approve)
+            {
+                Message = string.Format("Process Progress {0} with status {1}", pnProgress, pcStatus);
+            }
+            else if (TipeApprove == TYPE_APPROVE.Reject)
+            {
+                Message = string.Format("Process Progress {0} with status {1}", pnProgress, pcStatus);
+            }
+            return Task.CompletedTask;
+        }
+        private async Task ServiceGetError(string pcKeyGuid)
         {
             R_Exception loException = new R_Exception();
 
-            GST00500ParameterDBDTO loParameter = new GST00500ParameterDBDTO()
-            {
-                GUID_ID = pcKeyGuid
-            };
-
+            List<R_ErrorStatusReturn> loResultData;
+            R_GetErrorWithMultiLanguageParameter loParameterData;
+            R_ProcessAndUploadClient loCls;
             try
             {
-                var loError = await _modelGST00500.GetErroListAsync(loParameter);
-                GetListErrorTransaction = loError;
-
-                if (GetListErrorTransaction.Count > 0)
+                loParameterData = new R_GetErrorWithMultiLanguageParameter()
                 {
-                    foreach (var item in GetListErrorTransaction)
-                    {
-                        string tempMessage = string.Format("This record With {0} And {1} And {2} And {3} has been failed when update status ", item.CCOMPANY_ID, item.CTRANSACTION_CODE, item.CDEPT_CODE, item.CREFERENCE_NO);
-                        loException.Add(new Exception(tempMessage));
-                        
-                    }
-                }
+                    COMPANY_ID = CCOMPANYID,
+                    USER_ID = CUSERID,
+                    KEY_GUID = pcKeyGuid,
+                    RESOURCE_NAME = "RSP_GS_MAINTAIN_APPROVALResources"
+                };
+                loCls = new R_ProcessAndUploadClient(
+                    pcModuleName: "GS",
+                    plSendWithContext: true,
+                    plSendWithToken: true,
+                    pcHttpClientName: "R_DefaultServiceUrl",
+                    poProcessProgressStatus: this);
 
+                loResultData = await loCls.R_GetStreamErrorProcess(loParameterData);
+
+                loResultData.ForEach(x => loException.Add(x.SeqNo.ToString(), x.ErrorMessage));
+                goto EndBlock;
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
-        EndBlock:
+        EndBlock:;
             loException.ThrowExceptionIfErrors();
-        }
-        #endregion
 
-        #region ProgressStatus
-
-        public async Task ProcessComplete(string pcKeyGuid, eProcessResultMode poProcessResultMode)
-        {
-
-            if (poProcessResultMode == eProcessResultMode.Success)
-            {
-                Message = string.Format("Finish Processing Reversing Journal!” ");
-            }
-
-            if (poProcessResultMode == eProcessResultMode.Fail)
-            {
-                Message = string.Format("Process Complete but fail with GUID {0}", pcKeyGuid);
-                await GetError(pcKeyGuid);
-            }
-        }
-
-        public async Task ProcessError(string pcKeyGuid, R_APIException ex)
-        {
-            Message = string.Format("Process Error with GUID {0}", pcKeyGuid);
-            await GetError(pcKeyGuid);
-            await Task.CompletedTask;
-
-        }
-
-        public Task ReportProgress(int pnProgress, string pcStatus)
-        {
-            Console.WriteLine($"Step {pnProgress} with status {pcStatus}");
-            return Task.CompletedTask;
         }
         #endregion
 

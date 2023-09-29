@@ -9,23 +9,8 @@ using System.Reflection.Metadata;
 
 namespace GLR00300Back
 {
-    public class GLR00300Cls : R_BusinessObject<GLR00300DTO>
-    {
-        protected override GLR00300DTO R_Display(GLR00300DTO poEntity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void R_Saving(GLR00300DTO poNewEntity, eCRUDMode poCRUDMode)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void R_Deleting(GLR00300DTO poEntity)
-        {
-            throw new NotImplementedException();
-        }
-        public GLR00300PeriodDTO GetPeriod(GLR00300DBParameter poParameter)
+    public class GLR00300Cls
+    { public GLR00300PeriodDTO IntialProcess(GLR00300DBParameter poParameter)
         {
             R_Exception loException = new R_Exception();
             GLR00300PeriodDTO loResult = null;
@@ -36,15 +21,25 @@ namespace GLR00300Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                var lcQuery =
-                    @"SELECT IMIN_YEAR=CAST(MIN(CYEAR) AS INT), IMAX_YEAR=CAST(MAX(CYEAR) AS INT) FROM GSM_PERIOD (NOLOCK) WHERE CCOMPANY_ID = @CCOMPANY_ID";
+                var lcQuery = "RSP_GS_GET_PERIOD_YEAR_RANGE ";
 
                 loCommand.CommandText = lcQuery;
-                loCommand.CommandType = CommandType.Text;
-                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
+                loCommand.CommandType = CommandType.StoredProcedure;
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CYEAR", DbType.String, 4, "");
+                loDb.R_AddCommandParameter(loCommand, "@CMODE", DbType.String, 10, "");
 
-                var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, false);
                 loResult = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTemp).FirstOrDefault();
+
+                //Initial Process GET DEFAULT YEAR
+                var lcQueryDefaultYear = $"EXEC RSP_GL_GET_SYSTEM_PARAM '{poParameter.CCOMPANY_ID}', '{poParameter.CLANGUAGE_ID}' ";
+                loCommand.CommandText = lcQueryDefaultYear;
+                loCommand.CommandType = CommandType.Text;
+                var loReturnTempVal = loDb.SqlExecQuery(loConn, loCommand, true);
+                var loResultTemp = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTempVal).FirstOrDefault();
+
+                loResult.CSOFT_PERIOD_YY = loResultTemp.CSOFT_PERIOD_YY;
             }
             catch (Exception ex)
             {
@@ -64,13 +59,14 @@ namespace GLR00300Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                var lcQuery =
-                    @"SELECT CCODE,CDESCRIPTION	FROM RFT_GET_GSB_CODE_INFO('BIMASAKTI', '@CCOMPANY_ID', '_GL_TRIAL_BAL_TYPE', '', '@LANGUAGES') ";
+                var lcQuery = "RSP_GS_GET_GSB_CODE_LIST";
                 loCommand.CommandText = lcQuery;
-                loCommand.CommandType = CommandType.Text;
+                loCommand.CommandType = CommandType.StoredProcedure;
 
-                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@LANGUAGES", DbType.String, 20, poParameter.CLANGUAGE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CAPPLICATION", DbType.String, 20, "BIMASAKTI"); 
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CCLASS_ID", DbType.String, 40, "_GL_TRIAL_BAL_TYPE");
+                loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 2, poParameter.CLANGUAGE_ID);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
@@ -93,12 +89,14 @@ namespace GLR00300Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                var lcQuery = @"SELECT CCODE ,CDESCRIPTION	FROM RFT_GET_GSB_CODE_INFO('BIMASAKTI', '@CCOMPANY_ID', '_GL_TRIAL_BAL_PRINT_METHOD', '', '@LANGUAGES')";
+                var lcQuery = "RSP_GS_GET_GSB_CODE_LIST";
                 loCommand.CommandText = lcQuery;
-                loCommand.CommandType = CommandType.Text;
+                loCommand.CommandType = CommandType.StoredProcedure;
 
-                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@LANGUAGES", DbType.String, 20, poParameter.CLANGUAGE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CAPPLICATION", DbType.String, 20, "BIMASAKTI");
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CCLASS_ID", DbType.String, 40, "_GL_TRIAL_BAL_PRINT_METHOD");
+                loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 2, poParameter.CLANGUAGE_ID);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
@@ -140,7 +138,6 @@ namespace GLR00300Back
             loException.ThrowExceptionIfErrors();
             return loResult;
         }
-
         public List<GLR00300_DataDetail_AccountTrialBalance> GetAllTrialBalanceReportData(GLR00300ParamDBToGetReportDTO poParameter)
         {
             R_Exception loException = new R_Exception();

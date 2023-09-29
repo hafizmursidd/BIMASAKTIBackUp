@@ -25,11 +25,11 @@ namespace GLR00300Model.ViewModel
         public GLR00300PeriodDTO PeriodYearMinMax = new GLR00300PeriodDTO();
         public GLR00300DTO CurrencyType = new GLR00300DTO();
         public List<GLR00300DTO> CurrencyTypeList { get; set; } = new List<GLR00300DTO>
-            { new GLR00300DTO { CCODE = "L", CDESCRIPTION = "Local Currency" },
-              new GLR00300DTO { CCODE = "B", CDESCRIPTION = "Base Currency" } };
+            { new GLR00300DTO { CCODE = "L", CNAME = "Local Currency" },
+              new GLR00300DTO { CCODE = "B", CNAME = "Base Currency" } };
         public List<GLR00300DTO> JournalAdustModeList { get; set; } = new List<GLR00300DTO>
-        { new GLR00300DTO { CCODE = "S", CDESCRIPTION = "Split" },
-            new GLR00300DTO { CCODE = "M", CDESCRIPTION = "Merged" } };
+        { new GLR00300DTO { CCODE = "S", CNAME = "Split" },
+            new GLR00300DTO { CCODE = "M", CNAME = "Merged" } };
 
         public GLR00300GetAccountCOA FromAccount = new GLR00300GetAccountCOA();
         public GLR00300GetAccountCOA ToAccount = new GLR00300GetAccountCOA();
@@ -41,7 +41,7 @@ namespace GLR00300Model.ViewModel
         public string TrialBalanceTypeValue = "N";
         public string CurrencyTypeValue = "L";
         public string JournalAdjustModeValue = "S";
-        public int PeriodYear = DateTime.Now.Year;
+        public int PeriodYear;
         public string PeriodId = "01";
         public bool _lPrintByCenter = false;
         public string PrintMethodValue = "00";
@@ -64,13 +64,14 @@ namespace GLR00300Model.ViewModel
             loException.ThrowExceptionIfErrors();
         }
 
-        public async Task GetPeriodYear()
+        public async Task GetInitialProcess()
         {
             R_Exception loException = new R_Exception();
             try
             {
-                var loResult = await _modelGLR00300Model.GetPeriodAsyncModel();
+                var loResult = await _modelGLR00300Model.GetInitialProcessAsyncModel();
                 PeriodYearMinMax = loResult;
+                PeriodYear = int.Parse(loResult.CSOFT_PERIOD_YY);
                 await GetPeriod();
             }
             catch (Exception ex)

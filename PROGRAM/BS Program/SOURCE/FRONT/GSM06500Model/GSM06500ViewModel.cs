@@ -107,7 +107,7 @@ namespace GSM06500Model
         public async Task<GSM06500DTO> SaveTermOfPayment(GSM06500DTO poNewEntity, R_eConductorMode peConductorMode)
         {
             var loEx = new R_Exception();
-            GSM06500DTO loResult = null;
+            GSM06500DTO loResult = new GSM06500DTO();
 
             try
             {

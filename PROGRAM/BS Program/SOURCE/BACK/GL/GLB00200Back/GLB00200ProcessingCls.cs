@@ -108,8 +108,6 @@ namespace GLB00200Back
 
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
-
-
                 Var_Step = 1;
                 foreach (var item in loTempListForProcess)
                 {
@@ -147,6 +145,7 @@ namespace GLB00200Back
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
+
                     }
                     catch (Exception ex)
                     {
@@ -156,9 +155,9 @@ namespace GLB00200Back
                 //UNHANDLED Error
                     if (loExceptionDt.Haserror)
                     {
-                        //Lakukan penambahan untuk menulis error pada GST_UPLOAD_ERROR_STATUS
                         //try catch ini digunakan untuk cek apakah ada error per data
-
+                       
+                        lnErrorCount += 1;
                         lcQueryMessage = $"INSERT INTO GST_UPLOAD_ERROR_STATUS (CCOMPANY_ID,CUSER_ID,CKEY_GUID,ISEQ_NO,CERROR_MESSAGE)" +
                                          $"VALUES " +
                                          $"( '{lcCompany}', '{lcUserId}','{lcGuidId}', {Var_Step}, '{loExceptionDt.ErrorList.FirstOrDefault().ErrDescp}') ;";
@@ -248,12 +247,13 @@ namespace GLB00200Back
             DbConnection loConn = null;
             DbCommand loCommand = null;
             bool lbRtn = false;
-            DataTable loTable = null;
+            DataTable loTable = new DataTable();
             string lcQuery;
             try
             {
                 loConn = poConnection;
                 loCommand = loDb.GetCommand();
+                R_ExternalException.R_SP_Init_Exception(loConn);
 
                 lcQuery = "RSP_GL_PROCESS_REVERSING_JRN";
 
@@ -267,7 +267,15 @@ namespace GLB00200Back
 
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
-                loTable = loDb.SqlExecQuery(loConn, loCommand, false);
+                try
+                {
+                    loTable = loDb.SqlExecQuery(loConn, loCommand, false);
+                }
+                catch (Exception ex)
+                {
+                    loEx.Add(ex);
+                }
+                loEx.Add(R_ExternalException.R_SP_Get_Exception(loConn));
 
                 if (loTable.Rows[0].Field<int>(0) > 0)
                 {

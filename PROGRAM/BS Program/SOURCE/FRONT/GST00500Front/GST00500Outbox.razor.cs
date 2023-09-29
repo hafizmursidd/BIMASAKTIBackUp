@@ -13,19 +13,17 @@ using R_BlazorFrontEnd.Enums;
 
 namespace GST00500Front
 {
-    public partial class GST00500Outbox
+    public partial class GST00500Outbox : R_Page
     {
         private GST00500OutboxViewModel _viewModelGST00500Outbox = new();
         private R_Grid<GST00500DTO> _gridOutboxTransRef;
         private R_Grid<GST00500ApprovalStatusDTO> _gridOutboxTransStatusRef;
         private R_ConductorGrid _conductorOutboxTrans;
         private R_ConductorGrid _conductorOutboxTransStatus;
-        private GST00500DTO ParamTransactionStatus = new();
 
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
-
             try
             {
                 await _gridOutboxTransRef.R_RefreshGrid(null);
@@ -34,7 +32,6 @@ namespace GST00500Front
             {
                 loEx.Add(ex);
             }
-
             loEx.ThrowExceptionIfErrors();
         }
         #region Outbox
@@ -42,13 +39,17 @@ namespace GST00500Front
         private async Task ServiceGetListOutboxTransaction(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
-
             try
             {
                 await _viewModelGST00500Outbox.GetAllOutboxTransaction();
-                ParamTransactionStatus = _viewModelGST00500Outbox.OutboxTransactionList.FirstOrDefault();
-                await _gridOutboxTransStatusRef.R_RefreshGrid(null);
+                GST00500DTO ParamTransactionStatus = _viewModelGST00500Outbox.OutboxTransactionList.FirstOrDefault();
                 eventArgs.ListEntityResult = _viewModelGST00500Outbox.OutboxTransactionList;
+
+                //TO DISPLAY GRID APPROVE BY, ON THE BOTTOM OF MAIN GRID
+                //if (_viewModelGST00500Outbox.OutboxTransactionList.Count > 0)
+                //{
+                //    await _gridOutboxTransStatusRef.R_RefreshGrid(ParamTransactionStatus);
+                //}
             }
             catch (Exception ex)
             {
@@ -57,22 +58,32 @@ namespace GST00500Front
 
             R_DisplayException(loEx);
         }
-
         private async Task Grid_DisplayOutbox(R_DisplayEventArgs eventArgs)
         {
-            if (eventArgs.ConductorMode == R_eConductorMode.Normal)
+            var loEx = new R_Exception();
+            try
             {
-                ParamTransactionStatus = (GST00500DTO)eventArgs.Data;
-
-                await _gridOutboxTransStatusRef.R_RefreshGrid(null);
+                if (eventArgs.ConductorMode == R_eConductorMode.Normal 
+                    && _viewModelGST00500Outbox.OutboxTransactionList.Count > 0)
+                {
+                    GST00500DTO ParamTransactionStatus = (GST00500DTO)eventArgs.Data;
+                    await _gridOutboxTransStatusRef.R_RefreshGrid(ParamTransactionStatus);
+                }
             }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
         }
         private async Task ServiceGetListOutboxTransactionStatus(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
             try
             {
-                await _viewModelGST00500Outbox.GetApprovalStatus(ParamTransactionStatus);
+                GST00500DTO ParamTransactionStatus = (GST00500DTO)eventArgs.Parameter;
+                await _viewModelGST00500Outbox.GetAllApprovalStatus(ParamTransactionStatus);
                 eventArgs.ListEntityResult = _viewModelGST00500Outbox.OutboxApprovalStatusTransactionList;
             }
             catch (Exception ex)

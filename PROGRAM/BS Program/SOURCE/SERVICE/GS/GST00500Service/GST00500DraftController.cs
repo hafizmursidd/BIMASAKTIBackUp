@@ -36,16 +36,14 @@ namespace GST00500Service
         {
             var loEx = new R_Exception();
             GST00500DBParameter loDbParameter;
-            R_Exception loException = new R_Exception();
             IAsyncEnumerable<GST00500DTO> loRtn = null;
             List<GST00500DTO> loRtnTemp;
             try
             {
                 loDbParameter = new GST00500DBParameter();
                 loDbParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                loDbParameter.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
-               // loDbParameter.CUSER_ID = "HPC";
+                loDbParameter.CTRANS_TYPE = "D";
 
                 var loCls = new GST00500DraftCls();
                 loRtnTemp = loCls.Approval_Draft_List(loDbParameter);

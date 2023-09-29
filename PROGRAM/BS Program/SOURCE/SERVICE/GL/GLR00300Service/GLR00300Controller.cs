@@ -27,7 +27,7 @@ namespace GLR00300Service
             throw new NotImplementedException();
         }
         [HttpPost]
-        public GLR00300PeriodDTO GetPeriod()
+        public GLR00300PeriodDTO InitialProcess()
         {
             R_Exception loException = new R_Exception();
             GLR00300DBParameter loDbParameter = new();
@@ -36,9 +36,9 @@ namespace GLR00300Service
             {
                 var loCls = new GLR00300Cls();
                 loDbParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-
+                loDbParameter.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
                 //loDbParameter.CCOMPANY_ID = "rcd";
-                loReturn = loCls.GetPeriod(loDbParameter);
+                loReturn = loCls.IntialProcess(loDbParameter);
             }
             catch (Exception ex)
             {

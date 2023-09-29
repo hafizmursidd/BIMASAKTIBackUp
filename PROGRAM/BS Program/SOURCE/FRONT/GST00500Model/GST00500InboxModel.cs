@@ -39,10 +39,10 @@ namespace GST00500Model
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loParam)
-        {
-            throw new NotImplementedException();
-        }
+        //public IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loParam)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<List<GST00500DTO>> GetInboxListAsyncModel()
         {
@@ -114,29 +114,29 @@ namespace GST00500Model
             return loResult;
         }
 
-        public async Task<List<GST00500ApprovalTransactionDTO>> GetErroListAsync(GST00500ParameterDBDTO loParam)
-        {
-            var loEx = new R_Exception();
-            List<GST00500ApprovalTransactionDTO> loReturn = new List<GST00500ApprovalTransactionDTO>();
-            try
-            {
-                R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                loReturn = await R_HTTPClientWrapper.R_APIRequestStreamingObject<GST00500ApprovalTransactionDTO, GST00500ParameterDBDTO>(
-                    _RequestServiceEndPoint,
-                    nameof(IGST00500.GetError),
-                    loParam,
-                    DEFAULT_MODULE,
-                    _SendWithContext,
-                    _SendWithToken);
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
+        //public async Task<List<GST00500ApprovalTransactionDTO>> GetErroListAsync(GST00500ParameterDBDTO loParam)
+        //{
+        //    var loEx = new R_Exception();
+        //    List<GST00500ApprovalTransactionDTO> loReturn = new List<GST00500ApprovalTransactionDTO>();
+        //    try
+        //    {
+        //        R_HTTPClientWrapper.httpClientName = _HttpClientName;
+        //        loReturn = await R_HTTPClientWrapper.R_APIRequestStreamingObject<GST00500ApprovalTransactionDTO, GST00500ParameterDBDTO>(
+        //            _RequestServiceEndPoint,
+        //            nameof(IGST00500.GetError),
+        //            loParam,
+        //            DEFAULT_MODULE,
+        //            _SendWithContext,
+        //            _SendWithToken);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        loEx.Add(ex);
+        //    }
 
-            EndBlock:
-            loEx.ThrowExceptionIfErrors();
-            return loReturn;
-        }
+        //    EndBlock:
+        //    loEx.ThrowExceptionIfErrors();
+        //    return loReturn;
+        //}
     }
 }

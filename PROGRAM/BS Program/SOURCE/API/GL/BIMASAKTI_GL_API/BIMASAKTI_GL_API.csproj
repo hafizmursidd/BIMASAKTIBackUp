@@ -30,12 +30,33 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Reports\GLR00300AccountTrialBalanceFormatA.frx">
+	  <None Update="Reports\BaseHeaderLandscapeCommon.frx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Reports\GLR00300AccountTrialBalanceFormatB.frx">
+	  <None Update="Reports\GLR00300AccountTrialBalanceA.frx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+		<None Update="Reports\GLR00300AccountTrialBalanceB.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceC.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceD.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceE.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceF.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceG.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceH.frx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

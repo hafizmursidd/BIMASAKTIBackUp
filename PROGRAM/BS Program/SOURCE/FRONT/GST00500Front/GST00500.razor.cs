@@ -19,8 +19,8 @@ using R_BlazorFrontEnd.Helpers;
 
 namespace GST00500Front
 {
-    public partial class GST00500
-    {
+    public partial class GST00500 : R_Page
+    { 
         #region Declare ViewModel
 
         private GST00500InboxViewModel _viewModelGST00500Inbox = new();
@@ -34,7 +34,10 @@ namespace GST00500Front
         private bool isApprove = true;
 
 
-
+        private void DisplayErrorInvoke(R_Exception poException)
+        {
+            this.R_DisplayException(poException);
+        }
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -43,13 +46,15 @@ namespace GST00500Front
                 await ServiceGetUserName(null);
                 _viewModelGST00500Inbox.CCOMPANYID = clientHelper.CompanyId;
                 _viewModelGST00500Inbox.CUSERID = clientHelper.UserId;
+                _viewModelGST00500Inbox.DisplayErrorAction = DisplayErrorInvoke;
+                await Task.CompletedTask;
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         private async Task ServiceGetUserName(R_ServiceGetRecordEventArgs eventArgs)
@@ -85,11 +90,10 @@ namespace GST00500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         #region ApproveButton
-        //OnClickApprove()
         private async Task OnClickApprove()
         {
             var loEx = new R_Exception();
@@ -108,7 +112,7 @@ namespace GST00500Front
                 loEx.Add(ex);
             }
         EndBlock:
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
         #endregion
 
@@ -185,9 +189,8 @@ namespace GST00500Front
                 _viewModelGST00500Inbox.loInboxApprovaltBatchList = (List<GST00500DTO>)eventArgs.Data;
                 if (isApprove)
                 {
-                    await _viewModelGST00500Inbox.GetSelectedDataToSaveApproval();
+                    await _viewModelGST00500Inbox.ProcessApproval();
                 }
-                await _gridInboxTransRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
@@ -200,7 +203,7 @@ namespace GST00500Front
             var loEx = new R_Exception();
             try
             {
-
+                _gridInboxTransRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
@@ -227,14 +230,6 @@ namespace GST00500Front
                 {
                     await _gridInboxTransRef.R_RefreshGrid(null);
                 }
-                //else if (arg.Title == "Outbox")
-                //{
-                //    await _gridOutboxTransRef.R_RefreshGrid(null);
-                //}
-                //else if (arg.Title == "Draft")
-                //{
-                //    await _gridDraftTransRef.R_RefreshGrid(null);
-                //}
             }
             catch (Exception ex)
             {
@@ -245,6 +240,12 @@ namespace GST00500Front
         }
         private void R_Before_Open_TabPageOutbox(R_BeforeOpenTabPageEventArgs eventArgs)
         {
+            var param = new GST00500DTO()
+            {
+                CCOMPANY_ID = clientHelper.CompanyId,
+                CUSER_ID = clientHelper.UserId
+            };
+            eventArgs.Parameter = param;
             eventArgs.TargetPageType = typeof(GST00500Outbox);
         }
         private void R_Before_Open_TabPageDraft(R_BeforeOpenTabPageEventArgs eventArgs)

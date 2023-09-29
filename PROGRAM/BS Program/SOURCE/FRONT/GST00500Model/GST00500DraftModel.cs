@@ -32,7 +32,7 @@ namespace GST00500Model
         public async Task<List<GST00500DTO>> GetDraftListAsyncModel()
         {
             var loEx = new R_Exception();
-            List<GST00500DTO> loResult = null;
+            List<GST00500DTO> loResult = new List<GST00500DTO>();
 
             try
             {

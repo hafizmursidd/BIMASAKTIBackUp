@@ -3,7 +3,7 @@
 @using GFF00900COMMON.DTOs
 
 <R_StackLayout Style="width:600px">
-    <div hidden="@ReasonVisibility">
+    <div hidden="@IsReasonHidden">
         <R_StackLayout>
             <R_StackLayout Row="true">
                 <R_ItemLayout Class="col-4">
@@ -30,7 +30,7 @@
         </R_StackLayout>
     </div>
 
-    <div hidden="@AccessValidationVisibility">
+    <div hidden="@IsAccessValidationHidden">
         <R_StackLayout>
             <R_StackLayout Row="true">
                 <R_ItemLayout Class="col-4">

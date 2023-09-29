@@ -71,7 +71,7 @@ namespace GLR00300Common.Model
 
             GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
             loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData(loParam).BaseHeaderData;
-            loRtn.GLR00300AccountTrialBalanceResultData = DefaultData();
+            loRtn.GLR00300_ACCOUNT_TRIAL_BALANCE_RESULT_DATA = DefaultData();
 
             return loRtn;
         }

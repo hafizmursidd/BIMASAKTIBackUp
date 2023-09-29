@@ -15,7 +15,7 @@ namespace GLR00300Common.GLR00300Print
     }
     public class GLR00300AccountTrialBalanceResultWithBaseHeaderDTO : BaseHeaderReportCommon.BaseHeader.BaseHeaderResult
     {
-        public GLR00300AccountTrialBalanceResultDTO GLR00300AccountTrialBalanceResultData { get; set; }
+        public GLR00300AccountTrialBalanceResultDTO GLR00300_ACCOUNT_TRIAL_BALANCE_RESULT_DATA { get; set; }
     }
 
 

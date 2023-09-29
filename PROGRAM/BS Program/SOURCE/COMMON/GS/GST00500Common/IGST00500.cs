@@ -11,7 +11,8 @@ namespace GST00500Common
         IAsyncEnumerable<GST00500DTO> ApprovalInboxListStream();
         GST00500UserNameDTO GetUserName();
         GST00500RejectListDTO ReasonRejectList();
-        IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loParam);
+
+    //    IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loParam);
 
 
     }

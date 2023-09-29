@@ -13,7 +13,7 @@
             Height="250px">
         <R_GridColumns>
             <R_GridTextColumn Width="250px"
-                              FieldName="CTRANSACTION_NAME"
+                              FieldName="CTRANS_NAME"
                               HeaderText="Transaction Name">
             </R_GridTextColumn>
             <R_GridTextColumn Width="250px"
@@ -21,25 +21,25 @@
                               HeaderText="Department">
             </R_GridTextColumn>
             <R_GridTextColumn Width="250px"
-                              FieldName="CREFERENCE_NO"
+                              FieldName="CREF_NO"
                               HeaderText="Reference No">
             </R_GridTextColumn>
             <R_GridTextColumn Width="250px"
-                              FieldName="CREFERENCE_DATE"
+                              FieldName="CREF_DATE"
                               HeaderText="Reference Date">
             </R_GridTextColumn>
             <R_GridTextColumn Width="150px"
-                              FieldName="CTRANSACTION_STATUS_DESC"
+                              FieldName="CTRANS_STATUS_DESC"
                               HeaderText="Status">
             </R_GridTextColumn>
             <R_GridTextColumn Width="150px"
                               FieldName="CUPDATE_BY"
                               HeaderText="Updated By">
             </R_GridTextColumn>
-            <R_GridDatePickerColumn Width="150px"
-                                    FieldName="DUPDATE_DATE"
-                                    HeaderText="Updated Date">
-            </R_GridDatePickerColumn>
+            <R_GridDateTimePickerColumn Width="150px"
+                                        FieldName="DUPDATE_DATE"
+                                        HeaderText="Updated Date">
+            </R_GridDateTimePickerColumn>
         </R_GridColumns>
     </R_Grid>
     <R_StackLayout Row="true" Class="d-flex justify-content-end mt-1 mb-1">
@@ -49,8 +49,8 @@
     </R_StackLayout>
     </R_ItemLayout>
 
-    @*REGION Outbox Transaction Status*@
-<R_StackLayout>
+    @*REGION GRID Outbox Transaction Status LIST [BOTTOM GRID]*@
+    <R_StackLayout>
     <R_Label>
         Approval Status
     </R_Label>
@@ -83,10 +83,17 @@
             </R_GridTextColumn>
         </R_GridColumns>
     </R_Grid>
-</R_StackLayout>
-
-    <R_ConductorGrid @ref="@_conductorOutboxTrans"
+    </R_StackLayout>
+    
+@*MAIN GRID*@
+<R_ConductorGrid @ref="@_conductorOutboxTrans"
                  R_ViewModel="@_viewModelGST00500Outbox"
                  R_IsHeader="true"
                  R_Display="Grid_DisplayOutbox">
+</R_ConductorGrid>
+
+@*BOTTOM GRID*@
+    <R_ConductorGrid @ref="@_conductorOutboxTransStatus"
+                 R_ViewModel="@_viewModelGST00500Outbox"
+                 R_IsHeader="true">
     </R_ConductorGrid>

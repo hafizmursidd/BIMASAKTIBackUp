@@ -17,16 +17,18 @@ namespace GFF00900BACK
         {
             R_Exception loException = new R_Exception();
             R_Db loDb = new R_Db();
-            List<RSP_ACTIVITY_VALIDITYDataDTO> loResult = new List<RSP_ACTIVITY_VALIDITYDataDTO>();
+            List<RSP_ACTIVITY_VALIDITYDataDTO> loResult = null;
             DbConnection loConn = loDb.GetConnection();
+            DbCommand loCmd = null;
+            string lcQuery;
 
             try
             {
-                string lcQuery = $"EXEC RSP_ACTIVITY_VALIDITY " +
+                lcQuery = $"EXEC RSP_ACTIVITY_VALIDITY " +
                     $"@COMPANY_ID, " +
                     $"@ACTIVITY_CODE";
 
-                DbCommand loCmd = loDb.GetCommand();
+                loCmd = loDb.GetCommand();
                 loCmd.CommandText = lcQuery;
 
                 loDb.R_AddCommandParameter(loCmd, "@COMPANY_ID", DbType.String, 50, poEntity.COMPANY_ID);
@@ -60,6 +62,11 @@ namespace GFF00900BACK
                     loConn.Dispose();
                     loConn = null;
                 }
+                if (loCmd != null)
+                {
+                    loCmd.Dispose();
+                    loCmd = null;
+                }
             }
             loException.ThrowExceptionIfErrors();
             return loResult;
@@ -69,11 +76,14 @@ namespace GFF00900BACK
         {
             R_Exception loException = new R_Exception();
             R_Db loDb = new R_Db();
-            DbConnection loConn = loDb.GetConnection();
+            DbConnection loConn = null;
+            DbCommand loCmd = null;
+            string lcQuery;
 
             try
             {
-                string lcQuery = $"EXEC RSP_CREATE_ACTIVITY_APPROVAL_LOG " +
+                loConn = loDb.GetConnection();
+                lcQuery = $"EXEC RSP_CREATE_ACTIVITY_APPROVAL_LOG " +
                                  $"@CCOMPANY_ID, " +
                                  $"@CACTION_CODE, " +
                                  $"@CCOMPANY_ID, " +
@@ -96,7 +106,7 @@ namespace GFF00900BACK
                     $"'{poEntity.DETAIL_ACTION}'";
 */
 
-                DbCommand loCmd = loDb.GetCommand();
+                loCmd = loDb.GetCommand();
                 loCmd.CommandText = lcQuery;
 
                 loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 50, poEntity.CCOMPANY_ID);
@@ -134,6 +144,11 @@ namespace GFF00900BACK
                     loConn.Dispose();
                     loConn = null;
                 }
+                if (loCmd != null)
+                {
+                    loCmd.Dispose();
+                    loCmd = null;
+                }
             }
             loException.ThrowExceptionIfErrors();
             /*
@@ -170,7 +185,9 @@ namespace GFF00900BACK
         {
             R_Exception loException = new R_Exception();
             R_Db loDb = new R_Db();
-            DbConnection loConn = loDb.GetConnection();
+            DbConnection loConn = null;
+            DbCommand loCmd = null;
+            string lcQuery;
 
             try
             {
@@ -182,15 +199,16 @@ namespace GFF00900BACK
                     $"'{poEntity.CACTION_CODE}', " +
                     $"'{poEntity.CUSER_LOGIN_ID}'";
                 */
+                loConn = loDb.GetConnection();
 
-                string lcQuery = $"EXEC RSP_GS_VALIDATE_USER_ACT_APPR " +
+                lcQuery = $"EXEC RSP_GS_VALIDATE_USER_ACT_APPR " +
                                  $"@CCOMPANY_ID, " +
                                  $"@CUSER_ID, " +
                                  $"@CPASSWORD, " +
                                  $"@CACTION_CODE, " +
                                  $"@CUSER_LOGIN_ID";
 
-                DbCommand loCmd = loDb.GetCommand();
+                loCmd = loDb.GetCommand();
                 loCmd.CommandText = lcQuery;
 
                 loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 50, poEntity.CCOMPANY_ID);
@@ -225,6 +243,11 @@ namespace GFF00900BACK
 
                     loConn.Dispose();
                     loConn = null;
+                }
+                if (loCmd != null)
+                {
+                    loCmd.Dispose();
+                    loCmd = null;
                 }
             }
         EndBlock:

@@ -6,12 +6,13 @@ namespace GLR00300Common
     public class GLR00300DTO
     {
         public string CCODE { get; set; }
-        public string CDESCRIPTION { get; set; }
+        public string CNAME { get; set; }
     }
     public class GLR00300PeriodDTO : R_APIResultBaseDTO
     {
         public int IMIN_YEAR { get; set; }
         public int IMAX_YEAR { get; set; }
+        public string CSOFT_PERIOD_YY { get; set; }
     }
     public class GLR00300BudgetNoDTO 
     {

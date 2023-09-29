@@ -25,7 +25,6 @@ namespace GST00500Front
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
-
             try
             {
                 _viewModelGST00500Inbox.CCOMPANYID = clientHelper.CompanyId;
@@ -44,7 +43,6 @@ namespace GST00500Front
         private async Task PropertyDropdown_ServiceGetListRecord(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
-
             try
             {
                 await _viewModelGST00500Inbox.GetReasonRejectTransaction();
@@ -63,14 +61,19 @@ namespace GST00500Front
 
             try
             {
-                if ((string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.CREASON_CODE)) ||
-                (string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.TNOTES)))
+                if (string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.CREASON_CODE))
                 {
-                    loEx.Add(new Exception(""));
+                    loEx.Add(new Exception("Please select “Reason of Rejection” !!"));
+                }
+               else if (string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.TNOTES))
+                {
+                    loEx.Add(new Exception("Please insert “Rejection Note” !!"));
                 }
                 else
                 {
                     await _viewModelGST00500Inbox.GetSelectedDataToRejectApproval();
+                    Thread.Sleep(2500);
+                    //TO CLose Rejection PopUp
                     await Close(true, true);
                 }
             }

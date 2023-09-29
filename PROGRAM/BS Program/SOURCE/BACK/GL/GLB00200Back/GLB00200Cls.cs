@@ -44,7 +44,6 @@ namespace GLB00200Back
             loException.ThrowExceptionIfErrors();
             return loResult;
         }
-
         public GLB00200InitalProcessDTO InitialProcess(GLB00200DBParameter poParameter)
         {
             R_Exception loException = new R_Exception();
@@ -67,16 +66,15 @@ namespace GLB00200Back
                 loResult = R_Utility.R_ConvertTo<GLB00200InitalProcessDTO>(loReturnTemp).FirstOrDefault();
 
                 //for LINCREMENT __ VALIDATION
-                var lcQueryLincrement = $"SELECT LINCREMENT_FLAG,LAPPROVAL_FLAG FROM GSM_TRANSACTION_CODE (NOLOCK) " +
-                                        $"WHERE CCOMPANY_ID = @CCOMPANY_ID AND CTRANSACTION_CODE ='000030' ";
+                var lcQueryLincrement = @"RSP_GS_GET_TRANS_CODE_INFO";
                 loCommand.CommandText = lcQueryLincrement;
-                loCommand.CommandType = CommandType.Text;
-                //   loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poParameter.CCOMPANY_ID);
+                loCommand.CommandType = CommandType.StoredProcedure;
+                loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 10, "000020");
+
                 var loReturnTempVal = loDb.SqlExecQuery(loConn, loCommand, true);
                 var loResultTemp = R_Utility.R_ConvertTo<GLB00200InitalProcessDTO>(loReturnTempVal).FirstOrDefault();
 
                 loResult.LINCREMENT_FLAG = loResultTemp.LINCREMENT_FLAG;
-                loResult.LAPPROVAL_FLAG = loResultTemp.LAPPROVAL_FLAG;
             }
             catch (Exception ex)
             {
@@ -85,7 +83,6 @@ namespace GLB00200Back
             loException.ThrowExceptionIfErrors();
             return loResult;
         }
-
         public List<GLB00200JournalDetailDTO> GetDetail_ReversingJournalList(GLB00200DBParameter poParameter)
         {
             R_Exception loException = new R_Exception();

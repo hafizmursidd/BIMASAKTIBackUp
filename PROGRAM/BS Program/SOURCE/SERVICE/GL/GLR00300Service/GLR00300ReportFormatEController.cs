@@ -120,7 +120,7 @@ namespace GLR00300Service
 
                     loData = new GLR00300AccountTrialBalanceResultFormat_EtoH_DTO()
                     {
-                        Title = "Account Trial Balance Format E",
+                        Title = "Account Trial Balance",
                         Header = new GLR00300HeaderAccountTrialBalanceDTO()
                         {
                             CPERIOD = getFirstDataToHeader.CPERIOD_NAME,
@@ -150,9 +150,9 @@ namespace GLR00300Service
                             CTO_ACCOUNT_NO = poParam.CTO_ACCOUNT_NO,
                             CFROM_CENTER_CODE = poParam.CFROM_CENTER_CODE,
                             CTO_CENTER_CODE = poParam.CTO_CENTER_CODE,
-                            CTB_TYPE_NAME = "",
+                            CTB_TYPE_NAME = "Audit",
                             CCURRENCY = "",
-                            CJOURNAL_ADJ_MODE_NAME = "",
+                            CJOURNAL_ADJ_MODE_NAME = "Split",
                             CPRINT_METHOD_NAME = "",
                             CBUDGET_NO = poParam.CBUDGET_NO,
                         },

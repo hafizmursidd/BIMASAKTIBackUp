@@ -56,7 +56,7 @@ namespace GLB00200Front
             {
                 loEx.Add(ex);
             }
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         private async Task ServiceGetInitialProcess()
@@ -234,11 +234,11 @@ namespace GLB00200Front
 
             if (loData.Count == 0)
             {
-                R_MessageBox.Show("", "No Data Found!", R_eMessageBoxButtonType.OK);
+                R_MessageBox.Show("", "Data Not Found!", R_eMessageBoxButtonType.OK);
                 events.Cancel = true;
             }
             //Validasi Incement Flag
-            if (_viewModelGLB00200.loGetInitialProcess.LINCREMENT_FLAG == false)
+            if (_viewModelGLB00200.GetInitialProcess.LINCREMENT_FLAG == false)
             {
                 R_MessageBox.Show("", "Cannot process Recurring Journal with Manual Numbering! Transaction numbering setting for Recurring Journal should be auto increment, not manual numbering!", R_eMessageBoxButtonType.OK);
                 events.Cancel = true;

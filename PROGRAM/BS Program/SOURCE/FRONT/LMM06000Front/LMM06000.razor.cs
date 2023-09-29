@@ -84,8 +84,6 @@ namespace LMM06000Front
         #endregion
 
         #region UnitType
-
-
         private async Task GetListRecordUnitType(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -125,7 +123,6 @@ namespace LMM06000Front
         #endregion
 
         #region BillingRule
-
         private async Task GetListRecordBillingRules(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -196,7 +193,6 @@ namespace LMM06000Front
         #endregion
 
         #region BeforeLookup
-
         private R_Lookup R_Lookup_Unit_Charges_Button;
         //BEFORE LOOKUP INSTALLMENT DAN BOOKING FEE
         private void BeforeOpenLookUp_Unit_Charges(R_BeforeOpenLookupEventArgs eventArgs)
@@ -229,7 +225,6 @@ namespace LMM06000Front
         #endregion
 
         #region AfterLOOKUP
-
         //After LookUp Booking Fee
         private void AfterOpenLookUp_Unit_ChargesBookingFee(R_AfterOpenLookupEventArgs eventArgs)
         {
@@ -284,14 +279,14 @@ namespace LMM06000Front
                 CBOOKING_FEE_CHARGE_ID = "",
                 CDP_PERIOD_MODE = "",
                 LWITH_DP = false,
-                
+
                 CDP_CHARGE_ID = "",
                 LINSTALLMENT = false,
                 CINSTALLMENT_CHARGE_ID = "",
                 CINSTALLMENT_PERIOD_MODE = "",
                 LBANK_CREDIT = false
-            }; 
-            
+            };
+
             await FocusLabelAdd.FocusAsync();
 
         }
@@ -414,37 +409,32 @@ namespace LMM06000Front
         }
         #endregion
 
-        #region Active/Inactive
 
+        #region Active/Inactive
+      
         private async Task R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
         {
             R_Exception loException = new R_Exception();
             try
             {
                 var loValidateViewModel = new GFF00900Model.ViewModel.GFF00900ViewModel();
-                loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "GSM01501";
-                await loValidateViewModel.RSP_ACTIVITY_VALIDITYMethodAsync(); //Jika IAPPROVAL_CODE == 3, Akan keluar RSP_ERROR disini
+                loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "LMM06001"; //Uabh Approval Code sesuai Spec masing masing
+                await loValidateViewModel.RSP_ACTIVITY_VALIDITYMethodAsync(); //Jika IAPPROVAL_CODE == 3, maka akan keluar RSP_ERROR disini
 
-                RSP_ACTIVITY_VALIDITYDataDTO loUserApproval = new RSP_ACTIVITY_VALIDITYDataDTO();
-                loUserApproval = loValidateViewModel.loRspActivityValidityResult.Data.
-                    Where(x => x.CAPPROVAL_USER.Equals(clientHelper.UserId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-
-                if (loUserApproval == null)
+                //Jika Approval User ALL dan Approval Code 1, maka akan langsung menjalankan ActiveInactive
+                if (loValidateViewModel.loRspActivityValidityList.FirstOrDefault().CAPPROVAL_USER == "ALL" && loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
                 {
-                    if (loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().CAPPROVAL_USER == "ALL" && loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
-                    {
-                        await BillingRuleViewModel.ActiveInactiveProcessAsync();
-                        await _gridBillingRuleRef.R_RefreshGrid(null);
-                        return;
-                    }
-                    else
-                    {
-                        var loValidate = await R_MessageBox.Show("", "User Not Allowed", R_eMessageBoxButtonType.OK);
-                    }
+                    await BillingRuleViewModel.ActiveInactiveProcessAsync();
+                    await _gridBillingRuleRef.R_RefreshGrid(null);
+                    return;
                 }
-                else
+                else //Disini Approval Code yang didapat adalah 2, yang berarti Active Inactive akan dijalankan jika User yang diinput ada di RSP_ACTIVITY_VALIDITY
                 {
-                    eventArgs.Parameter = "LMM06001";
+                    eventArgs.Parameter = new GFF00900ParameterDTO()
+                    {
+                        Data = loValidateViewModel.loRspActivityValidityList,
+                        IAPPROVAL_CODE = "LMM06001" //Uabh Approval Code sesuai Spec masing masing
+                    };
                     eventArgs.TargetPageType = typeof(GFF00900FRONT.GFF00900);
                 }
             }
@@ -468,6 +458,7 @@ namespace LMM06000Front
                 if (result == true)
                 {
                     await BillingRuleViewModel.ActiveInactiveProcessAsync();
+                    await _gridBillingRuleRef.R_RefreshGrid(null);
                 }
             }
             catch (Exception ex)
@@ -475,32 +466,7 @@ namespace LMM06000Front
                 loException.Add(ex);
             }
             loException.ThrowExceptionIfErrors();
-            await _gridBillingRuleRef.R_RefreshGrid(null);
         }
-
-        //private void R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
-        //{
-        //    eventArgs.Parameter = "LMM06001";
-        //    eventArgs.TargetPageType = typeof(GFF00900FRONT.GFF00900);
-        //}
-
-        //private async Task R_After_Open_ActivateInactive(R_AfterOpenPopupEventArgs eventArgs)
-        //{
-        //    R_Exception loException = new R_Exception();
-        //    try
-        //    {
-        //        var result = (bool)eventArgs.Result;
-        //        if (result)
-        //            await BillingRuleViewModel.ActiveInactiveProcessAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        loException.Add(ex);
-        //    }
-
-        //    loException.ThrowExceptionIfErrors();
-        //    await _gridBillingRuleRef.R_RefreshGrid(null);
-        //}
         #endregion
     }
 }

@@ -85,14 +85,14 @@ namespace GSM04500Front
             try
             {
                 journalGroupViewModel.JournalGroupTypeValue = lsJournalGrpType;
+                journalGroupViewModel.JournalGroupCurrent.CJRNGRP_TYPE = lsJournalGrpType;
+
                 await _gridRef.R_RefreshGrid(poParam);
                 journalGroupViewModel.DropdownGroupType = true;
 
                 if (_tabStrip.ActiveTab.Id == "Tab_AccountSetting")
                 {
                     journalGroupViewModel.DropdownGroupType = false;
-                    //  await _tabPageAccountSetting.InvokeRefreshTabPageAsync(journalGroupViewModel.PropertyValueContext);
-                    // await _tabPageAccountSetting.InvokeRefreshTabPageAsync(journalGroupViewModel.JournalGroupTypeValue);
                 }
             }
             catch (Exception ex)
@@ -175,7 +175,7 @@ namespace GSM04500Front
 
             loEx.ThrowExceptionIfErrors();
         }
-      
+
         private async Task Grid_Display(R_DisplayEventArgs eventArgs)
         {
             if (eventArgs.ConductorMode == R_eConductorMode.Normal)
@@ -209,7 +209,6 @@ namespace GSM04500Front
 
         #region CHANGE TAB
         //CHANGE TAB
-
         private void Before_Open_AccountSetting(R_BeforeOpenTabPageEventArgs eventArgs)
         {
             eventArgs.TargetPageType = typeof(GSM04500AccountSetting); ;
@@ -279,7 +278,14 @@ namespace GSM04500Front
             var loEx = new R_Exception();
             try
             {
-                await _gridRef.R_RefreshGrid(null);
+                if (eventArgs.Success == false)
+                {
+                    return;
+                }
+                if ((bool)eventArgs.Result == true)
+                {
+                    await _gridRef.R_RefreshGrid(null);
+                }
             }
             catch (Exception ex)
             {

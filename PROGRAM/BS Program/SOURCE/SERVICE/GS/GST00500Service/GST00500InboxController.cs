@@ -11,7 +11,7 @@ namespace GST00500Service
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class GST00500InboxController :  IGST00500
+    public class GST00500InboxController : ControllerBase, IGST00500
     {
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
@@ -80,6 +80,7 @@ namespace GST00500Service
             return loRtn;
         }
 
+        /*
         [HttpPost]
         public IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loparameter)
         {
@@ -105,6 +106,7 @@ namespace GST00500Service
 
             return loRtn;
         }
+        
         private async IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetErrorList(List<GST00500ApprovalTransactionDTO> poParameter)
         {
             foreach (var item in poParameter)
@@ -112,7 +114,9 @@ namespace GST00500Service
                 yield return item;
             }
         }
-       
+
+        */
+
         [HttpPost]
         public IAsyncEnumerable<GST00500DTO> ApprovalInboxListStream()
         {
@@ -124,9 +128,8 @@ namespace GST00500Service
             {
                 loDbParameter = new GST00500DBParameter();
                 loDbParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                loDbParameter.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
-                //loDbParameter.CUSER_ID = "HPC";
+                loDbParameter.CTRANS_TYPE = "I";
 
                 var loCls = new GST00500Cls();
                 loRtnTemp = loCls.Approval_Inbox_List(loDbParameter);

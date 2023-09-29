@@ -10,6 +10,5 @@ namespace GLB00200Common
         public int IMIN_YEAR { get; set; }
         public int IMAX_YEAR { get; set; }
         public bool LINCREMENT_FLAG { get; set; }
-        public bool LAPPROVAL_FLAG { get; set; }
     }
 }

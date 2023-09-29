@@ -15,7 +15,7 @@
                 Height="450px">
             <R_GridColumns>
                 <R_GridTextColumn Width="250px"
-                                  FieldName="CTRANSACTION_NAME"
+                                  FieldName="CTRANS_NAME"
                                   HeaderText="Transaction Name">
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
@@ -23,21 +23,21 @@
                                   HeaderText="Department">
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
-                                  FieldName="CREFERENCE_NO"
+                                  FieldName="CREF_NO"
                                   HeaderText="Reference No">
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
-                                  FieldName="CREFERENCE_DATE"
+                                  FieldName="CREF_DATE"
                                   HeaderText="Reference Date">
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="150px"
                                   FieldName="CUPDATE_BY"
                                   HeaderText="Updated By">
                 </R_GridTextColumn>
-                <R_GridDatePickerColumn Width="150px"
-                                        FieldName="DUPDATE_DATE"
-                                        HeaderText="Updated Date">
-                </R_GridDatePickerColumn>
+                <R_GridDateTimePickerColumn Width="150px"
+                                            FieldName="DUPDATE_DATE"
+                                            HeaderText="Updated Date">
+                </R_GridDateTimePickerColumn>
             </R_GridColumns>
         </R_Grid>
         </R_ItemLayout>
@@ -45,12 +45,17 @@
 
         <R_StackLayout Row="true" Class="d-flex justify-content-end">
         <R_ItemLayout>
-            <R_Button>View</R_Button>
+            <R_Detail R_Before_Open_Detail="R_Before_OpenDocNumbering_Detail"
+                      R_After_Open_Detail="R_After_OpenDocNumbering_Detail">
+                View
+            </R_Detail>
+            @*<R_Button>View</R_Button>*@
         </R_ItemLayout>
         </R_StackLayout>
         </R_StackLayout>
 
         <R_ConductorGrid @ref="@_conductorDraftTrans"
                  R_IsHeader="true"
-                 R_ViewModel="@_viewModelGST00500Draft">
+                 R_ViewModel="@_viewModelGST00500Draft"
+                 R_Display="@Grid_DisplayDraft">
         </R_ConductorGrid>

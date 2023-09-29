@@ -39,12 +39,12 @@
             Width="900px"
             R_ServiceGetListRecord="@Upload_ServiceGetListRecord" >
         <R_GridColumns>
-            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.No) HeaderText="No" Width="75px"></R_GridTextColumn>
+            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.No) Width="75px" HeaderText="No"></R_GridTextColumn>
             <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.JournalGroup) Width="150px" HeaderText="Journal Group"></R_GridTextColumn>
             <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.JournalGroupName) Width="150px" HeaderText="Journal Group Name"></R_GridTextColumn>
-            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.EnableAccrual) Width="150px" HeaderText="Enable Accrual"></R_GridTextColumn>
-            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorFlag) Width="150px" HeaderText="Valid" Visible="@_viewModel.VisibleError"></R_GridTextColumn>
-            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorMessage) Width="300px" HeaderText="Notes" Visible="@_viewModel.VisibleError"></R_GridTextColumn>
+            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.EnableAccrual) Width="150px" HeaderText="Enable Accrual" Visible="@_viewModel.VisibleColumn_LACCRUAL"></R_GridTextColumn>
+            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorFlag) Width="150px" HeaderText="Valid" Visible="@_viewModel.IsError"></R_GridTextColumn>
+            <R_GridTextColumn FieldName=@nameof(GSM04500UploadErrorValidateDTO.ErrorMessage) Width="300px" HeaderText="Notes" Visible="@_viewModel.IsError"></R_GridTextColumn>
         </R_GridColumns>
     </R_Grid>
 </R_StackLayout>
@@ -86,7 +86,7 @@
                 </R_ItemLayout>
             </R_StackLayout>
         </R_ItemLayout>
-        <R_ItemLayout col="4" hidden="@_viewModel.VisibleError">
+        <R_ItemLayout col="4" hidden="@_viewModel.IsError">
             <R_StackLayout Row Class="justify-content-end">
                 <R_ItemLayout>
                     <R_Button OnClick="@Button_OnClickCloseAsync">
@@ -98,7 +98,7 @@
                 </R_ItemLayout>
             </R_StackLayout>
             </R_ItemLayout>
-            <R_ItemLayout col="4" hidden="@(!_viewModel.VisibleError)">
+            <R_ItemLayout col="4" hidden="@(!_viewModel.IsError)">
             <R_StackLayout Row Class="justify-content-end">
                 <R_ItemLayout>
                     <R_Button OnClick="@Button_OnClickCloseAsync">

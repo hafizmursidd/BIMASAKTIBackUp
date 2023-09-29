@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.ComponentModel.Design;
 using System.Data;
+using R_BlazorFrontEnd.Controls.MessageBox;
 
 namespace GSM04500Model.ViewModel
 {
@@ -28,6 +29,7 @@ namespace GSM04500Model.ViewModel
         public DataSet ExcelDataSet { get; set; }
         public Func<Task> ActionDataSetExcel { get; set; }
         public Action<R_Exception> DisplayErrorAction { get; set; }
+        public Action ShowSuccessAction { get; set; }
 
         public string PropertyValue { get; set; } = "";
         public string PropertyName { get; set; } = "";
@@ -36,11 +38,12 @@ namespace GSM04500Model.ViewModel
         public string UserId { get; set; }
 
         public int SumListExcel { get; set; }
-        public bool VisibleError { get; set; } = false;
+        public bool IsError { get; set; }
         public int SumValidDataExcel { get; set; }
         public int SumInvalidDataExcel { get; set; }
         public ObservableCollection<GSM04500UploadErrorValidateDTO> JournalGroupValidateUploadError { get; set; } = new ObservableCollection<GSM04500UploadErrorValidateDTO>();
-
+        public bool _IsSuccess { get; set; }
+        public bool VisibleColumn_LACCRUAL;
         //CONVERT DTO
         public async Task ConvertGrid(List<GSM04500UploadFromExcelDTO> poEntity)
         {
@@ -48,12 +51,23 @@ namespace GSM04500Model.ViewModel
             try
             {
                 // Onchange Visible Error
-                VisibleError = false;
+                IsError = false;
                 SumValidDataExcel = 0;
                 SumInvalidDataExcel = 0;
 
-                var loTemp = poEntity;
-                
+                //VALIDATE VALUE COLUMN BOOLEAN
+                //if (poEntity.Any(y => y.EnableAccrual != "0" || y.EnableAccrual != "1"))
+                //{
+
+                //    var loFailed = false;
+
+                //    goto EndBlock;
+                //    var loUnhandleEx = loResultData.Where(y => y.SeqNo <= 0).Select(x =>
+                //        new R_BlazorFrontEnd.Exceptions.R_Error(x.SeqNo.ToString(), x.ErrorMessage)).ToList();
+                //    loUnhandleEx.ForEach(x => loException.Add(x));
+
+                //}
+
                 // Convert Excel DTO and add SeqNo
                 List<GSM04500UploadErrorValidateDTO> Data = poEntity.Select((item, i)
                     => new GSM04500UploadErrorValidateDTO
@@ -72,9 +86,25 @@ namespace GSM04500Model.ViewModel
             {
                 loException.Add(ex);
             }
-
+        EndBlock:
             loException.ThrowExceptionIfErrors();
         }
+        //TO Visible EnableAccrual Column 
+        public void ColumnAccrual_Visible()
+        {
+            switch (JournalGroupTypeValue)
+            {
+                case "10":
+                case "11":
+                case "40":
+                    VisibleColumn_LACCRUAL = true;
+                    break;
+                default:
+                    VisibleColumn_LACCRUAL = false;
+                    break;
+            }
+        }
+
         //PROCESS SEND EXCEL DATA
         public async Task SaveFileBulk()
         {
@@ -134,15 +164,16 @@ namespace GSM04500Model.ViewModel
             {
                 if (poProcessResultMode == eProcessResultMode.Success)
                 {
-                    Message = string.Format("Process Complete and success with GUID {0}", pcKeyGuid);
-                    VisibleError = false;
+                    Message = string.Format("Process Complete and success");
+                    ShowSuccessAction();
+                    IsError = false;
                 }
 
                 if (poProcessResultMode == eProcessResultMode.Fail)
                 {
-                    Message = $"Process Complete but fail with GUID {pcKeyGuid}";
-                   await ServiceGetError(pcKeyGuid);
-                    VisibleError = true;
+                    IsError = true;
+                    Message = $"Process Complete but fail";
+                    await ServiceGetError(pcKeyGuid);
                 }
             }
             catch (Exception ex)
@@ -232,18 +263,27 @@ namespace GSM04500Model.ViewModel
                         }
                     });
 
-                    //Set DataSetTable and get error
+                    // Convert DB DTO => excel, for user downlaod
+                    List<GSM04500UploadFromExcelDTO> loData = JournalGroupValidateUploadError.Select((item)
+                        => new GSM04500UploadFromExcelDTO
+                        {
+                            JournalGroup = item.JournalGroup,
+                            JournalGroupName = item.JournalGroupName,
+                            EnableAccrual = item.EnableAccrual,
+                            Notes = item.ErrorMessage
+                        }).ToList();
+                    //   Set DataSetTable and get error
                     //var loExcelData =
                     //    R_FrontUtility.ConvertCollectionToCollection<GSM04500UploadFromExcelDTO>(JournalGroupValidateUploadError);
 
-                    //var loDataTable = R_FrontUtility.R_ConvertTo(loExcelData);
-                    //loDataTable.TableName = "Staff";
+                    var loDataTable = R_FrontUtility.R_ConvertTo(loData);
+                    loDataTable.TableName = "Journal Group";
 
-                    //var loDataSet = new DataSet();
-                    //loDataSet.Tables.Add(loDataTable);
+                    var loDataSet = new DataSet();
+                    loDataSet.Tables.Add(loDataTable);
 
-                    //// Assign Dataset
-                    //ExcelDataSet = loDataSet;
+                    // Assign Dataset
+                    ExcelDataSet = loDataSet;
 
                     //// Download if get Error
                     //await ActionDataSetExcel.Invoke();

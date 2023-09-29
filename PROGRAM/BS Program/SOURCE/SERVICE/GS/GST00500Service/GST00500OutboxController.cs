@@ -32,35 +32,31 @@ namespace GST00500Service
             throw new NotImplementedException();
         }
         [HttpPost]
-        public GST00500ApprovalStatusListDTO GetApprovalStatus()
+        public List<GST00500ApprovalStatusDTO> GetApprovalStatusList()
         {
             var loEx = new R_Exception();
-            var loParameter = new GST00500DBParameter();
-            var poEntity = new GST00500DTO();
-            var loCls = new GST00500OutboxCls();
-            var loRtn = new GST00500ApprovalStatusListDTO();
+            GST00500DBParameter loParameter = null;
+            GST00500OutboxCls loCls = null;
+            List<GST00500ApprovalStatusDTO> loRtn = null;
             try
             {
+                loCls = new GST00500OutboxCls();
+                loParameter = new GST00500DBParameter();
+                loRtn = new List<GST00500ApprovalStatusDTO>();
+
                 loParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                loParameter.CLANGUAGE_ID =  R_BackGlobalVar.CULTURE;
-                poEntity.CTRANSACTION_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CTTRANSACTION_CODE);
-                poEntity.CDEPT_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CDEPT_CODE);
-                poEntity.CREFERENCE_NO = R_Utility.R_GetStreamingContext<string>(ContextConstant.CREFERENCE_NO);
+                loParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                loParameter.CTRANS_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CTRANS_CODE);
+                loParameter.CDEPT_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CDEPT_CODE);
+                loParameter.CREF_NO = R_Utility.R_GetStreamingContext<string>(ContextConstant.CREF_NO);
 
-                //loParameter.CCOMPANYID = "RCD";
-                //loParameter.CLANGUAGE_ID = "EN";
-                //poEntity.CTRANSACTION_CODE = "000000";
-                //poEntity.CDEPT_CODE = "ACC";
-                //poEntity.CREFERENCE_NO = "REF.202306.0001";
-
-                var temp =  loCls.ApprovalStatus(poEntity, loParameter);
-                loRtn.Data = temp;
+                loRtn = loCls.ApproverStatusList(loParameter);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-            EndBlock:
+        EndBlock:
             loEx.ThrowExceptionIfErrors();
             return loRtn;
         }
@@ -77,12 +73,9 @@ namespace GST00500Service
                 loDbParameter = new GST00500DBParameter();
 
                 loDbParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                loDbParameter.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
-                
-                //loDbParameter.CUSER_ID = "HPC";
-                //loDbParameter.CLANGUAGE_ID = R_BackGlobalVar.COMPANY_ID;
-                // loDbParameter.CLANGUAGE_ID = "En";
+                loDbParameter.CTRANS_TYPE = "O";
+
 
                 var loCls = new GST00500OutboxCls();
                 loRtnTemp = loCls.Approval_Outbox_List(loDbParameter);

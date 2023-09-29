@@ -77,7 +77,7 @@ namespace GSM06500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         private async Task R_ServiceGetRecordAsync(R_ServiceGetRecordEventArgs eventArgs)
@@ -94,7 +94,7 @@ namespace GSM06500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         public async Task ServiceDelete(R_ServiceDeleteEventArgs eventArgs)
@@ -111,7 +111,7 @@ namespace GSM06500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         public async Task Conductor_AfterDelete()
@@ -135,7 +135,7 @@ namespace GSM06500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
 
         public async Task ServiceValidation(R_ValidationEventArgs eventArgs)
@@ -158,7 +158,7 @@ namespace GSM06500Front
             }
 
             eventArgs.Cancel = loEx.HasError;
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
     }
 }

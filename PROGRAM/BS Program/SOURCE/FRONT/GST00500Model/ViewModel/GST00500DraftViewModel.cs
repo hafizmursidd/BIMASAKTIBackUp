@@ -16,6 +16,8 @@ namespace GST00500Model.ViewModel
         public ObservableCollection<GST00500DTO> DraftTransactionList =
             new ObservableCollection<GST00500DTO>();
 
+        public GST00500CurrentRecordParamDTO _currentRecord = new GST00500CurrentRecordParamDTO();
+
         public async Task GetAllDraftTransaction()
         {
             R_Exception loException = new R_Exception();
@@ -27,8 +29,6 @@ namespace GST00500Model.ViewModel
             catch (Exception ex)
             {
                 loException.Add(ex);
-
-
             }
         }
     }

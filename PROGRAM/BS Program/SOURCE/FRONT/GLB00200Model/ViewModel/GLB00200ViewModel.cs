@@ -28,7 +28,7 @@ namespace GLB00200Model.ViewModel
         //List for Convert
         public List<int> NO_Convert = new List<int>();
 
-        public GLB00200InitalProcessDTO loGetInitialProcess = new GLB00200InitalProcessDTO();
+        public GLB00200InitalProcessDTO GetInitialProcess = new GLB00200InitalProcessDTO();
         public int PeriodYear = DateTime.Now.Year;
         public string PeriodMonth = DateTime.Now.Month.ToString("D2");
         public string lcSearchText = "";
@@ -55,7 +55,7 @@ namespace GLB00200Model.ViewModel
             try
             {
                 var loResult = await _modelGLB00200Model.GetInitialProcessAsyncModel();
-                loGetInitialProcess = loResult;
+                GetInitialProcess = loResult;
             }
             catch (Exception ex)
             {
@@ -219,11 +219,8 @@ namespace GLB00200Model.ViewModel
             StateChangeAction();
             await Task.CompletedTask;
         }
-
         public async Task ReportProgress(int pnProgress, string pcStatus)
         {
-            Message = string.Format("Process Progress {0} with status {1}", pnProgress, pcStatus);
-
             Percentage = pnProgress;
             Message = string.Format("Process Progress {0} with status {1}", pnProgress, pcStatus);
 
@@ -269,7 +266,6 @@ namespace GLB00200Model.ViewModel
             loException.ThrowExceptionIfErrors();
 
         }
-
         #endregion
 
 

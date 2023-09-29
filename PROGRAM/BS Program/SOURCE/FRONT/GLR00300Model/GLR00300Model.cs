@@ -25,7 +25,7 @@ namespace GLR00300Model
         {
         }
 
-        public GLR00300PeriodDTO GetPeriod()
+        public GLR00300PeriodDTO InitialProcess()
         {
             throw new NotImplementedException();
         }
@@ -41,7 +41,7 @@ namespace GLR00300Model
         {
             throw new NotImplementedException();
         }
-        public async Task<GLR00300PeriodDTO> GetPeriodAsyncModel()
+        public async Task<GLR00300PeriodDTO> GetInitialProcessAsyncModel()
         {
             var loEx = new R_Exception();
             GLR00300PeriodDTO loResult = new GLR00300PeriodDTO();
@@ -50,7 +50,7 @@ namespace GLR00300Model
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
                 loResult = await R_HTTPClientWrapper.R_APIRequestObject<GLR00300PeriodDTO>(
                     _RequestServiceEndPoint,
-                    nameof(IGLR00300.GetPeriod),
+                    nameof(IGLR00300.InitialProcess),
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\COMMON\GS\GST00500Common\GST00500Common.csproj" />
+    <ProjectReference Include="..\GS_SPR\RSP_GS_MAINTAIN_APPROVALResources\RSP_GS_MAINTAIN_APPROVALResources.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

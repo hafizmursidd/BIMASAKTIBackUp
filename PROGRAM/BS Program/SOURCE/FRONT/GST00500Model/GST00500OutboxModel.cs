@@ -9,7 +9,7 @@ using R_BusinessObjectFront;
 
 namespace GST00500Model
 {
-    public class GST00500OutboxModel :R_BusinessObjectServiceClientBase<GST00500DTO>, IGST00500Outbox
+    public class GST00500OutboxModel : R_BusinessObjectServiceClientBase<GST00500DTO>, IGST00500Outbox
     {
         private const string DEFAULT_HTTP = "R_DefaultServiceUrl";
         private const string DEFAULT_ENDPOINT = "api/GST00500Outbox";
@@ -28,7 +28,7 @@ namespace GST00500Model
             throw new NotImplementedException();
         }
 
-        public GST00500ApprovalStatusListDTO GetApprovalStatus()
+        public List<GST00500ApprovalStatusDTO> GetApprovalStatusList()
         {
             throw new NotImplementedException();
         }
@@ -36,7 +36,7 @@ namespace GST00500Model
         public async Task<List<GST00500DTO>> GetOutboxListAsyncModel()
         {
             var loEx = new R_Exception();
-            List<GST00500DTO> loResult = null;
+            List<GST00500DTO> loResult = new List<GST00500DTO>();
 
             try
             {
@@ -55,25 +55,23 @@ namespace GST00500Model
             loEx.ThrowExceptionIfErrors();
             return loResult;
         }
-        
-        public async Task<GST00500ApprovalStatusListDTO> GetApprovalStatusAsyncModel(GST00500DTO poEntity)
+
+        public async Task<List<GST00500ApprovalStatusDTO>> GetApprovalStatusListAsyncModel()
         {
             var loEx = new R_Exception();
-            GST00500ApprovalStatusListDTO loResult = null;
+            List<GST00500ApprovalStatusDTO> loResult = new List<GST00500ApprovalStatusDTO>();
 
             try
             {
-                R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CTTRANSACTION_CODE, poEntity.CTRANSACTION_CODE);
-                R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CDEPT_CODE, poEntity.CDEPT_CODE);
-                R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CREFERENCE_NO, poEntity.CREFERENCE_NO);;
-
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                loResult = await R_HTTPClientWrapper.R_APIRequestObject<GST00500ApprovalStatusListDTO>(
-                    _RequestServiceEndPoint,
-                    nameof(IGST00500Outbox.GetApprovalStatus),
-                    DEFAULT_MODULE,
-                    _SendWithContext,
-                    _SendWithToken);
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<GST00500ApprovalStatusDTO>(
+                     _RequestServiceEndPoint,
+                     nameof(IGST00500Outbox.GetApprovalStatusList),
+                     DEFAULT_MODULE,
+                     _SendWithContext,
+                     _SendWithToken);
+
+                loResult = loTempResult;
             }
             catch (Exception ex)
             {
@@ -82,7 +80,7 @@ namespace GST00500Model
             loEx.ThrowExceptionIfErrors();
             return loResult;
         }
-        
+
 
     }
 }

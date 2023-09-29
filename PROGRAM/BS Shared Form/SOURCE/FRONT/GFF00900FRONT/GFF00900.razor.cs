@@ -21,56 +21,27 @@ namespace GFF00900FRONT
         private GFF00900ViewModel loViewModel = new();
 
         private R_Conductor _conductorRef;
-        [Inject] IClientHelper _clientHelper { get; set; }
         [Inject] R_ISymmetricJSProvider _encryptProvider { get; set; }
 
-        private bool ReasonVisibility = true;
+        private bool IsReasonHidden = true;
 
-        private bool AccessValidationVisibility = true;
-
-        private bool LayoutVisibility = true;
-
-        private int mode = 0;
-
+        private bool IsAccessValidationHidden = true;
 
         protected override async Task R_Init_From_Master(object poParameter)
         {
-            var loEx = new R_Exception();
+            R_Exception loEx = new R_Exception();
+            GFF00900ParameterDTO loParam = null;
 
             try
-                {
-                loViewModel.loParameter.ACTION_CODE = (string)poParameter;
-                loViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = (string)poParameter;
+            {
+                loParam = (GFF00900ParameterDTO)poParameter;
 
-                R_Exception loException = new R_Exception();
-                try
-                {
-                    await loViewModel.RSP_ACTIVITY_VALIDITYMethodAsync();
-                    if (loViewModel.loRspActivityValidityResult.Data.Any(x => x.CAPPROVAL_USER.Equals(_clientHelper.UserId, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        loViewModel.loSelectedUser = loViewModel.loRspActivityValidityResult.Data.
-                            Where(x => x.CAPPROVAL_USER.Equals(_clientHelper.UserId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                loViewModel.loParameter.ACTION_CODE = loParam.IAPPROVAL_CODE;
+                loViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = loParam.IAPPROVAL_CODE;
+                loViewModel.loRspActivityValidityList = loParam.Data;
 
-                        mode = loViewModel.loSelectedUser.IAPPROVAL_MODE;
-                      
-                        LayoutVisibility = false;
-                        ReasonVisibility = false;
-                    }
-                    else
-                    {
-                        var loValidate = await R_MessageBox.Show("", "User Not Allowed", R_eMessageBoxButtonType.OK);
-                        if (loValidate == R_eMessageBoxResult.OK)
-                        {
-                            await this.Close(true, false);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    loException.Add(ex);
-                }
-                loException.ThrowExceptionIfErrors();
-            }
+                IsReasonHidden = false;
+    }
             catch (Exception ex)
             {
                 loEx.Add(ex);
@@ -87,11 +58,8 @@ namespace GFF00900FRONT
             }
             else
             {
-                if (mode == 2)
-                {
-                    ReasonVisibility = true;
-                    AccessValidationVisibility = false;
-                }
+                IsReasonHidden = true;
+                IsAccessValidationHidden = false;
             }
         }
 
@@ -105,17 +73,35 @@ namespace GFF00900FRONT
             R_Exception loException = new R_Exception();
             try
             {
-                string lcEncryptedPassword = await _encryptProvider.TextEncrypt(loViewModel.loParameter.PASSWORD, loViewModel.loParameter.USER);
-                loViewModel.loParameter.PASSWORD = lcEncryptedPassword;
-                await loViewModel.UsernameAndPasswordValidationMethod();
+                loViewModel.UserPasswordFieldValidation();
+
+                //await loViewModel.RSP_ACTIVITY_VALIDITYMethodAsync();
+
+                if (loViewModel.loRspActivityValidityList.Any(x => x.CAPPROVAL_USER.Equals(loViewModel.loParameter.USER, StringComparison.OrdinalIgnoreCase)))
+                {/*
+                    loViewModel.loSelectedUser = loViewModel.loRspActivityValidityList.
+                        Where(x => x.CAPPROVAL_USER.Equals(loViewModel.loParameter.USER, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();*/
+
+                    string lcEncryptedPassword = await _encryptProvider.TextEncrypt(loViewModel.loParameter.PASSWORD, loViewModel.loParameter.USER);
+                    loViewModel.loParameter.PASSWORD = lcEncryptedPassword;
+                    await loViewModel.UsernameAndPasswordValidationMethod();
+
+                    await this.Close(true, true);
+                }
+                else
+                {
+                    var loValidate = await R_MessageBox.Show("", "User Not Allowed", R_eMessageBoxButtonType.OK);
+                    if (loValidate == R_eMessageBoxResult.OK)
+                    {
+                        await this.Close(true, false);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
             }
             loException.ThrowExceptionIfErrors();
-
-            await this.Close(true, true);
         }
 
         private async Task OnCancel()

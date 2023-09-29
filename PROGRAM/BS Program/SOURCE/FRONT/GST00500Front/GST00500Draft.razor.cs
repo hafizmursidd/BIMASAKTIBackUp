@@ -7,13 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GSM04500Front;
 using GST00500Model.ViewModel;
+using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
+using R_BlazorFrontEnd.Helpers;
 
 namespace GST00500Front
 {
-    public partial class GST00500Draft
+    public partial class GST00500Draft : R_Page
     {
         private GST00500DraftViewModel _viewModelGST00500Draft = new();
         private R_Grid<GST00500DTO> _gridDraftTransRef;
@@ -32,7 +35,7 @@ namespace GST00500Front
                 loEx.Add(ex);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            R_DisplayException(loEx);
         }
         private async Task ServiceGetListDraftTransaction(R_ServiceGetListRecordEventArgs eventArgs)
         {
@@ -50,5 +53,45 @@ namespace GST00500Front
 
             R_DisplayException(loEx);
         }
+        private async Task Grid_DisplayDraft(R_DisplayEventArgs eventArgs)
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                if (eventArgs.ConductorMode == R_eConductorMode.Normal
+                    && _viewModelGST00500Draft.DraftTransactionList.Count > 0)
+                {
+                    var loCurrentTemp = (GST00500DTO)eventArgs.Data;
+                    //CONVERT DTO TO Call Another Program
+                    _viewModelGST00500Draft._currentRecord =
+                        R_FrontUtility.ConvertObjectToObject<GST00500CurrentRecordParamDTO>(loCurrentTemp);
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        #region ButtonView
+        private void R_Before_OpenDocNumbering_Detail(R_BeforeOpenDetailEventArgs eventArgs)
+        {
+            eventArgs.Parameter = _viewModelGST00500Draft._currentRecord;
+
+            string abc = "GSM04500Front.GSM04500";
+            var type = Type.GetType("System.String");
+
+
+            var loStop = "af";
+           // eventArgs.TargetPageType = type;
+            ;
+        }
+
+        private void R_After_OpenDocNumbering_Detail()
+        {
+
+        }
+        #endregion
     }
 }

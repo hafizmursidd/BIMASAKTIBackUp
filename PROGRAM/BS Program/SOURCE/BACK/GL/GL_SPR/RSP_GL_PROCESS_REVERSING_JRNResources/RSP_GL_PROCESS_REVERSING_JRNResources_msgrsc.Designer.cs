@@ -60,5 +60,14 @@ namespace RSP_GL_PROCESS_REVERSING_JRNResources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process failed! unable to process Reverse Journal transaction {0}.
+        /// </summary>
+        internal static string Error900 {
+            get {
+                return ResourceManager.GetString("Error900", resourceCulture);
+            }
+        }
     }
 }
