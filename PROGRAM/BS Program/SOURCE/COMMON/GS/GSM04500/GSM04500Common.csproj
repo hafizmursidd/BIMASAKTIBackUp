@@ -5,6 +5,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="GOA\**" />
+    <EmbeddedResource Remove="GOA\**" />
+    <None Remove="GOA\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Reference Include="R_APICommon">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APICommon.dll</HintPath>
@@ -15,10 +21,6 @@
 		<Reference Include="R_CommonFrontBackAPI">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_CommonFrontBackAPI.dll</HintPath>
 		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="GOA\" />
 	</ItemGroup>
 
 </Project>

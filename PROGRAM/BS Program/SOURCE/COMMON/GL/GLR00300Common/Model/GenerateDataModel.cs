@@ -2,81 +2,76 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BaseHeaderReportCommon.BaseHeader;
-using BaseHeaderReportCommon.Model;
+using BaseHeaderReportCOMMON;
+using BaseHeaderReportCOMMON.Models;
 using GLR00300Common.GLR00300Print;
 
 namespace GLR00300Common.Model
 {
     public static class GenerateDataModel
     {
-        public static GLR00300AccountTrialBalanceResultDTO DefaultData()
+        #region Foramt A - D
+
+        public static GLR00300AccountTrialBalanceResultFormat_AtoD_DTO DefaultData_Format_AtoD()
         {
-            GLR00300AccountTrialBalanceResultDTO loData = new GLR00300AccountTrialBalanceResultDTO()
-            {
-                Title = "Account Trial Balance",
-                Header = new GLR00300HeaderAccountTrialBalanceDTO()
+            GLR00300AccountTrialBalanceResultFormat_AtoD_DTO loReturn =
+                new GLR00300AccountTrialBalanceResultFormat_AtoD_DTO()
                 {
-                    CPERIOD = "Period",
-                    CFROM_ACCOUNT_NO = "123.000.000",
-                    CTO_ACCOUNT_NO = "456.000.000",
-                    CFROM_CENTER_CODE = "123.000.000",
-                    CTO_CENTER_CODE = "456.000.000",
-                    CTB_TYPE_NAME = "Normal",
-                    CCURRENCY = "IDR",
-                    CJOURNAL_ADJ_MODE_NAME = "SPLIT",
-                    CPRINT_METHOD_NAME = "SUPRESS NO TRANSACTION",
-                    CBUDGET_NO = " - "
-                },
-                Column = new AccountTrialBalanceColumnDTO(),
-                DataAccountTrialBalance = new List<GLR00300_DataDetail_AccountTrialBalance>()
-            };
+                    Title = "Account Trial Balance",
+                    Header = new GLR00300HeaderAccountTrialBalanceDTO()
+                    {
+                        CPERIOD = "Period",
+                        CFROM_ACCOUNT_NO = "123.000.000",
+                        CTO_ACCOUNT_NO = "456.000.000",
+                        CFROM_CENTER_CODE = "123.000.000",
+                        CTO_CENTER_CODE = "456.000.000",
+                        CTB_TYPE_NAME = "Normal",
+                        CCURRENCY = "IDR",
+                        CJOURNAL_ADJ_MODE_NAME = "SPLIT",
+                        CPRINT_METHOD_NAME = "SUPRESS NO TRANSACTION",
+                        CBUDGET_NO = " - "
+                    },
+                    Column = new AccountTrialBalanceColumnDTO(),
+                    Data = new List<GLR00300DataAccountTrialBalanceAD>()
+                };
 
-            List<GLR00300_DataDetail_AccountTrialBalance> loCollection = new List<GLR00300_DataDetail_AccountTrialBalance>();
+            List<GLR00300DataAccountTrialBalanceAD> loCollectionData = new List<GLR00300DataAccountTrialBalanceAD>();
 
-            for (int i = 0; i < 20; i++)
+            //GENERATE DATA DUMMY
+            for (int j = 1; j < 15; j++)
             {
-                loCollection.Add(new GLR00300_DataDetail_AccountTrialBalance()
+                loCollectionData.Add(new GLR00300DataAccountTrialBalanceAD()
                 {
-                    CGLACCOUNT_NO = $"15.000.1.00{i}",
-                    CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {i}",
+                    CGLACCOUNT_NO = $"15.000.1.00{j}",
+                    CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {j}",
                     CDBCR = "D",
                     CBSIS = "BS",
-                    NBEGIN_BALANCE = 900000m* i * 1700m,
-                    NCREDIT = 400000m + i * 1200m,
-                    NDEBIT = 500000m + i * 2700m,
-                    NDEBIT_ADJ = 600000m + i * 3700m,
-                    NCREDIT_ADJ = 700000m + i * 4700m,
-                    NEND_BALANCE = 800000m + i * 5999m,
-                    NBUDGET = 800008m * 1000 * i
+                    CCENTER = $"712 -  Condo CGR {j}",
+                    NBEGIN_BALANCE = 900000m * j * 17000m,
+                    NCREDIT = 400000m * j * 1100m,
+                    NDEBIT = 500000m * j * 9700m,
+                    NDEBIT_ADJ = 600000m * j * 3700m,
+                    NCREDIT_ADJ = 700000m * j * 4700m,
+                    NEND_BALANCE = 800000m * j * 5700m,
+                    NBUDGET = 80000.8m * 1000 * j
                 }
                 );
             }
-
-            loData.DataAccountTrialBalance = loCollection;
-
-
-            return loData;
+            loReturn.Data = loCollectionData;
+            return loReturn;
         }
 
-        public static GLR00300AccountTrialBalanceResultWithBaseHeaderDTO DefaultDataWithHeader()
+        public static GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO DefaultDataWithHeaderFormat_AtoD()
         {
-            var loParam = new BaseHeaderDTO()
-            {
-                CCOMPANY_NAME = "PT Realta Chackradarma",
-                CPRINT_CODE = "001",
-                CPRINT_NAME = "Account Trial Balance",
-                CUSER_ID = "HMC"
-            };
-
-            GLR00300AccountTrialBalanceResultWithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResultWithBaseHeaderDTO();
-            loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData(loParam).BaseHeaderData;
-            loRtn.GLR00300_ACCOUNT_TRIAL_BALANCE_RESULT_DATA = DefaultData();
+            GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO();
+            loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData().BaseHeaderData;
+            loRtn.GLR00300AccountTrialBalanceResult_FormatAtoD_DataFormat = DefaultData_Format_AtoD();
 
             return loRtn;
         }
+        #endregion
 
-
+        #region Format E - H
         public static GLR00300AccountTrialBalanceResultFormat_EtoH_DTO DefaultData_Format_EtoH()
         {
             GLR00300AccountTrialBalanceResultFormat_EtoH_DTO loReturn =
@@ -102,24 +97,24 @@ namespace GLR00300Common.Model
             List<GLR00300_DataDetail_AccountTrialBalance> loCollectionData = new List<GLR00300_DataDetail_AccountTrialBalance>();
 
             //GENERATE DATA DUMMY
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i < 5; i++)
             {
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < 6; j++)
                 {
                     loCollectionData.Add(new GLR00300_DataDetail_AccountTrialBalance()
                     {
-                        CGLACCOUNT_NO = $"15.000.1.00{j}",
-                        CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {j}",
+                        CGLACCOUNT_NO = $"15.000.1.00{i}",
+                        CGLACCOUNT_NAME = $"ELECTRICAL NEW SYSTEM {i}",
                         CDBCR = "D",
                         CBSIS = "BS",
-                        CCENTER = $"712 -  Condo CGR {i}",
+                        CCENTER = $"712 -  Condo CGR {j}",
                         NBEGIN_BALANCE = 900000m * i * 17000m,
-                        NCREDIT =400000m * i * 1100m,
+                        NCREDIT = 400000m * i * 1100m,
                         NDEBIT = 500000m * i * 9700m,
                         NDEBIT_ADJ = 600000m * i * 3700m,
                         NCREDIT_ADJ = 700000m * i * 4700m,
                         NEND_BALANCE = 800000m * i * 5700m,
-                        NBUDGET =80000.8m * 1000 * i
+                        NBUDGET = 80000.8m * 1000 * i
                     }
                     );
                 }
@@ -160,21 +155,14 @@ namespace GLR00300Common.Model
 
         public static GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO DefaultDataWithHeaderFormat_EtoH()
         {
-            var loParam = new BaseHeaderDTO()
-            {
-                CCOMPANY_NAME = "PT Realta Chackradarma",
-                CPRINT_CODE = "001",
-                CPRINT_NAME = "Account Trial Balance",
-                CUSER_ID = "HMC"
-            };
-
             GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO();
-            loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData(loParam).BaseHeaderData;
+            loRtn.BaseHeaderData = GenerateDataModelHeader.DefaultData().BaseHeaderData;
             loRtn.GLR00300AccountTrialBalanceResult_FormatEtoH_DataFormat = DefaultData_Format_EtoH();
 
             return loRtn;
         }
 
+        #endregion
 
     }
 }

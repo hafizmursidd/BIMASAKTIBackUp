@@ -32,7 +32,6 @@ namespace Lookup_LMBACK
             loEx.ThrowExceptionIfErrors();
             return loResult;
         }
-
         public List<LML00200DTO> GetAllUnitCharges(LML00200ParameterDTO poEntity)
         {
             var loEx = new R_Exception();
@@ -65,7 +64,6 @@ namespace Lookup_LMBACK
 
             return loResult;
         }
-
         public List<LML00300DTO> GetAllSupervisor(LML00300ParameterDTO poEntity)
         {
             var loEx = new R_Exception();
@@ -118,6 +116,38 @@ namespace Lookup_LMBACK
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
                 loResult = R_Utility.R_ConvertTo<LML00400DTO>(loReturnTemp).ToList();
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            loEx.ThrowExceptionIfErrors();
+
+            return loResult;
+        }
+
+        public List<LML00500DTO> GetAllSalesman(LML00500ParameterDTO poEntity)
+        {
+            var loEx = new R_Exception();
+            List<LML00500DTO> loResult = null;
+            R_Db loDb;
+            try
+            {
+                loDb = new R_Db();
+                var loConn = loDb.GetConnection();
+                var loCmd = loDb.GetCommand();
+
+                var lcQuery = @"RSP_LM_GET_SALESMAN_LIST";
+                loCmd.CommandText = lcQuery;
+                loCmd.CommandType = CommandType.StoredProcedure;
+
+                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 8, poEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 20, poEntity.CPROPERTY_ID);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                loResult = R_Utility.R_ConvertTo<LML00500DTO>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {

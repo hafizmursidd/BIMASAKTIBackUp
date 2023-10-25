@@ -18,6 +18,27 @@ namespace GLR00300Common.GLR00300Print
         public string CBUDGET_NO { get; set; }
     }
 
+    #region Format A to Format D
+
+    public class GLR00300DataAccountTrialBalanceAD
+    {
+        public string CGLACCOUNT_NO { get; set; }
+        public string CGLACCOUNT_NAME { get; set; }
+        public string CDBCR { get; set; }
+        public string CBSIS { get; set; }
+        public string CCENTER { get; set; }
+        public decimal NBEGIN_BALANCE { get; set; }
+        public decimal NCREDIT { get; set; }
+        public decimal NDEBIT { get; set; }
+        public decimal NDEBIT_ADJ { get; set; }
+        public decimal NCREDIT_ADJ { get; set; }
+        public decimal NEND_BALANCE { get; set; }
+        public decimal NBUDGET { get; set; }
+    }
+
+
+    #endregion
+
     #region Format E to Format H
     public class GLRR00300DataAccountTrialBalance
     {
@@ -41,9 +62,9 @@ namespace GLR00300Common.GLR00300Print
     #endregion
 
 
+    //RAW DATA WITH HEADER FROM DB
     public class GLR00300_DataDetail_AccountTrialBalance
     {
-        //DATA WITH HEADER FROM DB
 
         //HEADERFROM DB
         public string CPERIOD_NAME { get; set; }

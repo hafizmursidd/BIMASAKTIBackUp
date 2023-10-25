@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<inherited BaseReport="BaseHeaderLandscapeCommon.frx" BaseReportAbsolutePath="D:\Work\Code\Backup 1.3 RSF\BIMASAKTI_11\1.00\PROGRAM\BS Program\SOURCE\API\GL\BIMASAKTI_GL_API\Reports\BaseHeaderLandscapeCommon.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/04/2023 16:21:34" ReportInfo.Modified="09/27/2023 16:22:35" ReportInfo.CreatorVersion="2023.2.21.0">
+<inherited BaseReport="BaseHeaderLandscapeCommon.frx" BaseReportAbsolutePath="D:\Work\Code\Backup 1.3 RSF\BIMASAKTI_11\1.00\PROGRAM\BS Program\SOURCE\API\GL\BIMASAKTI_GL_API\Reports\BaseHeaderLandscapeCommon.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/04/2023 16:21:34" ReportInfo.Modified="09/29/2023 13:54:04" ReportInfo.CreatorVersion="2023.2.21.0">
   <Dictionary>
     <BusinessObjectDataSource Name="ResponseDataModel" ReferenceName="ResponseDataModel" DataType="System.Collections.ArrayList" Enabled="true">
       <Column Name="GLR00300AccountTrialBalanceResult_FormatEtoH_DataFormat" DataType="GLR00300Common.GLR00300Print.GLR00300AccountTrialBalanceResultFormat_EtoH_DTO, GLR00300Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -86,7 +86,6 @@
       <inherited Name="Text37"/>
       <inherited Name="Text39"/>
       <inherited Name="Text42"/>
-      <TextObject Name="Text1" ZOrder="10" Left="945" Width="94.5" Height="18.9" Text="NBUDGET" HorzAlign="Right" Font="Arial, 8pt, style=Bold"/>
       <ChildBand Name="Child1" ZOrder="-1" Top="96.7" Width="1047.06" Height="85.05">
         <TextObject Name="Text43" Left="9.45" Top="9.45" Width="85.05" Height="18.9" Text="Period	    :&#13;&#10;" Font="Arial, 8pt, style=Bold"/>
         <TextObject Name="Text44" Left="434.7" Top="9.45" Width="132.3" Height="18.9" Text="Trial Balance Type 	:&#13;&#10;" Font="Arial, 8pt, style=Bold"/>

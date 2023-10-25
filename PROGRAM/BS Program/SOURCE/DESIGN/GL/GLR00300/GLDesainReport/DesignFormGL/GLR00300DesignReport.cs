@@ -13,12 +13,11 @@ namespace DesignFormGL
         {
             _loReport = new Report();
         }
-
-        private void ButtonFormatAClick(object sender, EventArgs e)
+        private void ButtonFormatA_D_Click(object sender, EventArgs e)
         {
             ArrayList loData = new ArrayList
             {
-                GLR00300Common.Model.GenerateDataModel.DefaultDataWithHeader()
+                GLR00300Common.Model.GenerateDataModel.DefaultDataWithHeaderFormat_AtoD()
             };
             _loReport.RegisterData(loData, "ResponseDataModel");
             _loReport.Design();

@@ -16,6 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Include="BaseHeaderReportCOMMON">
+		  <HintPath>..\..\..\BACK\Dll\BaseHeaderReportCOMMON.dll</HintPath>
+		</Reference>
 		<Reference Include="R_APIBackEnd">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APIBackEnd.dll</HintPath>
 		</Reference>

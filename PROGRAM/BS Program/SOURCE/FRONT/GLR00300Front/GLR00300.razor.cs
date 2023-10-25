@@ -194,7 +194,7 @@ namespace GLR00300Front
                 var loParam = new GSL00510ParameterDTO();
                 loParam.CCOMPANY_ID = _clientHelper.CompanyId;
                 loParam.CGLACCOUNT_TYPE = "N";
-                loParam.CUSER_LANGUAGE = _clientHelper.UserId;
+                loParam.CUSER_ID = _clientHelper.UserId;
                 eventArgs.Parameter = loParam;
 
                 eventArgs.TargetPageType = typeof(GSL00510);
@@ -238,7 +238,7 @@ namespace GLR00300Front
                 var loParam = new GSL00510ParameterDTO();
                 loParam.CCOMPANY_ID = _clientHelper.CompanyId;
                 loParam.CGLACCOUNT_TYPE = "N";
-                loParam.CUSER_LANGUAGE = _clientHelper.UserId;
+                loParam.CUSER_ID = _clientHelper.UserId;
                 eventArgs.Parameter = loParam;
 
                 eventArgs.TargetPageType = typeof(GSL00510);
@@ -360,6 +360,7 @@ namespace GLR00300Front
         private async Task GenerateReport()
         {
             var loEx = new R_Exception();
+            bool loFlag = false;
             try
             {
                 #region ValidationEmpty
@@ -421,7 +422,7 @@ namespace GLR00300Front
                 //};
 
                 //set Parameter FROM FRONT TO BACK
-                
+
                 var loParam = new GLR00300ParamDBToGetReportDTO()
                 {
                     CCOMPANY_ID = _clientHelper.CompanyId,
@@ -450,16 +451,18 @@ namespace GLR00300Front
                         {
                             if ((!_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (N,S,false,false)
                             {
+                                loFlag=true;
                                 //FORMAT A
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300Report/AllTrialBalanceReportPost",
-                                    "rpt/GLR00300Report/AllTrialBalanceReportGet",
+                                    "rpt/GLR00300ReportFormatA/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatA/AllTrialBalanceReportGet",
                                     loParam);
                             }
                             else if (!_viewModelGLR00300._lPrintByCenter && _viewModelGLR00300._lPrintBudget) // (N,S,false,true)
                             {
+                                loFlag = true;
                                 //FORMAT B
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
@@ -472,71 +475,85 @@ namespace GLR00300Front
                         else if (loParam.CJOURNAL_ADJ_MODE_CODE == "M")
                         {
                             if ((!_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (N,M,false,false)
-                            {//FORMAT C
+                            {
+                                loFlag = true;
+                                //FORMAT C
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatC/AllTrialBalanceReportPostFormatC",
-                                    "rpt/GLR00300ReportFormatC/AllTrialBalanceReportGetFormatC",
+                                    "rpt/GLR00300ReportFormatC/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatC/AllTrialBalanceReportGet",
                                     loParam);
                             }
                             else if ((!_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintBudget)) // (N,M,false,true)
-                            {//FORMAT D
+                            {
+                                loFlag = true;
+                                //FORMAT D
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatD/AllTrialBalanceReportPostFormatD",
-                                    "rpt/GLR00300ReportFormatD/AllTrialBalanceReportGetFormatD",
+                                    "rpt/GLR00300ReportFormatD/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatD/AllTrialBalanceReportGet",
                                     loParam);
                             }
                         }
                     }
-
                     else if (loParam.CTB_TYPE_CODE == "A")
                     {
                         if (loParam.CJOURNAL_ADJ_MODE_CODE == "S")
                         {
                             if ((_viewModelGLR00300._lPrintByCenter) && !(_viewModelGLR00300._lPrintBudget)) // (A,S,True,false)
                             {
+                                loFlag = true;
                                 //FORMAT E
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatE/AllTrialBalanceReportPostFormatE",
-                                    "rpt/GLR00300ReportFormatE/AllTrialBalanceReportGetFormatE",
+                                    "rpt/GLR00300ReportFormatE/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatE/AllTrialBalanceReportGet",
                                     loParam);
                             }
                             else if (_viewModelGLR00300._lPrintByCenter && _viewModelGLR00300._lPrintBudget) // (A,S,true,true)
-                            {//FORMAT F
+                            {
+                                loFlag = true;
+                                //FORMAT F
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatF/AllTrialBalanceReportPostFormatF",
-                                    "rpt/GLR00300ReportFormatF/AllTrialBalanceReportGetFormatF",
+                                    "rpt/GLR00300ReportFormatF/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatF/AllTrialBalanceReportGet",
                                     loParam);
                             }
                         }
                         else if (loParam.CJOURNAL_ADJ_MODE_CODE == "M")
                         {
                             if ((_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (A,M,true,false)
-                            {//FORMAT G
+                            {
+                                loFlag = true;
+                                //FORMAT G
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatG/AllTrialBalanceReportPostFormatG",
-                                    "rpt/GLR00300ReportFormatG/AllTrialBalanceReportGetFormatG",
+                                    "rpt/GLR00300ReportFormatG/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatG/AllTrialBalanceReportGet",
                                     loParam);
                             }
                             else if ((_viewModelGLR00300._lPrintByCenter) && (_viewModelGLR00300._lPrintBudget)) // (A,M,true,true)
-                            {//FORMAT H
+                            {
+                                loFlag = true;
+                                //FORMAT H
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",
                                     "GL",
-                                    "rpt/GLR00300ReportFormatH/AllTrialBalanceReportPostFormatH",
-                                    "rpt/GLR00300ReportFormatH/AllTrialBalanceReportGetFormatH",
+                                    "rpt/GLR00300ReportFormatH/AllTrialBalanceReportPost",
+                                    "rpt/GLR00300ReportFormatH/AllTrialBalanceReportGet",
                                     loParam);
                             }
                         }
+                    }
+                    if (!loFlag)
+                    {
+                        await R_MessageBox.Show("", "Can not process this command!", R_eMessageBoxButtonType.OK);
                     }
                 }
             }

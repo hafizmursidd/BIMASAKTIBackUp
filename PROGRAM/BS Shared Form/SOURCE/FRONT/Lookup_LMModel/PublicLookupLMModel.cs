@@ -24,36 +24,42 @@ namespace Lookup_LMModel
             base(pcHttpClientName, pcRequestServiceEndPoint, pcModuleName, plSendWithContext, plSendWithToken)
         {
         }
-        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList(LML00100ParameterDTO poParameter)
+
+        #region implements INTERFACE
+        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList()
         {
             throw new NotImplementedException();
         }
-        public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList(LML00200ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList()
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<LML00300DTO> LML00300SupervisorList(LML00300ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00300DTO> LML00300SupervisorList()
         {
             throw new NotImplementedException();
         }
-        public IAsyncEnumerable<LML00400DTO> LML00400UtilityChargesList(LML00400ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00400DTO> LML00400UtilityChargesList()
         {
             throw new NotImplementedException();
         }
+        public IAsyncEnumerable<LML00500DTO> LML00500SalesmanList()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
         #region LML00100
-        public async Task<LMLGenericList<LML00100DTO>> LML00100GetSalesTaxListAsync(LML00100ParameterDTO poParameter)
+        public async Task<LMLGenericList<LML00100DTO>> LML00100GetSalesTaxListAsync()
         {
             var loEx = new R_Exception();
             LMLGenericList<LML00100DTO> loResult = new LMLGenericList<LML00100DTO>();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00100DTO, LML00100ParameterDTO>(
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00100DTO>(
                     _RequestServiceEndPoint,
                     nameof(IPublicLookupLM.LML00100GetSalesTaxList),
-                    poParameter,
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);
@@ -72,17 +78,16 @@ namespace Lookup_LMModel
         #endregion
         #region LML00200 
 
-        public async Task<LMLGenericList<LML00200DTO>> LML00200GetUnitChargesListAsync (LML00200ParameterDTO poParameter)
+        public async Task<LMLGenericList<LML00200DTO>> LML00200GetUnitChargesListAsync ()
         {
             var loEx = new R_Exception();
             LMLGenericList<LML00200DTO> loResult = new LMLGenericList<LML00200DTO>();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00200DTO, LML00200ParameterDTO>(
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00200DTO>(
                     _RequestServiceEndPoint,
                     nameof(IPublicLookupLM.LML00200UnitChargesList),
-                    poParameter,
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);
@@ -101,17 +106,16 @@ namespace Lookup_LMModel
 
         #region LML00300 
 
-        public async Task<LMLGenericList<LML00300DTO>> LML00300SupervisorListAsync (LML00300ParameterDTO poParameter)
+        public async Task<LMLGenericList<LML00300DTO>> LML00300SupervisorListAsync ()
         {
             var loEx = new R_Exception();
             LMLGenericList<LML00300DTO> loResult = new LMLGenericList<LML00300DTO>();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject< LML00300DTO, LML00300ParameterDTO>(
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00300DTO>(
                     _RequestServiceEndPoint,
                     nameof(IPublicLookupLM.LML00300SupervisorList),
-                    poParameter,
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);
@@ -127,19 +131,44 @@ namespace Lookup_LMModel
         }
         #endregion
 
-        #region LML00400 
-
-        public async Task<LMLGenericList<LML00400DTO>> LML00400GetUtilityChargesListAsync(LML00400ParameterDTO poParameter)
+        #region LML00400
+        public async Task<LMLGenericList<LML00400DTO>> LML00400GetUtilityChargesListAsync()
         {
             var loEx = new R_Exception();
             LMLGenericList<LML00400DTO> loResult = new LMLGenericList<LML00400DTO>();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00400DTO, LML00400ParameterDTO>(
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00400DTO>(
                     _RequestServiceEndPoint,
                     nameof(IPublicLookupLM.LML00400UtilityChargesList),
-                    poParameter,
+                    DEFAULT_MODULE,
+                    _SendWithContext,
+                    _SendWithToken);
+
+                loResult.Data = loTempResult;
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            loEx.ThrowExceptionIfErrors();
+            return loResult;
+        }
+        #endregion
+
+        #region LML00500
+        public async Task<LMLGenericList<LML00500DTO>> LML00500GetSalesmanListAsync()
+        {
+            var loEx = new R_Exception();
+            LMLGenericList<LML00500DTO> loResult = new LMLGenericList<LML00500DTO>();
+            try
+            {
+                R_HTTPClientWrapper.httpClientName = _HttpClientName;
+                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00500DTO>(
+                    _RequestServiceEndPoint,
+                    nameof(IPublicLookupLM.LML00500SalesmanList),
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);

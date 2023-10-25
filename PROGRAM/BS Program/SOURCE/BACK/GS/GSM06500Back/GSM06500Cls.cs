@@ -4,17 +4,27 @@ using R_Common;
 using R_CommonFrontBackAPI;
 using System.Data.Common;
 using System.Data;
-using System.Windows.Input;
-using System.Reflection.Metadata;
+using GSM06500Common.Logs;
+using System;
 
 namespace GSM06500Back
 {
 
     public class GSM06500Cls : R_BusinessObject<GSM06500DTO>
     {
+        private LoggerGSM06500 _loggerGSM06500;
+        public GSM06500Cls()
+        {
+            //Initial and Get Logger
+            _loggerGSM06500 = LoggerGSM06500.R_GetInstanceLogger();
+        }
+
         protected override void R_Deleting(GSM06500DTO poEntity)
         {
-            var loEx = new R_Exception();
+            string lcMethodName = nameof(R_Deleting);
+            _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
+            var loException = new R_Exception();
             DbCommand loCommand;
             try
             {
@@ -36,28 +46,38 @@ namespace GSM06500Back
                 loDb.R_AddCommandParameter(loCommand, "@CACTION", DbType.String, 10, lcAction);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 10, poEntity.CUSER_ID);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM06500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 try
                 {
                     loDb.SqlExecNonQuery(loConn, loCommand, false);
-                }
-                catch (Exception ex)
-                {
-                    loEx.Add(ex);
-                }
+                    _loggerGSM06500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
-                loEx.Add(R_ExternalException.R_SP_Get_Exception(loConn));
+                }
+                catch (Exception exception)
+                {
+                    loException.Add(exception);
+                    _loggerGSM06500.LogError(loException);
+                }
+                loException.Add(R_ExternalException.R_SP_Get_Exception(loConn));
             }
             catch (Exception ex)
             {
-                loEx.Add(ex);
+                loException.Add(ex);
+                _loggerGSM06500.LogError(loException);
             }
-
-            loEx.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
         }
 
         protected override GSM06500DTO R_Display(GSM06500DTO poEntity)
         {
-            R_Exception loEexception = new R_Exception();
+            string lcMethodName = nameof(R_Display);
+            _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
+            R_Exception loException = new R_Exception();
             GSM06500DTO loReturn = null;
             R_Db loDb;
             try
@@ -75,6 +95,11 @@ namespace GSM06500Back
                 loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 50, poEntity.CUSER_ID);
                 loDb.R_AddCommandParameter(loCmd, "@CPAY_TERM_CODE", DbType.String, 10, poEntity.CPAY_TERM_CODE);
 
+                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM06500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
+
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
 
                 loReturn = R_Utility.R_ConvertTo<GSM06500DTO>(loReturnTemp).ToList().FirstOrDefault();
@@ -83,16 +108,21 @@ namespace GSM06500Back
             catch (Exception ex)
             {
 
-                loEexception.Add(ex);
+                loException.Add(ex);
+                _loggerGSM06500.LogError(loException);
             }
         EndBlock:
-            loEexception.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
+            _loggerGSM06500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
             return loReturn;
         }
 
         protected override void R_Saving(GSM06500DTO poNewEntity, eCRUDMode poCRUDMode)
         {
+            string lcMethodName = nameof(R_Saving);
+            _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             string lcQuery = null;
             R_Db loDb;
@@ -122,27 +152,36 @@ namespace GSM06500Back
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
-                loDb.R_AddCommandParameter(loCommand, "CCOMPANY_ID", DbType.String, 50, poNewEntity.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCommand, "CPROPERTY_ID", DbType.String, 10, poNewEntity.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCommand, "CPAY_TERM_CODE", DbType.String, 8, poNewEntity.CPAY_TERM_CODE);
-                loDb.R_AddCommandParameter(loCommand, "CACTION", DbType.String, 10, lcAction);
-                loDb.R_AddCommandParameter(loCommand, "CPAY_TERM_NAME", DbType.String, 100, poNewEntity.CPAY_TERM_NAME);
-                loDb.R_AddCommandParameter(loCommand, "IPAY_TERM_DAYS", DbType.Int32, 999999, poNewEntity.IPAY_TERM_DAYS);
-                loDb.R_AddCommandParameter(loCommand, "CUSER_ID", DbType.String, 50, poNewEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poNewEntity.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 10, poNewEntity.CPROPERTY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CPAY_TERM_CODE", DbType.String, 8, poNewEntity.CPAY_TERM_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CACTION", DbType.String, 10, lcAction);
+                loDb.R_AddCommandParameter(loCommand, "@CPAY_TERM_NAME", DbType.String, 100, poNewEntity.CPAY_TERM_NAME);
+                loDb.R_AddCommandParameter(loCommand, "@IPAY_TERM_DAYS", DbType.Int32, 999999, poNewEntity.IPAY_TERM_DAYS);
+                loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poNewEntity.CUSER_ID);
 
+
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM06500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 try
                 {
                     loDb.SqlExecNonQuery(loConn, loCommand, false);
+                    _loggerGSM06500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+
                 }
-                catch (Exception ex)
+                catch (Exception exDt)
                 {
-                    loException.Add(ex);
+                    loException.Add(exDt);
+                    _loggerGSM06500.LogError(loException);
                 }
                 loException.Add(R_ExternalException.R_SP_Get_Exception(loConn));
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM06500.LogError(loException);
             }
             finally
             {
@@ -161,6 +200,9 @@ namespace GSM06500Back
 
         public List<GSM06500DTO> TERM_OF_LIST(GSM06500DBParameter poParameter)
         {
+            string lcMethodName = nameof(TERM_OF_LIST);
+            _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             List<GSM06500DTO> loReturn = null;
             R_Db loDb;
@@ -180,6 +222,11 @@ namespace GSM06500Back
                 loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 50, poParameter.CPROPERTY_ID);
                 loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 10, poParameter.CUSER_ID);
 
+                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM06500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
+
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
                 loReturn = R_Utility.R_ConvertTo<GSM06500DTO>(loReturnTemp).ToList();
 
@@ -187,15 +234,20 @@ namespace GSM06500Back
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM06500.LogError(loException);
             }
         EndBlock:
             loException.ThrowExceptionIfErrors();
+            _loggerGSM06500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
             return loReturn;
         }
 
         public List<GSM06500PropertyDTO> GetAllPropertyList(GSM06500DBParameter poParameter)
         {
+            string lcMethodName = nameof(GetAllPropertyList);
+            _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             List<GSM06500PropertyDTO> loReturn = null;
             R_Db loDb;
@@ -213,18 +265,24 @@ namespace GSM06500Back
                 loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 50, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
 
-                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM06500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
 
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
                 loReturn = R_Utility.R_ConvertTo<GSM06500PropertyDTO>(loReturnTemp).ToList();
 
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM06500.LogError(loException);
             }
         EndBlock:
             loException.ThrowExceptionIfErrors();
 
+            _loggerGSM06500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loReturn;
         }
     }

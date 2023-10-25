@@ -10,14 +10,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection.Metadata;
+using GSM04500Common.Logs;
 
 namespace GSM04500Back
 {
     public class GSM04510GOADeptCls : R_BusinessObject<GSM04510GOADeptDTO>
     {
+        private LoggerGSM04500 _loggerGSM04500;
+        public GSM04510GOADeptCls()
+        {
+            //Initial and Get Logger
+            _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+        }
         protected override void R_Deleting(GSM04510GOADeptDTO poEntity)
         {
-            var loEx = new R_Exception();
+            string lcMethodName = nameof(R_Deleting);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+           
+            var loException = new R_Exception();
             DbCommand loCommand;
             try
             {
@@ -41,29 +51,38 @@ namespace GSM04500Back
                 loDb.R_AddCommandParameter(loCommand, "CACTION", DbType.String, 10, lcAction);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 25, poEntity.CUSER_ID);
 
-
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 try
                 {
                     loDb.SqlExecNonQuery(loConn, loCommand, false);
+                    _loggerGSM04500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
                 }
                 catch (Exception ex)
                 {
-                    loEx.Add(ex);
+                    loException.Add(ex);
+                    _loggerGSM04500.LogError(loException);
                 }
 
-                loEx.Add(R_ExternalException.R_SP_Get_Exception(loConn));
+                loException.Add(R_ExternalException.R_SP_Get_Exception(loConn));
             }
             catch (Exception ex)
             {
-                loEx.Add(ex);
+                loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
         }
 
         protected override GSM04510GOADeptDTO R_Display(GSM04510GOADeptDTO poEntity)
         {
-            R_Exception loEexception = new R_Exception();
+            string lcMethodName = nameof(R_Display);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
+            R_Exception loException = new R_Exception();
             GSM04510GOADeptDTO loReturn = null;
             R_Db loDb;
 
@@ -72,36 +91,45 @@ namespace GSM04500Back
                 var lcQuery = @"RSP_GS_GET_JOURNAL_GRP_GOA_DEPT_DT";
 
                 loDb = new R_Db();
-                var loCmd = loDb.GetCommand();
+                var loCommand = loDb.GetCommand();
                 var loConn = loDb.GetConnection();
-                loCmd.CommandText = lcQuery;
-                loCmd.CommandType = CommandType.StoredProcedure;
+                loCommand.CommandText = lcQuery;
+                loCommand.CommandType = CommandType.StoredProcedure;
 
-                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 100, poEntity.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCmd, "@CJOURNAL_GROUP_TYPE", DbType.String, 2, poEntity.CJRNGRP_TYPE);
-                loDb.R_AddCommandParameter(loCmd, "@CJOURNAL_GROUP_CODE", DbType.String, 30, poEntity.CJRNGRP_CODE);
-                loDb.R_AddCommandParameter(loCmd, "@CGOA_CODE", DbType.String, 30, poEntity.CGOA_CODE);
-                loDb.R_AddCommandParameter(loCmd, "@CDEPT_CODE", DbType.String, 20, poEntity.CDEPT_CODE);
-                loDb.R_AddCommandParameter(loCmd, "@CUSER_LOGIN_ID", DbType.String, 25, poEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 100, poEntity.CPROPERTY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_GROUP_TYPE", DbType.String, 2, poEntity.CJRNGRP_TYPE);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_GROUP_CODE", DbType.String, 30, poEntity.CJRNGRP_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CGOA_CODE", DbType.String, 30, poEntity.CGOA_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 20, poEntity.CDEPT_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CUSER_LOGIN_ID", DbType.String, 25, poEntity.CUSER_ID);
 
-                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
 
                 loReturn = R_Utility.R_ConvertTo<GSM04510GOADeptDTO>(loReturnTemp).ToList().FirstOrDefault();
             }
             catch (Exception ex)
             {
-
-                loEexception.Add(ex);
+                loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
         EndBlock:
-            loEexception.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
             return loReturn;
         }
 
         protected override void R_Saving(GSM04510GOADeptDTO poNewEntity, eCRUDMode poCRUDMode)
         {
+            string lcMethodName = nameof(R_Saving);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+            
             R_Exception loException = new R_Exception();
             string lcQuery = null;
             R_Db loDb;
@@ -141,20 +169,27 @@ namespace GSM04500Back
                 loDb.R_AddCommandParameter(loCommand, "@CGLACCOUNT_NO", DbType.String, 20, poNewEntity.CGLACCOUNT_NO);
                 loDb.R_AddCommandParameter(loCommand, "CACTION", DbType.String, 10, lcAction);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 25, poNewEntity.CUSER_ID);
+                
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 try
                 {
                     loDb.SqlExecNonQuery(loConn, loCommand, false);
+                    _loggerGSM04500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
                 }
                 catch (Exception ex)
                 {
                     loException.Add(ex);
+                    _loggerGSM04500.LogError(loException);
                 }
                 loException.Add(R_ExternalException.R_SP_Get_Exception(loConn));
-
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
             finally
             {
@@ -173,30 +208,36 @@ namespace GSM04500Back
 
         public List<GSM04510GOADeptDTO> JOURNAL_GROUP_GOA_DEPT_LIST(GSM04510GOADeptDBParameter poParameter)
         {
+            string lcMethodName = nameof(JOURNAL_GROUP_GOA_DEPT_LIST);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+          
             R_Exception loException = new R_Exception();
             List<GSM04510GOADeptDTO> loReturn = null;
             R_Db loDb;
-            DbCommand loCmd;
+            DbCommand loCommand;
 
             try
             {
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
 
-                loCmd = loDb.GetCommand();
-                //EXEC RSP_GS_GET_JOURNAL_GRP_GOA_DEPT_LIST
-                //@CCOMPANY_ID, @CPROPERTY_ID, '10' , @CJRNGRP_CODE, @CGOA_CODE, @CUSER_LOGIN_ID
+                loCommand = loDb.GetCommand();
                 var lcQuery = @"RSP_GS_GET_JOURNAL_GRP_GOA_DEPT_LIST";
-                loCmd.CommandText = lcQuery;
-                loCmd.CommandType = CommandType.StoredProcedure;
-                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 100, poParameter.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCmd, "@CJOURNAL_GROUP_TYPE", DbType.String, 2, poParameter.CJRNGRP_TYPE);
-                loDb.R_AddCommandParameter(loCmd, "@CJOURNAL_GROUP_CODE", DbType.String, 30, poParameter.CJRNGRP_CODE);
-                loDb.R_AddCommandParameter(loCmd, "@CGOA_CODE", DbType.String, 30, poParameter.CGOA_CODE);
-                loDb.R_AddCommandParameter(loCmd, "@CUSER_LOGIN_ID", DbType.String, 25, poParameter.CUSER_ID);
+                loCommand.CommandText = lcQuery;
+                loCommand.CommandType = CommandType.StoredProcedure;
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 100, poParameter.CPROPERTY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_GROUP_TYPE", DbType.String, 2, poParameter.CJRNGRP_TYPE);
+                loDb.R_AddCommandParameter(loCommand, "@CJOURNAL_GROUP_CODE", DbType.String, 30, poParameter.CJRNGRP_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CGOA_CODE", DbType.String, 30, poParameter.CGOA_CODE);
+                loDb.R_AddCommandParameter(loCommand, "@CUSER_LOGIN_ID", DbType.String, 25, poParameter.CUSER_ID);
 
-                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
 
                 loReturn = R_Utility.R_ConvertTo<GSM04510GOADeptDTO>(loReturnTemp).ToList();
 
@@ -204,9 +245,11 @@ namespace GSM04500Back
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
         EndBlock:
             loException.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
             return loReturn;
         }

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Lookup_LMCOMMON.DTOs;
+using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Exceptions;
 
 namespace Lookup_LMModel.ViewModel.LML00300
@@ -17,7 +18,11 @@ namespace Lookup_LMModel.ViewModel.LML00300
 
             try
             {
-                var loResult = await _model.LML00300SupervisorListAsync(poParam);
+                R_FrontContext.R_SetStreamingContext(ContextConstantPublicLookup.CCOMPANY_ID, poParam.CCOMPANY_ID);
+                R_FrontContext.R_SetStreamingContext(ContextConstantPublicLookup.CUSER_ID, poParam.CUSER_ID);
+                R_FrontContext.R_SetStreamingContext(ContextConstantPublicLookup.CPROPERTY_ID, poParam.CPROPERTY_ID);
+
+                var loResult = await _model.LML00300SupervisorListAsync();
                 SupervisorList = new ObservableCollection<LML00300DTO>(loResult.Data);
             }
             catch (Exception ex)

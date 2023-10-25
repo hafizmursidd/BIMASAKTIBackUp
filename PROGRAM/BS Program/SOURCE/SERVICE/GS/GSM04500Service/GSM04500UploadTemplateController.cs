@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GSM04500Back;
 using GSM04500Common;
+using GSM04500Common.Logs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 
@@ -16,10 +18,21 @@ namespace GSM04500Service
     [Route("api/[controller]/[action]")]
     public class GSM04500UploadTemplateController : ControllerBase, IGSM04500Template 
     {
+        private LoggerGSM04500 _loggerGSM04500;
+
+        public GSM04500UploadTemplateController(ILogger<GSM04500UploadTemplateController> logger)
+        {
+            LoggerGSM04500.R_InitializeLogger(logger);
+            _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+        }
+
         [HttpPost]
         public GSM04500UploadFileDTO DownloadTemplateFile()
         {
-            var loEx = new R_Exception();
+            string lcMethodName = nameof(DownloadTemplateFile);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
+            var loException = new R_Exception();
             var loRtn = new GSM04500UploadFileDTO();
 
             try
@@ -38,10 +51,12 @@ namespace GSM04500Service
             }
             catch (Exception ex)
             {
-                loEx.Add(ex);
+                loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
 
             return loRtn;
         }

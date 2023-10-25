@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Lookup_LMCOMMON.DTOs;
-using Lookup_LMModel.ViewModel;
-using Lookup_LMModel.ViewModel.LML00200;
 using Lookup_LMModel.ViewModel.LML00400;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.Events;

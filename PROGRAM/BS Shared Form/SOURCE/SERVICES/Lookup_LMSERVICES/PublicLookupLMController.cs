@@ -13,18 +13,20 @@ namespace Lookup_LMSERVICES
     public class PublicLookupLMController : ControllerBase, IPublicLookupLM
     {
         [HttpPost]
-        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList(LML00100ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList()
         {
             var loEx = new R_Exception();
             IAsyncEnumerable<LML00100DTO> loRtn = null;
             List<LML00100DTO> loReturnTemp;
+            LML00100ParameterDTO poParameter = null;
             try
             {
                 var loCls = new PublicLookupLMCls();
-                poParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-                poParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                poParameter = new LML00100ParameterDTO();
+                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
+                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
                 loReturnTemp = loCls.GetAllSalesTax(poParameter);
-                loRtn = GetLML00100GetSalesTaxList(loReturnTemp);
+                loRtn = GetStreaming(loReturnTemp);
             }
             catch (Exception ex)
             {
@@ -32,19 +34,11 @@ namespace Lookup_LMSERVICES
             }
 
             loEx.ThrowExceptionIfErrors();
-
             return loRtn;
         }
-        private async IAsyncEnumerable<LML00100DTO> GetLML00100GetSalesTaxList(List<LML00100DTO> poParameter)
-        {
-            foreach (var item in poParameter)
-            {
-                yield return item;
-            }
-        }
-
+ 
         [HttpPost]
-        public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList(LML00200ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList()
         {
             var loEx = new R_Exception();
             IAsyncEnumerable<LML00200DTO> loRtn = null;
@@ -52,11 +46,16 @@ namespace Lookup_LMSERVICES
             try
             {
                 var loCls = new PublicLookupLMCls();
-                poParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-                poParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                var poParameter = new LML00200ParameterDTO();
+
+                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
+                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
+                poParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CPROPERTY_ID);
+                poParameter.CCHARGE_TYPE_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCHARGE_TYPE_ID);
+
 
                 loReturnTemp = loCls.GetAllUnitCharges(poParameter);
-                loRtn = GetLML00200UnitChargesList(loReturnTemp);
+                loRtn = GetStreaming(loReturnTemp);
             }
             catch (Exception ex)
             {
@@ -67,15 +66,9 @@ namespace Lookup_LMSERVICES
 
             return loRtn;
         }
-        private async IAsyncEnumerable<LML00200DTO> GetLML00200UnitChargesList(List<LML00200DTO> poParameter)
-        {
-            foreach (var item in poParameter)
-            {
-                yield return item;
-            }
-        }
+
         [HttpPost]
-        public IAsyncEnumerable<LML00300DTO> LML00300SupervisorList(LML00300ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00300DTO> LML00300SupervisorList()
         {
             var loEx = new R_Exception();
             IAsyncEnumerable<LML00300DTO> loRtn = null;
@@ -84,11 +77,13 @@ namespace Lookup_LMSERVICES
             try
             {
                 var loCls = new PublicLookupLMCls();
-                poParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-                poParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                var poParameter = new LML00300ParameterDTO();
+                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
+                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
+                poParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CPROPERTY_ID);
 
                 loReturnTemp = loCls.GetAllSupervisor(poParameter);
-                loRtn = GetLML00300SupervisorList(loReturnTemp);
+                loRtn = GetStreaming(loReturnTemp);
             }
             catch (Exception ex)
             {
@@ -98,15 +93,9 @@ namespace Lookup_LMSERVICES
 
             return loRtn;
         }
-        private async IAsyncEnumerable<LML00300DTO> GetLML00300SupervisorList(List<LML00300DTO> poParameter)
-        {
-            foreach (var item in poParameter)
-            {
-                yield return item;
-            }
-        }
+
         [HttpPost]
-        public IAsyncEnumerable<LML00400DTO> LML00400UtilityChargesList(LML00400ParameterDTO poParameter)
+        public IAsyncEnumerable<LML00400DTO> LML00400UtilityChargesList()
         {
             var loEx = new R_Exception();
             IAsyncEnumerable<LML00400DTO> loRtn = null;
@@ -115,11 +104,14 @@ namespace Lookup_LMSERVICES
             try
             {
                 var loCls = new PublicLookupLMCls();
-                poParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
-                poParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                var poParameter = new LML00400ParameterDTO();
+                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
+                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
+                poParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CPROPERTY_ID);
+                poParameter.CCHARGE_TYPE_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCHARGE_TYPE_ID);
 
                 loReturnTemp = loCls.GetAllUtilityCharges(poParameter);
-                loRtn = GetLML00400UtilityChargesList(loReturnTemp);
+                loRtn = GetStreaming(loReturnTemp);
             }
             catch (Exception ex)
             {
@@ -127,16 +119,45 @@ namespace Lookup_LMSERVICES
             }
 
             loEx.ThrowExceptionIfErrors();
-
             return loRtn;
         }
-        private async IAsyncEnumerable<LML00400DTO> GetLML00400UtilityChargesList(List<LML00400DTO> poParameter)
+
+        [HttpPost]
+        public IAsyncEnumerable<LML00500DTO> LML00500SalesmanList()
         {
-            foreach (var item in poParameter)
+            var loEx = new R_Exception();
+            IAsyncEnumerable<LML00500DTO> loRtn = null;
+            List<LML00500DTO> loReturnTemp;
+
+            try
+            {
+                var loCls = new PublicLookupLMCls();
+                var poParameter = new LML00500ParameterDTO();
+                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
+                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
+                poParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CPROPERTY_ID);
+
+                loReturnTemp = loCls.GetAllSalesman(poParameter);
+                loRtn = GetStreaming(loReturnTemp);
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            return loRtn;
+        }
+
+        #region StreamingProcess
+        private async IAsyncEnumerable<T> GetStreaming<T>(List<T> poParam)
+        {
+            foreach (var item in poParam)
             {
                 yield return item;
             }
         }
+
+        #endregion
     }
     
 }

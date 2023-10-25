@@ -9,6 +9,9 @@ using R_CommonFrontBackAPI;
 using GST00500Back;
 using R_BackEnd;
 using R_Common;
+using GST00500Common.Logs;
+using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace GST00500Service
 {
@@ -16,6 +19,13 @@ namespace GST00500Service
     [Route("api/[controller]/[action]")]
     public class GST00500OutboxController : ControllerBase, IGST00500Outbox
     {
+        private LoggerGST00500 _loggerGST00500;
+
+        public GST00500OutboxController(ILogger<GST00500OutboxController> logger)
+        {
+            LoggerGST00500.R_InitializeLogger(logger);
+            _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+        }
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
         {
@@ -34,6 +44,9 @@ namespace GST00500Service
         [HttpPost]
         public List<GST00500ApprovalStatusDTO> GetApprovalStatusList()
         {
+            string lcMethodName = nameof(GetApprovalStatusList);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GST00500DBParameter loParameter = null;
             GST00500OutboxCls loCls = null;
@@ -49,20 +62,30 @@ namespace GST00500Service
                 loParameter.CTRANS_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CTRANS_CODE);
                 loParameter.CDEPT_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CDEPT_CODE);
                 loParameter.CREF_NO = R_Utility.R_GetStreamingContext<string>(ContextConstant.CREF_NO);
+                
+                _loggerGST00500.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
+                _loggerGST00500.R_LogDebug("DbParameter {@Parameter} ", loParameter);
 
+                _loggerGST00500.LogInfo("Call method ApproverStatusList");
                 loRtn = loCls.ApproverStatusList(loParameter);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
         EndBlock:
             loEx.ThrowExceptionIfErrors();
+
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
         }
         [HttpPost]
         public IAsyncEnumerable<GST00500DTO> ApprovalOutboxListStream()
         {
+            string lcMethodName = nameof(ApprovalOutboxListStream);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GST00500DBParameter loDbParameter;
             R_Exception loException = new R_Exception();
@@ -78,16 +101,19 @@ namespace GST00500Service
 
 
                 var loCls = new GST00500OutboxCls();
+                _loggerGST00500.LogInfo("Call method Approval_Outbox_List");
                 loRtnTemp = loCls.Approval_Outbox_List(loDbParameter);
                 loRtn = GetApprovalOutboxList(loRtnTemp);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            loEx.ThrowExceptionIfErrors(); 
 
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
         }
 

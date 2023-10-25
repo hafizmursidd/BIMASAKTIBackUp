@@ -25,7 +25,7 @@ namespace GSM06500Model
             : base(pcHttpClientName, pcRequestServiceEndPoint,pcModuleName, plSendWithContext, plSendWithToken)
         {
         }
-        public IAsyncEnumerable<GSM06500DTO> GetallTermOfpaymentOriginal()
+        public IAsyncEnumerable<GSM06500DTO> GetTermOfPaymentList()
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace GSM06500Model
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
                 var loResultTemp = await R_HTTPClientWrapper.R_APIRequestStreamingObject<GSM06500DTO>(
                     _RequestServiceEndPoint,
-                    nameof(IGSM06500.GetallTermOfpaymentOriginal),
+                    nameof(IGSM06500.GetTermOfPaymentList),
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);

@@ -28,7 +28,7 @@ namespace LMM06000Model.ViewModel
         public List<LMM06000PeriodDTO> PeriodList {get; set;} = new List<LMM06000PeriodDTO>();
 
         public LMM06000ActiveInactiveDTO ActiveInactiveEntity = new LMM06000ActiveInactiveDTO();
-
+        public bool _IsButtonAddEnable = false;
         public async Task GetPropertyList()
         {
             var loEx = new R_Exception();
@@ -187,7 +187,6 @@ namespace LMM06000Model.ViewModel
 
             try
             {
-
                 await _model.SetActiveInactiveAsync(ActiveInactiveEntity);
             }
             catch (Exception ex)

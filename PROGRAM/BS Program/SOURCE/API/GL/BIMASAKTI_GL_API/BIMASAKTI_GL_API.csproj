@@ -36,11 +36,20 @@
 	  <None Update="Reports\GLR00300AccountTrialBalanceA.frx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Reports\GLR00300AccountTrialBalanceB .frx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 		<None Update="Reports\GLR00300AccountTrialBalanceB.frx">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceC .frx">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Reports\GLR00300AccountTrialBalanceC.frx">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Reports\GLR00300AccountTrialBalanceD .frx">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="Reports\GLR00300AccountTrialBalanceD.frx">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>

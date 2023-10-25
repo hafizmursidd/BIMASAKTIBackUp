@@ -1,6 +1,8 @@
 ﻿using GSM04500Back;
 using GSM04500Common;
+using GSM04500Common.Logs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
@@ -17,10 +19,19 @@ namespace GSM04500Service
     [Route("api/[controller]/[action]")]
     public class GSM04510GOADeptController : ControllerBase, IGSM04510GOADept
     {
+        private LoggerGSM04500 _loggerGSM04500;
 
+        public GSM04510GOADeptController(ILogger<GSM04510GOADeptController> logger)
+        {
+            LoggerGSM04500.R_InitializeLogger(logger);
+            _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+        }
         [HttpPost]
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
+            string lcMethodName = nameof(R_ServiceDelete);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_ServiceDeleteResultDTO loRtn = null;
             GSM04510GOADeptCls loCls;
@@ -32,14 +43,18 @@ namespace GSM04500Service
                 loRtn = new R_ServiceDeleteResultDTO();
                 poParameter.Entity.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
                 poParameter.Entity.CUSER_ID = R_BackGlobalVar.USER_ID;
+                _loggerGSM04500.LogInfo("Call method R_Delete on Controller");
+
                 loCls.R_Delete(poParameter.Entity);
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGSM04500.LogError(loException);
             }
         EndBlock:
             loException.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
 
             return loRtn;
 
@@ -48,6 +63,9 @@ namespace GSM04500Service
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GSM04510GOADeptDTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
+            string lcMethodName = nameof(R_ServiceGetRecord);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             var loRtn = new R_ServiceGetRecordResultDTO<GSM04510GOADeptDTO>();
 
@@ -56,22 +74,26 @@ namespace GSM04500Service
                 var loCls = new GSM04510GOADeptCls();
                 poParameter.Entity.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
                 poParameter.Entity.CUSER_ID = R_BackGlobalVar.USER_ID;
-
-
+                _loggerGSM04500.LogInfo("Call method R_GetRecord on Controller");
                 loRtn.data = loCls.R_GetRecord(poParameter.Entity);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGSM04500.LogError(loEx);
             }
 
             loEx.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
 
             return loRtn;
         }
         [HttpPost]
         public R_ServiceSaveResultDTO<GSM04510GOADeptDTO> R_ServiceSave(R_ServiceSaveParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
+            string lcMethodName = nameof(R_ServiceSave);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             var loRtn = new R_ServiceSaveResultDTO<GSM04510GOADeptDTO>();
             GSM04510GOADeptCls loCls;
@@ -83,21 +105,27 @@ namespace GSM04500Service
 
                 poParameter.Entity.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
                 poParameter.Entity.CUSER_ID = R_BackGlobalVar.USER_ID;
+                _loggerGSM04500.LogInfo("Call method R_Save on Controller");
 
                 loRtn.data = loCls.R_Save(poParameter.Entity, poParameter.CRUDMode);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGSM04500.LogError(loEx);
             };
             EndBlock:
             loEx.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
 
             return loRtn;
         }
         [HttpPost]
         public IAsyncEnumerable<GSM04510GOADeptDTO> JOURNAL_GRP_GOA_DEPT_LIST()
         {
+            string lcMethodName = nameof(JOURNAL_GRP_GOA_DEPT_LIST);
+            _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GSM04510GOADeptDBParameter loDbParameter;
             R_Exception loException = new R_Exception();
@@ -114,19 +142,24 @@ namespace GSM04500Service
                 loDbParameter.CJRNGRP_TYPE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CJRNGRP_TYPE);
                 loDbParameter.CJRNGRP_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CJOURNAL_GRP_CODE);
                 loDbParameter.CGOA_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CGOA_CODE);
-
+              
+                _loggerGSM04500.LogInfo("Get Parameter JOURNAL_GRP_GOA_DEPT_LIST on Controller");
+                _loggerGSM04500.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 var loCls = new GSM04510GOADeptCls();
-
+                _loggerGSM04500.LogInfo("Call method JOURNAL_GROUP_GOA_DEPT_LIST");
                 loRtnTemp = loCls.JOURNAL_GROUP_GOA_DEPT_LIST(loDbParameter);
+                _loggerGSM04500.LogInfo("Call method to streaming data");
                 loRtn = GET_JOURNAL_GRP_GOA_DEPT_LIST(loRtnTemp);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGSM04500.LogError(loEx);
             }
 
             loEx.ThrowExceptionIfErrors();
+            _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
 
             return loRtn;
         }

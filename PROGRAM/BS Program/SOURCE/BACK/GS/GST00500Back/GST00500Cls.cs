@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using GST00500Common;
+using GST00500Common.Logs;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
@@ -15,6 +17,12 @@ namespace GST00500Back
 {
     public class GST00500Cls : R_IServiceCRUDBase<GST00500DTO>
     {
+        private LoggerGST00500 _loggerGST00500;
+        public GST00500Cls()
+        {
+            //Initial and Get Logger
+            _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+        }
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
         {
             throw new NotImplementedException();
@@ -31,6 +39,9 @@ namespace GST00500Back
         }
         public List<GST00500DTO> Approval_Inbox_List(GST00500DBParameter poEntity)
         {
+            string lcMethodName = nameof(Approval_Inbox_List);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             var loEx = new R_Exception();
             List<GST00500DTO> loResult = null;
             R_Db loDb = new R_Db();
@@ -51,46 +62,73 @@ namespace GST00500Back
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_LOGIN_ID", DbType.String, 8, poEntity.CUSER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CTRANS_TYPE", DbType.String, 2, poEntity.CTRANS_TYPE);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGST00500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 var loReturnTemp = loDb.SqlExecQuery(loConnection, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GST00500DTO>(loReturnTemp).ToList();
-
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
             loEx.ThrowExceptionIfErrors();
+
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loResult;
         }
         public GST00500UserNameDTO GetUserName(GST00500DBParameter poEntity)
         {
+            string lcMethodName = nameof(GetUserName);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             var loEx = new R_Exception();
             var loResult = new GST00500UserNameDTO();
             R_Db loDb;
-            DbCommand loCmd;
+            DbCommand loCommand;
             try
             {
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
-                var loCommand = loDb.GetCommand();
+                 loCommand = loDb.GetCommand();
 
-                var lcQuery = $"SELECT B.CUSER_NAME FROM SAM_USER_COMPANY A (NOLOCK) " +
-                              $"INNER JOIN SAM_USER B (NOLOCK) ON B.CUSER_ID = A.CUSER_ID " +
-                              $"WHERE A.CCOMPANY_ID = '{poEntity.CCOMPANYID}' AND A.CUSER_ID = '{poEntity.CUSER_ID}' ";
+                var lcQuery = "RSP_GS_GET_USER_DETAIL";
+                loCommand.CommandText = lcQuery;
+                loCommand.CommandType = CommandType.StoredProcedure;
 
-                var loResultTemp = loDb.SqlExecQuery(lcQuery, loConn, true);
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANYID);
+                loDb.R_AddCommandParameter(loCommand, "@CPROGRAM_ID", DbType.String, 20, "GST00500");
+                loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 20, poEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CPARAMETER", DbType.String, 100, "");
+                
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGST00500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
+                var loResultTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult.CUSER_NAME = loResultTemp.Rows[0]["CUSER_NAME"].ToString();
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
             loEx.ThrowExceptionIfErrors();
+
+            loEx.ThrowExceptionIfErrors();
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loResult;
         }
 
         public List<GST00500RejectDTO> GetReasonRejectList(GST00500DBParameter poParameter)
         {
+            string lcMethodName = nameof(GetReasonRejectList);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             var loEx = new R_Exception();
             var loResult = new List<GST00500RejectDTO>();
             R_Db loDb;
@@ -106,64 +144,19 @@ namespace GST00500Back
                               $"'{poParameter.CCOMPANYID}', '_GS_REJECTTRANS_REASON', '', " +
                               $"'{poParameter.CLANGUAGE_ID}') ";
 
+                
+                _loggerGST00500.R_LogDebug("{@ObjectQuery} ", lcQuery);
                 loResult = loDb.SqlExecObjectQuery<GST00500RejectDTO>(lcQuery, loConn, true);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
             loEx.ThrowExceptionIfErrors();
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loResult;
         }
-      
-        /*
-        public List<GST00500ApprovalTransactionDTO> GetErrorList(string pcCompanyId, string pcUserId, string pcKeyGuid)
-        {
-            var loEx = new R_Exception();
-            var lcQuery = "";
-            var loDb = new R_Db();
-            List<GST00500ApprovalTransactionDTO> loResult = null;
-            DbConnection loConn = null;
-
-            try
-            {
-                loResult = new List<GST00500ApprovalTransactionDTO>();
-                loConn = loDb.GetConnection();
-                var loCmd = loDb.GetCommand();
-
-                lcQuery = "EXECUTE RSP_ConvertXMLToTable @CCOMPANY_ID, @CUSER_ID, @CKEY_GUID";
-                loCmd.CommandText = lcQuery;
-                loCmd.CommandType = CommandType.Text;
-
-                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 8, pcCompanyId);
-                loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 20, pcUserId);
-                loDb.R_AddCommandParameter(loCmd, "@CKEY_GUID", DbType.String, 50, pcKeyGuid);
-
-                var loDataTableResult = loDb.SqlExecQuery(loConn, loCmd, false);
-
-                loResult = R_Utility.R_ConvertTo<GST00500ApprovalTransactionDTO>(loDataTableResult).ToList();
-
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-            finally
-            {
-                if (loConn != null)
-                {
-                    if (loConn.State != ConnectionState.Closed)
-                        loConn.Close();
-
-                    loConn.Dispose();
-                    loConn = null;
-                }
-            }
-            loEx.ThrowExceptionIfErrors();
-
-            return loResult;
-        }
-        */
 
     }
 }

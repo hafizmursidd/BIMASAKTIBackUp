@@ -10,6 +10,7 @@ using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
 using R_BlazorFrontEnd.Controls.Events;
 using R_BlazorFrontEnd.Controls.MessageBox;
+using R_BlazorFrontEnd.Controls.Popup;
 using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
 using R_BlazorFrontEnd.Helpers;
@@ -32,6 +33,7 @@ namespace LMM06000Front
         private R_TextBox FocusLabelAdd;
         private R_TextBox FocusLabelEdit;
         [Inject] IClientHelper clientHelper { get; set; }
+        [Inject] public R_PopupService PopupService { get; set; }
 
 
         #region PropertyID
@@ -91,7 +93,19 @@ namespace LMM06000Front
             {
                 await BillingRuleViewModel.GetAllUnitType();
                 eventArgs.ListEntityResult = BillingRuleViewModel.UnitTypeList;
-                await _gridBillingRuleRef.R_RefreshGrid(null);
+                if (BillingRuleViewModel.UnitTypeList.Count() < 1)
+                {
+                    //disable when, unit type didn't have data
+                    BillingRuleViewModel.UnitTypeValueContext = "";
+                    BillingRuleViewModel._IsButtonAddEnable = false;
+                    await _gridBillingRuleRef.R_RefreshGrid(null);
+                }
+                else
+                {
+                    BillingRuleViewModel._IsButtonAddEnable = true;
+                    BillingRuleViewModel.UnitTypeValueContext = BillingRuleViewModel.UnitTypeList[0].CUNIT_TYPE_ID;
+                    await _gridBillingRuleRef.R_RefreshGrid(null);
+                }
             }
             catch (Exception ex)
             {
@@ -105,20 +119,14 @@ namespace LMM06000Front
         {
             if (eventArgs.ConductorMode == R_eConductorMode.Normal)
             {
-                var loParam = (LMM06000UnitTypeDTO)eventArgs.Data;
+                //Enable button add, when user click another unit type
+                BillingRuleViewModel._IsButtonAddEnable = true;
 
-                if (BillingRuleViewModel.UnitTypeList.Count() < 1)
-                {
-                    BillingRuleViewModel.PropertyValueContext = "";
-                    BillingRuleViewModel.UnitTypeValueContext = "";
-                }
-                else
-                {
-                    BillingRuleViewModel.PropertyValueContext = loParam.CPROPERTY_ID;
-                    BillingRuleViewModel.UnitTypeValueContext = loParam.CUNIT_TYPE_ID;
-                }
+                var loParam = (LMM06000UnitTypeDTO)eventArgs.Data;
+                BillingRuleViewModel.PropertyValueContext = loParam.CPROPERTY_ID;
+                BillingRuleViewModel.UnitTypeValueContext = loParam.CUNIT_TYPE_ID;
+                await _gridBillingRuleRef.R_RefreshGrid(null);
             }
-            await _gridBillingRuleRef.R_RefreshGrid(null);
         }
         #endregion
 
@@ -130,6 +138,15 @@ namespace LMM06000Front
             {
                 await BillingRuleViewModel.GetAllBillingRule();
                 eventArgs.ListEntityResult = BillingRuleViewModel.BillingRuleList;
+
+                //if (BillingRuleViewModel.UnitTypeList.Count() < 1)
+                //{
+                //BillingRuleViewModel._IsButtonAddEnable = true;
+                //    //disable when, unit type didn't have data
+                //    BillingRuleViewModel.UnitTypeValueContext = "";
+                //    BillingRuleViewModel._IsButtonAddEnable = false;
+                //    await _gridBillingRuleRef.R_RefreshGrid(null);
+                //}
             }
             catch (Exception ex)
             {
@@ -197,6 +214,7 @@ namespace LMM06000Front
         //BEFORE LOOKUP INSTALLMENT DAN BOOKING FEE
         private void BeforeOpenLookUp_Unit_Charges(R_BeforeOpenLookupEventArgs eventArgs)
         {
+
             var param = new LML00200ParameterDTO()
             {
                 CCOMPANY_ID = clientHelper.CompanyId,
@@ -206,6 +224,16 @@ namespace LMM06000Front
             };
             eventArgs.Parameter = param;
             eventArgs.TargetPageType = typeof(LML00200);
+
+            //var param = new LML00500ParameterDTO()
+            //{
+            //    CCOMPANY_ID = clientHelper.CompanyId,
+            //    CUSER_ID = clientHelper.UserId,
+            //    CPROPERTY_ID = "JBMPC"
+            //};
+            //eventArgs.Parameter = param;
+            //eventArgs.TargetPageType = typeof(LML00500);
+
         }
 
         //Before LookUp WITHDP
@@ -286,10 +314,23 @@ namespace LMM06000Front
                 CINSTALLMENT_PERIOD_MODE = "",
                 LBANK_CREDIT = false
             };
-
+            //disable button add when user click add
+            BillingRuleViewModel._IsButtonAddEnable = false;
             await FocusLabelAdd.FocusAsync();
 
         }
+
+        private async Task ServiceBeforeEdit(R_BeforeEditEventArgs eventArgs)
+        {
+            //disable button add when user click edit
+            BillingRuleViewModel._IsButtonAddEnable = false;
+        }
+        private async Task ServiceBeforeCancel(R_BeforeCancelEventArgs eventArgs)
+        {
+            //disable when user click edit and edit, then user click cancel not save
+            BillingRuleViewModel._IsButtonAddEnable = true;
+        }
+
         private async Task ServiceSaving(R_SavingEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -334,9 +375,9 @@ namespace LMM06000Front
             var loEx = new R_Exception();
             try
             {
+
                 var loParam = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
                 await BillingRuleViewModel.SaveUnitType_BillingRule(loParam, (eCRUDMode)eventArgs.ConductorMode);
-
                 eventArgs.Result = BillingRuleViewModel.BillingRuleDetail;
             }
             catch (Exception ex)
@@ -347,9 +388,12 @@ namespace LMM06000Front
             loEx.ThrowExceptionIfErrors();
         }
 
-        private void R_Validation(R_ValidationEventArgs eventArgs)
+        private async Task R_Validation(R_ValidationEventArgs eventArgs)
         {
             var loEx = new R_Exception();
+            GFF00900ParameterDTO loParamPopup = null;
+            R_PopupResult loResult = null;
+            LMM06000BillingRuleDetailDTO loData = null;
             try
             {
                 var loParam = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
@@ -378,12 +422,50 @@ namespace LMM06000Front
                     if (string.IsNullOrEmpty(loParam.CINSTALLMENT_CHARGE_ID))
                         loEx.Add(new Exception("Charge Id Installment is required."));
                 }
+
+                if (!loEx.HasError)
+                {
+                    try
+                    {
+                        loData = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
+                        if (loData.LACTIVE == true && _conductorBillingRuleRef.R_ConductorMode == R_eConductorMode.Add)
+                        {
+                            var loValidateViewModel = new GFF00900Model.ViewModel.GFF00900ViewModel();
+                            loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "LMM06001";
+                            await loValidateViewModel
+                                .RSP_ACTIVITY_VALIDITYMethodAsync();
+                            if (loValidateViewModel.loRspActivityValidityList.FirstOrDefault().CAPPROVAL_USER == "ALL" &&
+                                  loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
+                            {
+                                eventArgs.Cancel = false;
+                            }
+                            else
+                            {
+                                loParamPopup = new GFF00900ParameterDTO()
+                                {
+                                    Data = loValidateViewModel.loRspActivityValidityList,
+                                    IAPPROVAL_CODE = "LMM06001"
+                                };
+                                loResult = await PopupService.Show(typeof(GFF00900FRONT.GFF00900), loParamPopup);
+                                if (loResult.Success == false || (bool)loResult.Result == false)
+                                {
+                                    eventArgs.Cancel = true;
+                                };
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        loEx.Add(ex);
+                    }
+                }
+                loEx.ThrowExceptionIfErrors();
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-
+        EndBlock:
             eventArgs.Cancel = loEx.HasError;
             loEx.ThrowExceptionIfErrors();
         }
@@ -411,7 +493,7 @@ namespace LMM06000Front
 
 
         #region Active/Inactive
-      
+
         private async Task R_Before_Open_ActivateInactive(R_BeforeOpenPopupEventArgs eventArgs)
         {
             R_Exception loException = new R_Exception();
@@ -467,6 +549,49 @@ namespace LMM06000Front
             }
             loException.ThrowExceptionIfErrors();
         }
+
+
+        /*
+        public async Task Conductor_BeforeAdd(R_BeforeAddEventArgs eventArgs)
+        {
+            var loEx = new R_Exception();
+            GFF00900ParameterDTO loParam = null;
+            R_PopupResult loResult = null;
+            try
+            {
+                if (BillingRuleViewModel.CrateTime < DateTime.Today)
+                {
+                    var loValidateViewModel = new GFF00900Model.ViewModel.GFF00900ViewModel();
+                    loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "GSM05501"; //Uabh Approval Code sesuai Spec masing masing
+                    await loValidateViewModel.RSP_ACTIVITY_VALIDITYMethodAsync(); //Jika IAPPROVAL_CODE == 3, maka akan keluar RSP_ERROR disini
+
+                    //Jika Approval User ALL dan Approval Code 1, maka akan langsung menjalankan ActiveInactive
+                    if (loValidateViewModel.loRspActivityValidityList.FirstOrDefault().CAPPROVAL_USER == "ALL" && loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
+                    {
+                        eventArgs.Cancel = false;
+                    }
+                    else //Disini Approval Code yang didapat adalah 2, yang berarti Active Inactive akan dijalankan jika User yang diinput ada di RSP_ACTIVITY_VALIDITY
+                    {
+                        loParam = new GFF00900ParameterDTO()
+                        {
+                            Data = loValidateViewModel.loRspActivityValidityList,
+                            IAPPROVAL_CODE = "GSM05501" //Uabh Approval Code sesuai Spec masing masing
+                        };
+                        loResult = await PopupService.Show(typeof(GFF00900FRONT.GFF00900), loParam);
+                        eventArgs.Cancel = !(bool)loResult.Result;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            loEx.ThrowExceptionIfErrors();
+        }
+        */
         #endregion
     }
 }

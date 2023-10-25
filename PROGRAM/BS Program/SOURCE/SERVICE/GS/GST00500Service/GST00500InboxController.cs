@@ -6,6 +6,8 @@ using R_Common;
 using R_CommonFrontBackAPI;
 using System.Collections.Generic;
 using System.Data.Common;
+using GST00500Common.Logs;
+using Microsoft.Extensions.Logging;
 
 namespace GST00500Service
 {
@@ -13,6 +15,15 @@ namespace GST00500Service
     [Route("api/[controller]/[action]")]
     public class GST00500InboxController : ControllerBase, IGST00500
     {
+
+        private LoggerGST00500 _loggerGST00500;
+
+        public GST00500InboxController(ILogger<GST00500InboxController> logger)
+        {
+            LoggerGST00500.R_InitializeLogger(logger);
+            _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+        }
+
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
         {
@@ -32,6 +43,9 @@ namespace GST00500Service
         [HttpPost]
         public GST00500UserNameDTO GetUserName()
         {
+            string lcMethodName = nameof(GetUserName);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GST00500UserNameDTO loReturn = null;
             var loParameter = new GST00500DBParameter();
@@ -41,22 +55,28 @@ namespace GST00500Service
                 loReturn = new GST00500UserNameDTO();
                 loParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
                 loParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
+                _loggerGST00500.LogInfo("Call method GetUserName");
 
                 loReturn = loCls.GetUserName(loParameter);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
         EndBlock:
             loEx.ThrowExceptionIfErrors();
 
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loReturn;
         }
 
         [HttpPost]
         public GST00500RejectListDTO ReasonRejectList()
         {
+            string lcMethodName = nameof(ReasonRejectList);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GST00500RejectListDTO loRtn = null;
             var loParameter = new GST00500DBParameter();
@@ -65,61 +85,30 @@ namespace GST00500Service
             {
                 loRtn = new GST00500RejectListDTO();
                 loParameter.CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                loParameter.CUSER_ID = R_BackGlobalVar.CULTURE;
+                loParameter.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
 
+                _loggerGST00500.LogInfo("Call method GetReasonRejectList");
                 var loResult = loCls.GetReasonRejectList(loParameter);
                 loRtn.Data = loResult;
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
         EndBlock:
             loEx.ThrowExceptionIfErrors();
 
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
         }
-
-        /*
-        [HttpPost]
-        public IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetError(GST00500ParameterDBDTO loparameter)
-        {
-            var loEx = new R_Exception();
-            IAsyncEnumerable<GST00500ApprovalTransactionDTO> loRtn = null;
-            List<GST00500ApprovalTransactionDTO> loRtnTemp = null;
-            GST00500Cls loCls = null;
-            try
-            {
-                loCls = new GST00500Cls();
-                var CCOMPANYID = R_BackGlobalVar.COMPANY_ID;
-                var CUSER_ID = R_BackGlobalVar.USER_ID;
-
-                loRtnTemp = loCls.GetErrorList(CCOMPANYID, CUSER_ID, loparameter.GUID_ID);
-                loRtn = GetErrorList(loRtnTemp);
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-        EndBlock:
-            loEx.ThrowExceptionIfErrors();
-
-            return loRtn;
-        }
-        
-        private async IAsyncEnumerable<GST00500ApprovalTransactionDTO> GetErrorList(List<GST00500ApprovalTransactionDTO> poParameter)
-        {
-            foreach (var item in poParameter)
-            {
-                yield return item;
-            }
-        }
-
-        */
 
         [HttpPost]
         public IAsyncEnumerable<GST00500DTO> ApprovalInboxListStream()
         {
+            string lcMethodName = nameof(ApprovalInboxListStream);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             GST00500DBParameter loDbParameter;
             IAsyncEnumerable<GST00500DTO> loRtn = null;
@@ -132,16 +121,19 @@ namespace GST00500Service
                 loDbParameter.CTRANS_TYPE = "I";
 
                 var loCls = new GST00500Cls();
+                _loggerGST00500.LogInfo("Call method Approval_Inbox_List");
                 loRtnTemp = loCls.Approval_Inbox_List(loDbParameter);
                 loRtn = GetApprovalInboxList(loRtnTemp);
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
 
             loEx.ThrowExceptionIfErrors();
 
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
 
         }

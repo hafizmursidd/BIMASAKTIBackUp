@@ -6,12 +6,23 @@ using System.Data.Common;
 using System.Data;
 using GLR00300Common.GLR00300Print;
 using System.Reflection.Metadata;
+using GLR00300Common.Logs;
 
 namespace GLR00300Back
 {
     public class GLR00300Cls
-    { public GLR00300PeriodDTO IntialProcess(GLR00300DBParameter poParameter)
+    {
+        private LoggerGLR00300 _loggerGLR00300;
+        public GLR00300Cls()
         {
+            //Initial and Get Logger
+            _loggerGLR00300 = LoggerGLR00300.R_GetInstanceLogger();
+        }
+        public GLR00300PeriodDTO InitialProcess(GLR00300DBParameter poParameter)
+        {
+            string lcMethodName = nameof(InitialProcess);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             GLR00300PeriodDTO loResult = null;
             R_Db loDb;
@@ -28,6 +39,12 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CYEAR", DbType.String, 4, "");
                 loDb.R_AddCommandParameter(loCommand, "@CMODE", DbType.String, 10, "");
+                
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.LogInfo("Execute query initial process to get year range");
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, false);
                 loResult = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTemp).FirstOrDefault();
@@ -36,6 +53,9 @@ namespace GLR00300Back
                 var lcQueryDefaultYear = $"EXEC RSP_GL_GET_SYSTEM_PARAM '{poParameter.CCOMPANY_ID}', '{poParameter.CLANGUAGE_ID}' ";
                 loCommand.CommandText = lcQueryDefaultYear;
                 loCommand.CommandType = CommandType.Text;
+                _loggerGLR00300.LogInfo("Execute query initial process to get default year");
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery (2)} ", lcQueryDefaultYear);
+
                 var loReturnTempVal = loDb.SqlExecQuery(loConn, loCommand, true);
                 var loResultTemp = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTempVal).FirstOrDefault();
 
@@ -44,12 +64,18 @@ namespace GLR00300Back
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
             }
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+
             return loResult;
         }
         public List<GLR00300DTO> GetTrialBalanceTypeList(GLR00300DBParameter poParameter)
         {
+            string lcMethodName = nameof(GetTrialBalanceTypeList);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             List<GLR00300DTO> loResult = null;
             R_Db loDb;
@@ -67,19 +93,30 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CCLASS_ID", DbType.String, 40, "_GL_TRIAL_BAL_TYPE");
                 loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 2, poParameter.CLANGUAGE_ID);
-
+                
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
             }
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+
             return loResult;
         }
         public List<GLR00300DTO> GetPrintMethodTypeList(GLR00300DBParameter poParameter)
         {
+            string lcMethodName = nameof(GetPrintMethodTypeList);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             List<GLR00300DTO> loResult = null;
             R_Db loDb;
@@ -97,19 +134,30 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CCLASS_ID", DbType.String, 40, "_GL_TRIAL_BAL_PRINT_METHOD");
                 loDb.R_AddCommandParameter(loCommand, "@CLANGUAGE_ID", DbType.String, 2, poParameter.CLANGUAGE_ID);
-
+                
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
             }
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+
             return loResult;
         }
         public List<GLR00300BudgetNoDTO> GetBudgetNoList(GLR00300DBParameter poParameter)
         {
+            string lcMethodName = nameof(GetBudgetNoList);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             List<GLR00300BudgetNoDTO> loResult = null;
             R_Db loDb;
@@ -128,18 +176,27 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CYEAR", DbType.String, 10, poParameter.CYEAR);
                 loDb.R_AddCommandParameter(loCommand, "@CCURRENCY_TYPE", DbType.String, 10, poParameter.CCURRENCY_TYPE);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300BudgetNoDTO>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
             }
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loResult;
         }
         public List<GLR00300_DataDetail_AccountTrialBalance> GetAllTrialBalanceReportData(GLR00300ParamDBToGetReportDTO poParameter)
         {
+            string lcMethodName = nameof(GetAllTrialBalanceReportData);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             List<GLR00300_DataDetail_AccountTrialBalance> loResult = null;
             R_Db loDb;
@@ -171,14 +228,22 @@ namespace GLR00300Back
                 loDb.R_AddCommandParameter(loCommand, "@CPRINT_METHOD", DbType.String, 10, poParameter.CPRINT_METHOD_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CBUDGET_NO", DbType.String, 20, poParameter.CBUDGET_NO);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300_DataDetail_AccountTrialBalance>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
             }
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+
             return loResult;
         }
 

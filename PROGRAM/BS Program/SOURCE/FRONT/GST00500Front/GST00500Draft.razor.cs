@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GSM04500Front;
 using GST00500Model.ViewModel;
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Controls;
@@ -79,13 +78,11 @@ namespace GST00500Front
         {
             eventArgs.Parameter = _viewModelGST00500Draft._currentRecord;
 
-            string abc = "GSM04500Front.GSM04500";
-            var type = Type.GetType("System.String");
+           // string abc = "GSM04500Front.GSM04500";
+           // var type = Type.GetType(abc);
 
-
-            var loStop = "af";
-           // eventArgs.TargetPageType = type;
-            ;
+          // eventArgs.TargetPageType = typeof(GSM04500);
+      //     eventArgs.TargetPageType = type;
         }
 
         private void R_After_OpenDocNumbering_Detail()

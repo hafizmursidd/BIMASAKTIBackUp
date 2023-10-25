@@ -22,23 +22,23 @@ namespace DesignFormGL
 
         private void InitializeComponent()
         {
-            buttonFormatA = new Button();
+            buttonFormatA_D = new Button();
             buttonFormatE_H = new Button();
             SuspendLayout();
             // 
-            // buttonFormatA
+            // buttonFormatA_D
             // 
-            buttonFormatA.Location = new Point(12, 25);
-            buttonFormatA.Name = "buttonFormatA";
-            buttonFormatA.Size = new Size(177, 23);
-            buttonFormatA.TabIndex = 3;
-            buttonFormatA.Text = "Fomart A_D Report";
-            buttonFormatA.UseVisualStyleBackColor = true;
-            buttonFormatA.Click += ButtonFormatAClick;
+            buttonFormatA_D.Location = new Point(12, 56);
+            buttonFormatA_D.Name = "buttonFormatA_D";
+            buttonFormatA_D.Size = new Size(177, 23);
+            buttonFormatA_D.TabIndex = 3;
+            buttonFormatA_D.Text = "Fomart A_D Report";
+            buttonFormatA_D.UseVisualStyleBackColor = true;
+            buttonFormatA_D.Click += ButtonFormatA_D_Click;
             // 
             // buttonFormatE_H
             // 
-            buttonFormatE_H.Location = new Point(12, 63);
+            buttonFormatE_H.Location = new Point(12, 99);
             buttonFormatE_H.Name = "buttonFormatE_H";
             buttonFormatE_H.Size = new Size(177, 23);
             buttonFormatE_H.TabIndex = 3;
@@ -51,7 +51,7 @@ namespace DesignFormGL
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(buttonFormatA);
+            Controls.Add(buttonFormatA_D);
             Controls.Add(buttonFormatE_H);
             Name = "GLR00300DesignReport";
             Text = "DesignForm";
@@ -59,7 +59,7 @@ namespace DesignFormGL
             ResumeLayout(false);
         }
 
-        private Button buttonFormatA;
+        private Button buttonFormatA_D;
         private Button buttonFormatE_H;
     }
 }

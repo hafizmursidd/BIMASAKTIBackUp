@@ -12,7 +12,7 @@ using R_CommonFrontBackAPI;
 using R_Common;
 using R_ReportFastReportBack;
 using System.Collections;
-using BaseHeaderReportCommon.BaseHeader;
+using BaseHeaderReportCOMMON;
 using Microsoft.AspNetCore.Authorization;
 using R_Cache;
 
@@ -24,7 +24,6 @@ namespace GLR00300Service
         private GLR00300ParamDBToGetReportDTO _Parameter;
 
         #region instantiate
-
         public GLR00300ReportFormatBController()
         {
             _ReportCls = new R_ReportFastReportBackClass();
@@ -104,17 +103,16 @@ namespace GLR00300Service
 
         #region Helper
 
-        private GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO GenerateDataPrint(
-            GLR00300ParamDBToGetReportDTO poParam)
+        private GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
         {
             var loEx = new R_Exception();
-            GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO loRtn =
-                new GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO();
+            GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO();
 
             GLR00300Cls loCls = null;
-            GLR00300AccountTrialBalanceResultFormat_EtoH_DTO loData = null;
-            List<GLRR00300DataAccountTrialBalance> loConvertData = null;
+            GLR00300AccountTrialBalanceResultFormat_AtoD_DTO loData = null;
+            List<GLR00300DataAccountTrialBalanceAD> loConvertData = null;
             string lcPeriod;
+
             try
             {
                 loCls = new GLR00300Cls();
@@ -126,7 +124,7 @@ namespace GLR00300Service
                 if (loCollectionFromDb.Count > 0)
                 {
                     GLR00300_DataDetail_AccountTrialBalance getFirstDataForHeader = loCollectionFromDb.FirstOrDefault();
-                    loData = new GLR00300AccountTrialBalanceResultFormat_EtoH_DTO()
+                    loData = new GLR00300AccountTrialBalanceResultFormat_AtoD_DTO()
                     {
                         Title = "Account Trial Balance",
                         Header = new GLR00300HeaderAccountTrialBalanceDTO()
@@ -149,7 +147,7 @@ namespace GLR00300Service
                 else
                 {
                     lcPeriod = poParam.CYEAR + "-" + poParam.CTO_PERIOD_NO;
-                    loData = new GLR00300AccountTrialBalanceResultFormat_EtoH_DTO()
+                    loData = new GLR00300AccountTrialBalanceResultFormat_AtoD_DTO()
                     {
                         Title = "Account Trial Balance",
                         Header = new GLR00300HeaderAccountTrialBalanceDTO()
@@ -176,60 +174,43 @@ namespace GLR00300Service
                     CCOMPANY_NAME = "PT Realta Chakradarma",
                     CPRINT_CODE = "003",
                     CPRINT_NAME = "Account Trial Balance",
-                    CUSER_ID = R_BackGlobalVar.USER_ID,
+                    CUSER_ID = poParam.CUSER_ID,
                 };
 
                 loRtn.BaseHeaderData = loParam;
-                loRtn.GLR00300AccountTrialBalanceResult_FormatEtoH_DataFormat = loData;
-
+                loRtn.GLR00300AccountTrialBalanceResult_FormatAtoD_DataFormat = loData;
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-
-
             loEx.ThrowExceptionIfErrors();
-
             return loRtn;
         }
 
-        private List<GLRR00300DataAccountTrialBalance> FromRaw_To_Display(
-            List<GLR00300_DataDetail_AccountTrialBalance> poCollectionDataRaw)
+        private List<GLR00300DataAccountTrialBalanceAD> FromRaw_To_Display(List<GLR00300_DataDetail_AccountTrialBalance> poCollectionDataRaw)
         {
             var loEx = new R_Exception();
-            List<GLRR00300DataAccountTrialBalance> loReturn = null;
+            List<GLR00300DataAccountTrialBalanceAD> loReturn = null;
             try
             {
-                loReturn = new List<GLRR00300DataAccountTrialBalance>();
+                loReturn = new List<GLR00300DataAccountTrialBalanceAD>();
 
-                loReturn = poCollectionDataRaw
-                    .GroupBy(data => new
+                loReturn = poCollectionDataRaw.Select(item
+                    => new GLR00300DataAccountTrialBalanceAD
                     {
-                        data.CGLACCOUNT_NO,
-                        data.CGLACCOUNT_NAME,
-                        data.CDBCR,
-                        data.CBSIS,
-                    }).Select(dataDetail => new GLRR00300DataAccountTrialBalance
-                    {
-                        CGLACCOUNT_NO = dataDetail.Key.CGLACCOUNT_NO,
-                        CGLACCOUNT_NAME = dataDetail.Key.CGLACCOUNT_NAME,
-                        CDBCR = dataDetail.Key.CDBCR,
-                        CBSIS = dataDetail.Key.CBSIS,
-                        DataDetail = dataDetail.Select
-                        (itemDetail => new GLRR00300DataDetailAccountTrialBalance
-                        {
-                            CCENTER = itemDetail.CCENTER,
-                            NBEGIN_BALANCE = itemDetail.NBEGIN_BALANCE,
-                            NCREDIT = itemDetail.NCREDIT,
-                            NDEBIT = itemDetail.NDEBIT,
-                            NDEBIT_ADJ = itemDetail.NDEBIT_ADJ,
-                            NCREDIT_ADJ = itemDetail.NCREDIT_ADJ,
-                            NEND_BALANCE = itemDetail.NEND_BALANCE,
-                            NBUDGET = itemDetail.NBUDGET,
-                        }).ToList()
+                        CGLACCOUNT_NO = item.CGLACCOUNT_NO,
+                        CGLACCOUNT_NAME = item.CGLACCOUNT_NAME,
+                        CDBCR = item.CDBCR,
+                        CBSIS = item.CBSIS,
+                        NBEGIN_BALANCE = item.NBEGIN_BALANCE,
+                        NDEBIT = item.NDEBIT,
+                        NCREDIT = item.NCREDIT,
+                        NDEBIT_ADJ = item.NDEBIT_ADJ,
+                        NCREDIT_ADJ = item.NCREDIT_ADJ,
+                        NEND_BALANCE = item.NCREDIT_ADJ,
+                        NBUDGET = item.NBUDGET
                     }).ToList();
-
             }
             catch (Exception ex)
             {
