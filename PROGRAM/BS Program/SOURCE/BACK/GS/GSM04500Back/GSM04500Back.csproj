@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\COMMON\GS\GSM04500\GSM04500Common.csproj" />
+    <ProjectReference Include="..\..\..\COMMON\GS\GSM04500COMMON\GSM04500Common.csproj" />
     <ProjectReference Include="..\GS_SPR\RSP_GS_MAINTAIN_JOURNAL_GROUPResources\RSP_GS_MAINTAIN_JOURNAL_GROUPResources.csproj" />
     <ProjectReference Include="..\GS_SPR\RSP_GS_MAINTAIN_JOURNAL_GROUP_ACCOUNT_DEPTResources\RSP_GS_MAINTAIN_JOURNAL_GROUP_ACCOUNT_DEPTResources.csproj" />
     <ProjectReference Include="..\GS_SPR\RSP_GS_UPLOAD_JOURNAL_GROUPResources\RSP_GS_UPLOAD_JOURNAL_GROUPResources.csproj" />

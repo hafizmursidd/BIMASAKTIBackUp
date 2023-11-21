@@ -54,7 +54,7 @@ namespace GSM04500Back
                 var loDbParam = loCmd.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
+                _loggerGSM04500.LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
                 loReturn = R_Utility.R_ConvertTo<GSM04510GOADTO>(loReturnTemp).ToList().FirstOrDefault();
@@ -108,7 +108,7 @@ namespace GSM04500Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGSM04500.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 try
                 {
@@ -169,7 +169,7 @@ namespace GSM04500Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGSM04500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGSM04500.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
 

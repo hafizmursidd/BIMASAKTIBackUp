@@ -80,7 +80,7 @@ namespace GLB00200Service
                 loDbParameter.CREC_ID = loParam.CREC_ID;
 
                 _loggerGLB00200.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
-                _loggerGLB00200.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerGLB00200.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 _loggerGLB00200.LogInfo("Call method GetDetail_ReversingJournalList on Controller");
                 var temp = loCls.GetDetail_ReversingJournalList(loDbParameter);
@@ -118,7 +118,7 @@ namespace GLB00200Service
                 loDbParameter.CSEARCH_TEXT = R_Utility.R_GetStreamingContext<string>(ContextConstant.CSEARCH_TEXT);
               
                 _loggerGLB00200.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
-                _loggerGLB00200.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerGLB00200.LogDebug("DbParameter {@Parameter} ", loDbParameter);
                 
                 var loCls = new GLB00200Cls();
                 _loggerGLB00200.LogInfo("Call method ReversingJournalProcessList");

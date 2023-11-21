@@ -38,8 +38,9 @@ namespace GLR00300Front
             {
                 await ServiceGetTrialBalance();
                 await ServiceGetInitialProcess();
+                await ServiceGetPeriod();
                 await ServiceGetPrintMethod();
-                await ServiceGetGetBudgetNo();
+                await ServiceGetBudgetNo();
 
             }
             catch (Exception ex)
@@ -95,7 +96,8 @@ namespace GLR00300Front
             var loEx = new R_Exception();
             try
             {
-                await ServiceGetGetBudgetNo();
+                await ServiceGetBudgetNo();
+                await ServiceGetPeriod();
             }
             catch (Exception ex)
             {
@@ -104,7 +106,7 @@ namespace GLR00300Front
 
             R_DisplayException(loEx);
         }
-        private async Task ServiceGetGetBudgetNo()
+        private async Task ServiceGetBudgetNo()
         {
             var loEx = new R_Exception();
             try
@@ -117,7 +119,19 @@ namespace GLR00300Front
             }
             R_DisplayException(loEx);
         }
-
+        private async Task ServiceGetPeriod()
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                await _viewModelGLR00300.GetPeriod();
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            R_DisplayException(loEx);
+        }
         private async Task IsTrialBalanceTypeNormal(object poParam)
         {
             var loEx = new R_Exception();
@@ -215,9 +229,9 @@ namespace GLR00300Front
                 if (loTempResult == null)
                     return;
 
-                var loGetData = _viewModelGLR00300.FromAccount;
-                loGetData.CGLACCOUNT_NO = loTempResult.CGLACCOUNT_NO;
-                loGetData.CGLACCOUNT_NAME = loTempResult.CGLACCOUNT_NAME;
+                var loGetData = _viewModelGLR00300.InitialProcess;
+                loGetData.CMIN_GLACCOUNT_NO = loTempResult.CGLACCOUNT_NO;
+                loGetData.CMIN_GLACCOUNT_NAME = loTempResult.CGLACCOUNT_NAME;
             }
             catch (Exception ex)
             {
@@ -259,9 +273,9 @@ namespace GLR00300Front
                 if (loTempResult == null)
                     return;
 
-                var loGetData = _viewModelGLR00300.ToAccount;
-                loGetData.CGLACCOUNT_NO = loTempResult.CGLACCOUNT_NO;
-                loGetData.CGLACCOUNT_NAME = loTempResult.CGLACCOUNT_NAME;
+                var loGetData = _viewModelGLR00300.InitialProcess;
+                loGetData.CMAX_GLACCOUNT_NO = loTempResult.CGLACCOUNT_NO;
+                loGetData.CMAX_GLACCOUNT_NAME = loTempResult.CGLACCOUNT_NAME;
             }
             catch (Exception ex)
             {
@@ -363,78 +377,21 @@ namespace GLR00300Front
             bool loFlag = false;
             try
             {
-                #region ValidationEmpty
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.FromAccount.CGLACCOUNT_NO))
-                {
-                    loEx.Add(new Exception("Please select From Account No.!"));
-                    goto EndBlock;
-                }
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.ToAccount.CGLACCOUNT_NO))
-                {
-                    loEx.Add(new Exception("Please select To Account No.!"));
-                    goto EndBlock;
-                }
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.FromCenter.CCENTER_CODE) &&
-                    _viewModelGLR00300._lPrintByCenter)
-                {
-                    loEx.Add(new Exception("Please select From Center Code.!"));
-                    goto EndBlock;
-                }
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.ToCenter.CCENTER_CODE) &&
-                    _viewModelGLR00300._lPrintByCenter)
-                {
-                    loEx.Add(new Exception("Please select To Center Code.!"));
-                    goto EndBlock;
-                }
-
-                if (string.IsNullOrEmpty(_viewModelGLR00300.BudgetNoValue) &&
-                    _viewModelGLR00300._lPrintBudget)
-                {
-                    loEx.Add(new Exception("Please select Budget No.!"));
-                    goto EndBlock;
-                }
-
-                #endregion
+                _viewModelGLR00300.ValidationFieldEmpty();
 
                 var lcPeriodYear = _viewModelGLR00300.PeriodYear.ToString();
-
-                // Inject Dummmy
-                //var loParam = new GLR00300ParamDBToGetReportDTO()
-                //{
-                //    CCOMPANY_ID = "RCD",
-                //    CUSER_ID = "HMC",
-                //    CTB_TYPE_CODE = "A",
-                //    CJOURNAL_ADJ_MODE_CODE = "S",
-                //    CCURRENCY_TYPE_CODE = "L",
-                //    CFROM_ACCOUNT_NO = "15.10.0001",
-                //    CTO_ACCOUNT_NO = "15.10.9999",
-                //    CFROM_CENTER_CODE = "MMKT",
-                //    CTO_CENTER_CODE = "MMKT",
-                //    CYEAR = "2023",
-                //    CFROM_PERIOD_NO = "03",
-                //    CTO_PERIOD_NO = "03",
-                //    CPRINT_METHOD_CODE = "00",
-                //    CBUDGET_NO = _viewModelGLR00300.BudgetNoValue
-                //};
-
-                //set Parameter FROM FRONT TO BACK
-
                 var loParam = new GLR00300ParamDBToGetReportDTO()
                 {
                     CCOMPANY_ID = _clientHelper.CompanyId,
                     CUSER_ID = _clientHelper.UserId,
-                    CFROM_PERIOD_NO = _viewModelGLR00300.PeriodId,
-                    CTO_PERIOD_NO = _viewModelGLR00300.PeriodId,
+                    CFROM_PERIOD_NO = _viewModelGLR00300.PeriodNo, //based on spec the value Period_No FROM and TO is same
+                    CTO_PERIOD_NO = _viewModelGLR00300.PeriodNo,
                     CTB_TYPE_CODE = _viewModelGLR00300.TrialBalanceTypeValue,
                     CCURRENCY_TYPE_CODE = _viewModelGLR00300.CurrencyTypeValue,
                     CJOURNAL_ADJ_MODE_CODE = _viewModelGLR00300.JournalAdjustModeValue,
                     CYEAR = lcPeriodYear,
-                    CFROM_ACCOUNT_NO = _viewModelGLR00300.FromAccount.CGLACCOUNT_NO,
-                    CTO_ACCOUNT_NO = _viewModelGLR00300.ToAccount.CGLACCOUNT_NO,
+                    CFROM_ACCOUNT_NO = _viewModelGLR00300.InitialProcess.CMIN_GLACCOUNT_NO,
+                    CTO_ACCOUNT_NO = _viewModelGLR00300.InitialProcess.CMAX_GLACCOUNT_NO,
                     CFROM_CENTER_CODE = _viewModelGLR00300.FromCenter.CCENTER_CODE,
                     CTO_CENTER_CODE = _viewModelGLR00300.ToCenter.CCENTER_CODE,
                     CPRINT_METHOD_CODE = _viewModelGLR00300.PrintMethodValue,
@@ -451,7 +408,7 @@ namespace GLR00300Front
                         {
                             if ((!_viewModelGLR00300._lPrintByCenter) && (!_viewModelGLR00300._lPrintBudget)) // (N,S,false,false)
                             {
-                                loFlag=true;
+                                loFlag = true;
                                 //FORMAT A
                                 await _reportService.GetReport(
                                     "R_DefaultServiceUrlGL",

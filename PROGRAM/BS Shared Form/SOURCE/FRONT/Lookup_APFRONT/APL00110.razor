@@ -1,0 +1,42 @@
+@inherits R_Page
+@attribute [R_Page(Title = "Supplier Info")]
+<R_StackLayout Style="width: 800px">
+@*    <R_StackLayout Row>
+        <R_ItemLayout>
+            <R_Button OnClick="Search_Button">
+                Search
+            </R_Button>
+        </R_ItemLayout>
+        
+        <R_ItemLayout>
+            <R_Button OnClick="ShowAll_Button">
+                Show All
+            </R_Button>
+        </R_ItemLayout>
+
+    </R_StackLayout>*@
+
+    <R_StackLayout Row>
+        <R_Grid @ref="@GridRef"
+                DataSource="_viewModel.SupplierInfoGrid"
+                R_ServiceGetListRecord="R_ServiceGetListRecordAsync"
+                Pageable
+                PageSize="5">
+            <R_GridColumns>
+                <R_GridTextColumn FieldName="CSEQ_NO" HeaderText="Seq. No."></R_GridTextColumn>
+                <R_GridTextColumn FieldName="CSUPPLIER_NAME" HeaderText="Suplier Name"></R_GridTextColumn>
+            </R_GridColumns>
+        </R_Grid>
+    </R_StackLayout>
+
+    <R_StackLayout Row Class="justify-content-end">
+        <R_Button Enabled="@(_viewModel.SupplierInfoGrid.Count != 0)"
+                  OnClick="Button_OnClickOkAsync" >
+            OK
+        </R_Button>
+        <R_Button OnClick="Button_OnClickCloseAsync">
+            Cancel
+        </R_Button>
+    </R_StackLayout>
+
+</R_StackLayout>

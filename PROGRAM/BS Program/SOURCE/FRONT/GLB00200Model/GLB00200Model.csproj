@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\COMMON\GL\GLB00200Common\GLB00200Common.csproj" />
+		<ProjectReference Include="..\GLB00200FrontResources\GLB00200FrontResources.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="BlazorClientHelper">

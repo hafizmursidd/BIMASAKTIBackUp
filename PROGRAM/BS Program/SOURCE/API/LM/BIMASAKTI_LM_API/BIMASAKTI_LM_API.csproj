@@ -18,6 +18,9 @@
 
 
 	<ItemGroup>
+		<Reference Include="R_APICommonDTO">
+		  <HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APICommonDTO.dll</HintPath>
+		</Reference>
 		<Reference Include="R_APIStartUp">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APIStartUp.dll</HintPath>
 		</Reference>

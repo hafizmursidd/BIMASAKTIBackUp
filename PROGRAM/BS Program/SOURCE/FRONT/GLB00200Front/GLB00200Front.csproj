@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GLB00200FrontResources\GLB00200FrontResources.csproj" />
     <ProjectReference Include="..\GLB00200Model\GLB00200Model.csproj" />
   </ItemGroup>
 

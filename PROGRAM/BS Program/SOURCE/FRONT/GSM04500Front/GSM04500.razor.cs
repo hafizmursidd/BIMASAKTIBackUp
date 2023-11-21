@@ -231,6 +231,8 @@ namespace GSM04500Front
         private async Task _Staff_TemplateBtn_OnClick()
         {
             var loEx = new R_Exception();
+            string loCompanyName = clientHelper.CompanyId.ToUpper();
+
             try
             {
                 var loValidate = await R_MessageBox.Show("", "Are you sure download this template?", R_eMessageBoxButtonType.YesNo);
@@ -239,7 +241,7 @@ namespace GSM04500Front
                 {
                     var loByteFile = await journalGroupViewModel.DownloadTemplate();
 
-                    var saveFileName = $"Journal Group.xlsx";
+                    var saveFileName = $"Journal Group - {loCompanyName}.xlsx";
 
                     await JS.downloadFileFromStreamHandler(saveFileName, loByteFile.FileBytes);
                 }

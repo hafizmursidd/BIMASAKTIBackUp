@@ -17,7 +17,7 @@ namespace Lookup_GSFRONT
 
             try
             {
-                await GridRef.R_RefreshGrid(poParameter);
+                await GridRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
@@ -33,9 +33,7 @@ namespace Lookup_GSFRONT
 
             try
             {
-                var loParam = (GSL01900DTOParameter)eventArgs.Parameter;
-
-                await _viewModel.GetLOBList(loParam);
+                await _viewModel.GetLOBList();
 
                 eventArgs.ListEntityResult = _viewModel.LOBGrid;
             }

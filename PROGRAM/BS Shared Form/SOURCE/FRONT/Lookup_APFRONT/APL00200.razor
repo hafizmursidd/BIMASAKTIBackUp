@@ -1,0 +1,67 @@
+@using Lookup_APCOMMON.DTOs.APL00200
+@inherits R_Page
+@attribute [R_Page(Title = "Expenditure Lookup")]
+<R_StackLayout Style="width: 900px">
+    <R_StackLayout Row>
+
+        <R_ItemLayout>
+            <R_RadioGroup Data="@_viewModel.RadioButton"
+                          @bind-Value="@_viewModel.loExpenditureEntity.RadioButton"
+                          ValueField="@nameof(APL00200DTO.Code)"
+                          TextField="@nameof(APL00200DTO.Desc)"
+                          OnChanged="@OnChanged"
+                          R_ConductorSource="@_conductorRef">
+            </R_RadioGroup>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="2">
+            <R_TextBox @bind-Value="@_viewModel.loExpenditureEntity.CCATEGORY_ID"
+                       R_ConductorSource="@_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+
+        <R_ItemLayout>
+            <R_Lookup R_Before_Open_Lookup="@R_BeforeOpenLookUp" R_After_Open_Lookup="R_AfterOpenLookUp"
+                      Enabled="@(_viewModel.loExpenditureEntity.RadioButton == "S")"> ...</R_Lookup>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="3">
+            <R_TextBox @bind-Value="@_viewModel.loExpenditureEntity.CCATEGORY_NAME"
+                       R_ConductorSource="@_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+        <R_ItemLayout>
+            <R_Button OnClick="Refresh_Button">
+                Refresh
+            </R_Button>
+        </R_ItemLayout>
+
+    </R_StackLayout>
+
+    <R_StackLayout Row>
+        <R_Grid @ref="@GridRef"
+                DataSource="_viewModel.ExpenditureGrid"
+                R_ServiceGetListRecord="R_ServiceGetListRecordAsync"
+                Pageable
+                PageSize="5">
+            <R_GridColumns>
+                <R_GridTextColumn FieldName="CEXPENDITURE_ID" HeaderText="Expenditure ID"></R_GridTextColumn>
+                <R_GridTextColumn FieldName="CEXPENDITURE_NAME" HeaderText="Expenditure Name"></R_GridTextColumn>
+                <R_GridTextColumn FieldName="CCATEGORY_NAME" HeaderText="Category"></R_GridTextColumn>
+                <R_GridCheckBoxColumn FieldName="LTAXABLE" HeaderText="Taxable"></R_GridCheckBoxColumn>
+                <R_GridTextColumn FieldName="CWITHHOLDING_TAX_NAME" HeaderText="Withholding Tax"></R_GridTextColumn>
+            </R_GridColumns>
+        </R_Grid>
+        </R_StackLayout>
+
+        <R_StackLayout Row Class="justify-content-end">
+        <R_Button Enabled="@(_viewModel.ExpenditureGrid.Count != 0)"
+                  OnClick="Button_OnClickOkAsync">
+            OK
+        </R_Button>
+            <R_Button OnClick="Button_OnClickCloseAsync">
+            Cancel
+        </R_Button>
+    </R_StackLayout>
+
+    </R_StackLayout>

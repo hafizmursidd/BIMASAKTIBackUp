@@ -1,5 +1,7 @@
 ﻿@page "/GLB00200"
+@using GLB00200FrontResources
 @inherits R_Page
+@inject R_ILocalizer<Resources_GLB00200_Class> _localizer
 
 <R_StackLayout>
 
@@ -8,7 +10,9 @@
         <R_ItemLayout col="2">
             <R_StackLayout>
                 <R_ItemLayout col="10" Clas>
-                    <R_Label>Journal Period :</R_Label>
+                    <R_Label>
+                        @_localizer["_JournalPeriod"]
+                    </R_Label>
                 </R_ItemLayout>
             </R_StackLayout>
         </R_ItemLayout>
@@ -38,12 +42,12 @@
                 </R_ItemLayout>
                 <R_ItemLayout>
                     <R_Button OnClick="@GetList_ReversingJournalWithSearch">
-                        Search
+                        @_localizer["_Search"]
                     </R_Button>
                 </R_ItemLayout>
                 <R_ItemLayout>
                     <R_Button OnClick="@GetList_ReversingJournalWithCustomPeriod">
-                        Show All
+                        @_localizer["_ShowAll"]
                     </R_Button>
                 </R_ItemLayout>
             </R_StackLayout>
@@ -65,49 +69,49 @@
                 AllowEditRow="false"
                 Height="350px">
             <R_GridColumns>
-                <R_GridCheckBoxSelectColumn Width="100px" FieldName="LSELECTED"
+                <R_GridCheckBoxSelectColumn Width="75px" FieldName="LSELECTED"
                                             R_EnableEdit
                                             R_EnableAdd
                                             ShowSelectAllHeader>
                 </R_GridCheckBoxSelectColumn>
-                <R_GridNumericColumn Width="200px" FieldName="INO" HeaderText="No.">
+                <R_GridNumericColumn TextAlignment="R_eTextAlignment.Center" Width="75px" FieldName="INO" HeaderText=@_localizer["_No"]>
 
                 </R_GridNumericColumn>
-                <R_GridTextColumn Width="150px" FieldName="CDEPT_CODE_NAME"
-                                  HeaderText="Department">
+                <R_GridTextColumn Width="200px" FieldName="CDEPT_CODE_NAME"
+                                  HeaderText=@_localizer["_Dept"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px" FieldName="CREF_NO"
-                                  HeaderText="Master Ref. No.">
+                                  HeaderText=@_localizer["_RefNo"]>
                 </R_GridTextColumn>
-                <R_GridTextColumn Width="250px" FieldName="CDOC_NO"
-                                  HeaderText="Document No.">
+                <R_GridTextColumn Width="175px" FieldName="CDOC_NO"
+                                  HeaderText=@_localizer["_DocNo"]>
                 </R_GridTextColumn>
-                <R_GridTextColumn Width="250px" FieldName="CDOC_DATE"
-                                  HeaderText="Document Date">
+                <R_GridTextColumn Width="175px" FieldName="CDOC_DATE"
+                                  HeaderText=@_localizer["_DocDate"]>
                 </R_GridTextColumn>
-                <R_GridTextColumn Width="250px" FieldName="CREVERSE_DATE"
-                                  HeaderText="Reversing Date">
+                <R_GridTextColumn Width="175px" FieldName="CREVERSE_DATE"
+                                  HeaderText=@_localizer["_ReversDate"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="300px" FieldName="CTRANS_DESC"
-                                  HeaderText="Description">
+                                  HeaderText=@_localizer["_Desc"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="125px" FieldName="CCURRENCY_CODE"
-                                  HeaderText="Currency">
+                                  HeaderText=@_localizer["_Currency"]>
                 </R_GridTextColumn>
-                <R_GridNumericColumn Width="200px" FieldName="NTRANS_AMOUNT"
-                                     HeaderText="Amount">
+                <R_GridNumericColumn Width="175px" FieldName="NTRANS_AMOUNT"
+                                     HeaderText=@_localizer["_Amount"]>
                 </R_GridNumericColumn>
-                <R_GridTextColumn Width="125px" FieldName="CLOCAL_CURRENCY_CODE"
-                                  HeaderText="Local Currency">
+                <R_GridTextColumn Width="150px" FieldName="CLOCAL_CURRENCY_CODE"
+                                  HeaderText=@_localizer["_LocCurrency"]>
                 </R_GridTextColumn>
-                <R_GridNumericColumn Width="200px" FieldName="NLTRANS_AMOUNT"
-                                     HeaderText="Local Amount">
+                <R_GridNumericColumn Width="175px" FieldName="NLTRANS_AMOUNT"
+                                     HeaderText="@_localizer["_LocAmount"]">
                 </R_GridNumericColumn>
-                <R_GridTextColumn Width="200px" FieldName="CBASE_CURRENCY_CODE"
-                                  HeaderText="Base Currency">
+                <R_GridTextColumn Width="150px" FieldName="CBASE_CURRENCY_CODE"
+                                  HeaderText=@_localizer["_BaseCurrency"]>
                 </R_GridTextColumn>
-                <R_GridNumericColumn Width="200px" FieldName="NBTRANS_AMOUNT"
-                                     HeaderText="Base Amount">
+                <R_GridNumericColumn Width="175px" FieldName="NBTRANS_AMOUNT"
+                                     HeaderText=@_localizer["_BaseAmount"]>
                 </R_GridNumericColumn>
             </R_GridColumns>
         </R_Grid>
@@ -127,7 +131,7 @@
         <R_Button Enabled="_viewModelGLB00200.ButtonEnable"
                   R_ConductorGridSource="_conductorReversingJournal"
                   OnClick="@OnClickProcess">
-            Process
+            @_localizer["_Process"]
         </R_Button>
     </R_ItemLayout>
     <R_ItemLayout>
@@ -135,7 +139,7 @@
                  R_Before_Open_Popup="@ButtonDetail_GetList_ReversingJournal"
                  R_ConductorGridSource="@_conductorReversingJournal"
                  R_EnableHasData="false">
-            Detail
+            @_localizer["_Detail"]
         </R_Popup>
     </R_ItemLayout>
 </R_StackLayout>

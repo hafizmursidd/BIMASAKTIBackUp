@@ -1,12 +1,14 @@
 ﻿@page "/GSM06500"
 @inherits R_Page
-
-
+@inject R_ILocalizer<Resources_GSM06500_Class> _localizer
 
 <R_StackLayout>
     <R_StackLayout Row>
         <R_ItemLayout col="1">
-            <R_Label Class="fw-bold">Property</R_Label>
+            <R_Label FontStyle="R_eFontStyle.Bold"
+                     FontColor="R_eFontColor.Danger">
+                @_localizer["_Property"]
+            </R_Label>
         </R_ItemLayout>
         <R_ItemLayout col="2">
             <R_ComboBox Data="@PaymentTermViewModel.PropertyList"
@@ -22,7 +24,7 @@
 
 
 
-<R_StackLayout Class="mt-3">
+<R_StackLayout>
     <R_Grid @ref="@_gridRef"
             DataSource="PaymentTermViewModel.PaymentOfTermList"
             Pageable="true"
@@ -36,13 +38,13 @@
             >
 
         <R_GridColumns>
-            <R_GridTextColumn Width="200px" MaxLength="8" FieldName="CPAY_TERM_CODE" HeaderText="Term of Payment Code" R_EnableAdd />
-            <R_GridTextColumn Width="350px"  MaxLength="100" FieldName="CPAY_TERM_NAME" HeaderText="Term of Payment Name" R_EnableAdd R_EnableEdit />
-            <R_GridNumericColumn Width="150px" Min="0" Max="999999" FieldName="IPAY_TERM_DAYS" HeaderText="TOP Days" R_EnableAdd R_EnableEdit Arrows="false" />
-            <R_GridTextColumn Width="150px"FieldName="CUPDATE_BY" HeaderText="Updated By" />
-            <R_GridDateTimePickerColumn Width="250px"FieldName="DUPDATE_DATE" HeaderText="Updated Date" />
-            <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText="Created By" />
-            <R_GridDateTimePickerColumn Width="250px"  FieldName="DCREATE_DATE" HeaderText="Created Date" />
+            <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="200px" MaxLength="8" FieldName="CPAY_TERM_CODE" HeaderText=@_localizer["_PayCode"] R_EnableAdd />
+            <R_GridTextColumn Width="275px"  MaxLength="100" FieldName="CPAY_TERM_NAME" HeaderText=@_localizer["_PayName"] R_EnableAdd R_EnableEdit />
+            <R_GridNumericColumn TextAlignment="R_eTextAlignment.Center" Width="100px" Min="0" Max="999999" FieldName="IPAY_TERM_DAYS" HeaderText=@_localizer["_TopDays"] R_EnableAdd R_EnableEdit Arrows="false" />
+            <R_GridTextColumn Width="150px"FieldName="CUPDATE_BY" HeaderText=@_localizer["_UpdBY"] />
+            <R_GridDateTimePickerColumn Width="250px"FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"]/>
+            <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText=@_localizer["_CreateBy"] />
+            <R_GridDateTimePickerColumn Width="250px"  FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreateDate"] />
         </R_GridColumns>
     </R_Grid>
 </R_StackLayout>

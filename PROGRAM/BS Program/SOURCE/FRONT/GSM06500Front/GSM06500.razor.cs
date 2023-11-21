@@ -135,22 +135,14 @@ namespace GSM06500Front
                 loEx.Add(ex);
             }
 
-            R_DisplayException(loEx);
+            loEx.ThrowExceptionIfErrors();
         }
-
-        public async Task ServiceValidation(R_ValidationEventArgs eventArgs)
+        public void  ServiceValidation(R_ValidationEventArgs eventArgs)
         {
             var loEx = new R_Exception();
             try
             {
-                var loParam = (GSM06500DTO)eventArgs.Data;
-
-                if (string.IsNullOrEmpty(loParam.CPAY_TERM_CODE))
-                    loEx.Add(new Exception("Term of Payment Code is required."));
-                if (string.IsNullOrEmpty(loParam.CPAY_TERM_NAME))
-                    loEx.Add(new Exception("Term of Payment Name is required."));
-                if (loParam.IPAY_TERM_DAYS > 999999)
-                    loEx.Add(new Exception("Top Days is Too Long"));
+                PaymentTermViewModel.ValidationFieldEmpty((GSM06500DTO)eventArgs.Data);
             }
             catch (Exception ex)
             {

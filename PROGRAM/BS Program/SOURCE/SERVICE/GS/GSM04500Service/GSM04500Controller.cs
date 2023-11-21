@@ -205,7 +205,7 @@ namespace GSM04500Service
                 loDbParameter.CJRNGRP_TYPE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CJRNGRP_TYPE);
                 
                 _loggerGSM04500.LogInfo("Get Parameter GET_JOURNAL_GRP_LIST_STREAM on Controller");
-                _loggerGSM04500.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerGSM04500.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 var loCls = new GSM04500Cls();
                 _loggerGSM04500.LogInfo("Call method JOURNAL_GROUP_LIST");

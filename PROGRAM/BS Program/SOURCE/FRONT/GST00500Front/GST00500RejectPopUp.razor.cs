@@ -1,5 +1,6 @@
 ﻿using BlazorClientHelper;
 using GST00500Common;
+using GST00500FrontResources;
 using GST00500Model.ViewModel;
 using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
@@ -63,11 +64,13 @@ namespace GST00500Front
             {
                 if (string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.CREASON_CODE))
                 {
-                    loEx.Add(new Exception("Please select “Reason of Rejection” !!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GST00500_Class), "Error_02");
+                    loEx.Add(loErr);
                 }
                else if (string.IsNullOrEmpty(_viewModelGST00500Inbox.ParamRejectTransactionStatus.TNOTES))
                 {
-                    loEx.Add(new Exception("Please insert “Rejection Note” !!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GST00500_Class), "Error_03");
+                    loEx.Add(loErr);
                 }
                 else
                 {
@@ -81,7 +84,7 @@ namespace GST00500Front
             {
                 loEx.Add(ex);
             }
-
+            EndBlock:
             loEx.ThrowExceptionIfErrors();
         }
 

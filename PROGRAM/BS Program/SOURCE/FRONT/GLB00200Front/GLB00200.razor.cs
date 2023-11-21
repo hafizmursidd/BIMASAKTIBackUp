@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlazorClientHelper;
 using GLB00200Common;
+using GLB00200FrontResources;
 using GLB00200Model.ViewModel;
 using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
@@ -16,6 +17,7 @@ using R_BlazorFrontEnd.Controls.Grid;
 using R_BlazorFrontEnd.Controls.MessageBox;
 using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
+using R_BlazorFrontEnd.Helpers;
 
 namespace GLB00200Front
 {
@@ -127,7 +129,8 @@ namespace GLB00200Front
 
                 if (_viewModelGLB00200.ReversingJournalProcessList.Count() < 1)
                 {
-                    loEx.Add(new Exception("Data Not Found!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_01");
+                    loEx.Add(loErr);
                     await _gridReversing.R_RefreshGrid(null);
                     goto EndBlock;
                 }
@@ -149,22 +152,14 @@ namespace GLB00200Front
             var loEx = new R_Exception();
             try
             {
-                if (string.IsNullOrEmpty(_viewModelGLB00200.lcSearchText))
-                {
-                    loEx.Add(new Exception("Please input keyword to search!"));
-                    goto EndBlock;
-                }
-                if (!string.IsNullOrEmpty(_viewModelGLB00200.lcSearchText)
-                    && _viewModelGLB00200.lcSearchText.Length < 3)
-                {
-                    loEx.Add(new Exception("Minimum search keyword is 3 characters!"));
-                    goto EndBlock;
-                }
+                _viewModelGLB00200.ValidationFieldEmpty();
+                
                 await _viewModelGLB00200.GetAllReversingJournalProcess();
 
                 if (_viewModelGLB00200.ReversingJournalProcessList.Count() < 1)
                 {
-                    loEx.Add(new Exception("Data Not Found!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_01");
+                    loEx.Add(loErr);
                     await _gridReversing.R_RefreshGrid(null);
                     goto EndBlock;
                 }
@@ -229,18 +224,20 @@ namespace GLB00200Front
 
         #region Save Batch
         private void BeforeSaveBatch(R_BeforeSaveBatchEventArgs events)
-        {
+        { var loEx = new R_Exception();
             var loData = (List<GLB00200DTO>)events.Data;
 
             if (loData.Count == 0)
             {
-                R_MessageBox.Show("", "Data Not Found!", R_eMessageBoxButtonType.OK);
+                var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_04");
+                loEx.Add(loErr);
                 events.Cancel = true;
             }
             //Validasi Incement Flag
             if (_viewModelGLB00200.GetInitialProcess.LINCREMENT_FLAG == false)
             {
-                R_MessageBox.Show("", "Cannot process Recurring Journal with Manual Numbering! Transaction numbering setting for Recurring Journal should be auto increment, not manual numbering!", R_eMessageBoxButtonType.OK);
+                var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_05");
+                loEx.Add(loErr);
                 events.Cancel = true;
             }
         }
@@ -287,7 +284,7 @@ namespace GLB00200Front
         }
         #endregion
 
-        #region Validation to BAckground red
+        #region Validation to Background red
         private void R_RowForBackGround(R_GridRowRenderEventArgs eventArgs)
         {
             var loData = (GLB00200DTO)eventArgs.Data;

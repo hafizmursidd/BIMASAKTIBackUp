@@ -29,7 +29,7 @@
             R_Before_Open_Grid_Lookup="BeforeOpenLookUPGOA"
             R_After_Open_Grid_Lookup="AfterOpenLookGOA">
         <R_GridColumns>
-            <R_GridTextColumn Width="150px" FieldName="GROUPOFACCOUNT" HeaderText="Group of Account" />
+            <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="170px" FieldName="GROUPOFACCOUNT" HeaderText="Group of Account" />
             <R_GridCheckBoxColumn Width="100px" FieldName="LDEPARTMENT_MODE" HeaderText="By Dept" R_EnableEdit />
             <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO" Name="GLAccount_No" HeaderText="GL Account No" R_EnableAdd R_EnableEdit />
             <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" HeaderText="GL Account Name" />
@@ -70,14 +70,14 @@
         <R_GridColumns>
             <R_GroupBox Enabled="@JournalGOAViewModel.Data.LDEPARTMENT_MODE">
                 <R_StackLayout>
-                    <R_GridLookupColumn Width="200px" FieldName="@nameof(GSM04510GOADeptDTO.CDEPT_CODE)" Name="CDEPT_CODE" HeaderText="Department Code" R_EnableAdd />
+                    <R_GridLookupColumn TextAlignment="R_eTextAlignment.Center" Width="200px" FieldName="@nameof(GSM04510GOADeptDTO.CDEPT_CODE)" Name="CDEPT_CODE" HeaderText="Department Code" R_EnableAdd />
                     <R_GridTextColumn Width="200px" FieldName="CDEPT_NAME" HeaderText="Department Name" />
                     <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO" Name="GLAccount_No" HeaderText="GL Account No" R_EnableAdd R_EnableEdit />
                     <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" HeaderText="GL Account Name" />
                     <R_GridTextColumn  Width="150px" FieldName="CUPDATE_BY" HeaderText="Updated By" />
-                    <R_GridDatePickerColumn  Width="200px" FieldName="DUPDATE_DATE" HeaderText="Updated Date" />
+                    <R_GridDateTimePickerColumn  Width="200px" FieldName="DUPDATE_DATE" HeaderText="Updated Date" />
                     <R_GridTextColumn  Width="150px" FieldName="CCREATE_BY" HeaderText="Created By" />
-                    <R_GridDatePickerColumn  Width="200px" FieldName="DCREATE_DATE" HeaderText="Created Date" />
+                    <R_GridDateTimePickerColumn Width="200px" FieldName="DCREATE_DATE" HeaderText="Created Date" />
                 </R_StackLayout>
             </R_GroupBox>
         </R_GridColumns>

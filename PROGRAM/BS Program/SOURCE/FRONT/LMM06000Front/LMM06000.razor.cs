@@ -316,12 +316,15 @@ namespace LMM06000Front
             };
             //disable button add when user click add
             BillingRuleViewModel._IsButtonAddEnable = false;
+            // Focus Async
             await FocusLabelAdd.FocusAsync();
 
         }
 
         private async Task ServiceBeforeEdit(R_BeforeEditEventArgs eventArgs)
         {
+            //Focus Async
+            await FocusLabelEdit.FocusAsync();
             //disable button add when user click edit
             BillingRuleViewModel._IsButtonAddEnable = false;
         }

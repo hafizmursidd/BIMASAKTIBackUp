@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlazorClientHelper;
 using GST00500Common;
+using GST00500FrontResources;
 using GST00500Model.ViewModel;
 using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
@@ -20,7 +21,7 @@ using R_BlazorFrontEnd.Helpers;
 namespace GST00500Front
 {
     public partial class GST00500 : R_Page
-    { 
+    {
         #region Declare ViewModel
 
         private GST00500InboxViewModel _viewModelGST00500Inbox = new();
@@ -32,8 +33,10 @@ namespace GST00500Front
         private R_ConductorGrid _conductorInboxTrans;
         [Inject] IClientHelper clientHelper { get; set; }
         private bool isApprove = true;
-
-
+        private void StateChangeInvoke()
+        {
+            StateHasChanged();
+        }
         private void DisplayErrorInvoke(R_Exception poException)
         {
             this.R_DisplayException(poException);
@@ -46,6 +49,8 @@ namespace GST00500Front
                 await ServiceGetUserName(null);
                 _viewModelGST00500Inbox.CCOMPANYID = clientHelper.CompanyId;
                 _viewModelGST00500Inbox.CUSERID = clientHelper.UserId;
+
+                _viewModelGST00500Inbox.StateChangeAction = StateChangeInvoke;
                 _viewModelGST00500Inbox.DisplayErrorAction = DisplayErrorInvoke;
                 await Task.CompletedTask;
             }
@@ -101,7 +106,8 @@ namespace GST00500Front
             {
                 if (!_viewModelGST00500Inbox.IsDataSelectedExist())
                 {
-                    loEx.Add(new Exception("Please select at least one data to process !!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GST00500_Class), "Error_04");
+                    loEx.Add(loErr);
                     goto EndBlock;
                 }
                 await _conductorInboxTrans.R_SaveBatch();
@@ -125,9 +131,11 @@ namespace GST00500Front
             {
                 isApprove = false;
 
+                //_viewModelGST00500Inbox.ValidationField();
                 if (!_viewModelGST00500Inbox.IsDataSelectedExist())
                 {
-                    loEx.Add(new Exception("Please select at least one data to process !!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GST00500_Class), "Error_04");
+                    loEx.Add(loErr);
                     goto EndBlock;
                 }
 
@@ -140,8 +148,6 @@ namespace GST00500Front
 
                     eventArgs.Parameter = _viewModelGST00500Inbox.loInboxApprovaltBatchList;
                     eventArgs.TargetPageType = typeof(GST00500RejectPopUp);
-
-
                 }
 
                 await this.Close(true, true);
@@ -172,12 +178,14 @@ namespace GST00500Front
         #region Save Batch
         private void BeforeSaveBatch(R_BeforeSaveBatchEventArgs events)
         {
+            var loEx = new R_Exception();
             var tempData = (List<GST00500DTO>)events.Data;
 
 
             if (tempData.Count < 1)
             {
-                var loTemp = R_MessageBox.Show("", "Data Not Found", R_eMessageBoxButtonType.OK);
+                var loErr = R_FrontUtility.R_GetError(typeof(Resources_GST00500_Class), "Error_01");
+                loEx.Add(loErr); 
                 events.Cancel = true;
             }
         }

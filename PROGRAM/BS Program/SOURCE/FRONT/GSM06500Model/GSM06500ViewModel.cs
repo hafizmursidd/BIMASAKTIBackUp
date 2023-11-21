@@ -2,11 +2,13 @@
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
+using R_BlazorFrontEnd.Helpers;
 using R_CommonFrontBackAPI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using GSM06500FrontResources;
 
 namespace GSM06500Model
 {
@@ -110,7 +112,7 @@ namespace GSM06500Model
         public async Task<GSM06500DTO> SaveTermOfPayment(GSM06500DTO poNewEntity, R_eConductorMode peConductorMode)
         {
             var loEx = new R_Exception();
-            GSM06500DTO loResult = new GSM06500DTO();
+            GSM06500DTO loResult = null;
 
             try
             {
@@ -126,5 +128,36 @@ namespace GSM06500Model
             return loResult;
         }
 
+        public void ValidationFieldEmpty(GSM06500DTO poEntity)
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                if (string.IsNullOrEmpty(poEntity.CPAY_TERM_CODE))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GSM06500_Class), "Error_01");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(poEntity.CPAY_TERM_NAME))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GSM06500_Class), "Error_02");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (poEntity.IPAY_TERM_DAYS > 999999)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GSM06500_Class), "Error_03");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            EndBlock:
+            loEx.ThrowExceptionIfErrors();
+        }
     }
 }

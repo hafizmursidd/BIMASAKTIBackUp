@@ -47,7 +47,7 @@ namespace GLB00200Back
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
                _loggerGLB00200.LogInfo("Execute query initial process to get year range");
-                _loggerGLB00200.R_LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLB00200.LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, false);
                 loResult = R_Utility.R_ConvertTo<GLB00200InitalProcessDTO>(loReturnTemp).FirstOrDefault();
@@ -57,7 +57,7 @@ namespace GLB00200Back
                 loCommand.CommandText = lcQueryLincrement;
                 loCommand.CommandType = CommandType.Text;
                 _loggerGLB00200.LogInfo("Execute query initial process to validation");
-                _loggerGLB00200.R_LogDebug("{@ObjectQuery (2)} ", lcQueryLincrement);
+                _loggerGLB00200.LogDebug("{@ObjectQuery (2)} ", lcQueryLincrement);
 
                 var loReturnTempVal = loDb.SqlExecQuery(loConn, loCommand, true);
                 var loResultTemp = R_Utility.R_ConvertTo<GLB00200InitalProcessDTO>(loReturnTempVal).FirstOrDefault();
@@ -101,7 +101,7 @@ namespace GLB00200Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLB00200.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLB00200.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLB00200DTO>(loReturnTemp).ToList();
@@ -143,7 +143,7 @@ namespace GLB00200Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLB00200.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLB00200.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);

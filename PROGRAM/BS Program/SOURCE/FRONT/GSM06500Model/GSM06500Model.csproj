@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\COMMON\GS\GSM06500Common\GSM06500Common.csproj" />
+    <ProjectReference Include="..\GSM06500FrontResources\GSM06500FrontResources.csproj" />
   </ItemGroup>
 
   <ItemGroup>

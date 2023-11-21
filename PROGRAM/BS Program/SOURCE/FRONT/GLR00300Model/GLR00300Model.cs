@@ -24,10 +24,16 @@ namespace GLR00300Model
         {
         }
 
-        public GLR00300PeriodDTO InitialProcess()
+        public GLR00300InitialProcess InitialProcess()
         {
             throw new NotImplementedException();
         }
+
+        public GenericList<GLR00300GetPeriod> GetPeriod(GLR00300DBParameterDTO poParam)
+        {
+            throw new NotImplementedException();
+        }
+
         public GenericList<GLR00300DTO> GetTrialBalanceType()
         {
             throw new NotImplementedException();
@@ -40,14 +46,14 @@ namespace GLR00300Model
         {
             throw new NotImplementedException();
         }
-        public async Task<GLR00300PeriodDTO> GetInitialProcessAsyncModel()
+        public async Task<GLR00300InitialProcess> GetInitialProcessAsyncModel()
         {
             var loEx = new R_Exception();
-            GLR00300PeriodDTO loResult = new GLR00300PeriodDTO();
+            GLR00300InitialProcess loResult = new GLR00300InitialProcess();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                loResult = await R_HTTPClientWrapper.R_APIRequestObject<GLR00300PeriodDTO>(
+                loResult = await R_HTTPClientWrapper.R_APIRequestObject<GLR00300InitialProcess>(
                     _RequestServiceEndPoint,
                     nameof(IGLR00300.InitialProcess),
                     DEFAULT_MODULE,
@@ -114,6 +120,29 @@ namespace GLR00300Model
                     _RequestServiceEndPoint,
                     nameof(IGLR00300.GetBudgetNo),
                     loParamDB,
+                    DEFAULT_MODULE,
+                    _SendWithContext,
+                    _SendWithToken);
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            return loResult;
+        }
+
+        public async Task<GenericList<GLR00300GetPeriod>> GetPeriodAsyncoModel(GLR00300DBParameterDTO loParam)
+        {
+            R_Exception loEx = new R_Exception();
+            GenericList<GLR00300GetPeriod> loResult = new GenericList<GLR00300GetPeriod>();
+            try
+            {
+                R_HTTPClientWrapper.httpClientName = _HttpClientName;
+                loResult = await R_HTTPClientWrapper.R_APIRequestObject<GenericList<GLR00300GetPeriod>, GLR00300DBParameterDTO>(
+                    _RequestServiceEndPoint,
+                    nameof(IGLR00300.GetPeriod),
+                    loParam,
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);

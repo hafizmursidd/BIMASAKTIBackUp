@@ -1,24 +1,26 @@
 ﻿@page "/GLR00300"
 @using R_BlazorFrontEnd.Controls.Events
 @using GLR00300Common
+@using GLR00300FrontResources
 @inherits R_Page
+@inject R_ILocalizer<Resources_GLR00300_Class> _localizer
 
 <R_StackLayout>
 
     <R_StackLayout>
         <R_ItemLayout>
             <R_Label>
-                Report Options
+                @_localizer["_ReportOption"]
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
     <R_GroupBox>
 
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
-                <R_Label>Trial Balance Type</R_Label>
+            <R_ItemLayout col="2">
+                <R_Label>@_localizer["_TBType"]</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout col="2">
                 <R_ComboBox Data="@_viewModelGLR00300.TrialBalanceList"
                             ValueField="@nameof(GLR00300DTO.CCODE)"
                             TextField="@nameof(GLR00300DTO.CNAME)"
@@ -28,11 +30,11 @@
             </R_ItemLayout>
         </R_StackLayout>
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
-                <R_Label>Currency Type</R_Label>
+            <R_ItemLayout col="2">
+                <R_Label>@_localizer["_CurrencyType"]</R_Label>
             </R_ItemLayout>
             <R_StackLayout Row>
-                <R_ItemLayout xs="12">
+                <R_ItemLayout col="12">
                     <R_RadioGroup Data="@_viewModelGLR00300.CurrencyTypeList"
                                   @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
                                   ValueField="@nameof(GLR00300DTO.CCODE)"
@@ -44,11 +46,11 @@
         </R_StackLayout>
 
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
-                <R_Label>Journal Adjustment Mode</R_Label>
+            <R_ItemLayout col="2">
+                <R_Label>@_localizer["_JournalAdjMode"]</R_Label>
             </R_ItemLayout>
             <R_StackLayout Row>
-                <R_ItemLayout xs="12">
+                <R_ItemLayout col="12">
                     <R_RadioGroup Data="@_viewModelGLR00300.JournalAdustModeList"
                                   @bind-Value="_viewModelGLR00300.JournalAdjustModeValue"
                                   ValueField="@nameof(GLR00300DTO.CCODE)"
@@ -63,28 +65,28 @@
     <R_StackLayout>
         <R_ItemLayout>
             <R_Label>
-                Period
+                @_localizer["_Period"]
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
     <R_GroupBox Enabled="@_viewModelGLR00300._lIsTrialBalanceTypeIsNormal">
         <R_StackLayout Row>
-            <R_ItemLayout xs="1">
-                <R_Label>Year</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_Year"]</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                <R_NumericTextBox Min="@_viewModelGLR00300.PeriodYearMinMax.IMIN_YEAR"
-                                  Max="@_viewModelGLR00300.PeriodYearMinMax.IMAX_YEAR"
+            <R_ItemLayout col="1">
+                <R_NumericTextBox Min="@_viewModelGLR00300.InitialProcess.IMIN_YEAR"
+                                  Max="@_viewModelGLR00300.InitialProcess.IMAX_YEAR"
                                   @bind-Value="_viewModelGLR00300.PeriodYear"
                                   ThousandSeparator="false"
                                   OnChanged="@OnChange">
                 </R_NumericTextBox>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout col="1">
                 <R_ComboBox Data="@_viewModelGLR00300.GetPeriodList"
-                            @bind-Value="_viewModelGLR00300.PeriodId"
-                            ValueField="@nameof(GetPeriodDTO.Id)"
-                            TextField="@nameof(GetPeriodDTO.Id)">
+                            @bind-Value="_viewModelGLR00300.PeriodNo"
+                            ValueField="@nameof(GLR00300GetPeriod.CPERIOD_NO)"
+                            TextField="@nameof(GLR00300GetPeriod.CPERIOD_NO)">
                 </R_ComboBox>
             </R_ItemLayout>
         </R_StackLayout>
@@ -94,18 +96,19 @@
     <R_StackLayout>
         <R_ItemLayout>
             <R_Label>
-                Account
+                @_localizer["_Account"]
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
-    <R_GroupBox>
+
+<R_GroupBox>
         @*FROM Account*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="1">
-                <R_Label>From</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_From"]</R_Label>
             </R_ItemLayout>
             <R_ItemLayout col="2">
-                <R_TextBox @bind-Value="_viewModelGLR00300.FromAccount.CGLACCOUNT_NO"
+                <R_TextBox @bind-Value="_viewModelGLR00300.InitialProcess.CMIN_GLACCOUNT_NO"
                            Enabled="false">
 
                 </R_TextBox>
@@ -116,8 +119,8 @@
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                <R_TextBox @bind-Value="@_viewModelGLR00300.FromAccount.CGLACCOUNT_NAME"
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.InitialProcess.CMIN_GLACCOUNT_NAME"
                            Enabled="false">
                 </R_TextBox>
             </R_ItemLayout>
@@ -125,11 +128,11 @@
 
         @*To Account*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="1">
-                <R_Label>To</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_To"]</R_Label>
             </R_ItemLayout>
             <R_ItemLayout col="2">
-                <R_TextBox @bind-Value="_viewModelGLR00300.ToAccount.CGLACCOUNT_NO"
+                <R_TextBox @bind-Value="_viewModelGLR00300.InitialProcess.CMAX_GLACCOUNT_NO"
                            Enabled="false">
                 </R_TextBox>
             </R_ItemLayout>
@@ -139,8 +142,8 @@
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
-                <R_TextBox @bind-Value="@_viewModelGLR00300.ToAccount.CGLACCOUNT_NAME"
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@_viewModelGLR00300.InitialProcess.CMAX_GLACCOUNT_NAME"
                            Enabled="false">
                 </R_TextBox>
             </R_ItemLayout>
@@ -152,14 +155,14 @@
     <R_StackLayout Row="true">
         <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintByCenter"
                     OnChanged="@OnChangedCheckBoxPrintByCenter"> </R_CheckBox>
-        <R_Label>Print By Center</R_Label>
+        <R_Label>@_localizer["_PrintByCenter"]</R_Label>
     </R_StackLayout>
     <R_GroupBox Enabled="@_viewModelGLR00300._lPrintByCenter">
 
         @*FROM CENTER*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="1">
-                <R_Label>From</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_From"]</R_Label>
             </R_ItemLayout>
             <R_ItemLayout col="2">
                 <R_TextBox @bind-Value="_viewModelGLR00300.FromCenter.CCENTER_CODE"
@@ -173,7 +176,7 @@
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout col="2">
                 <R_TextBox @bind-Value="@_viewModelGLR00300.FromCenter.CCENTER_NAME"
                            Enabled="false">
                 </R_TextBox>
@@ -182,8 +185,8 @@
 
         @*TO CENTER*@
         <R_StackLayout Row>
-            <R_ItemLayout xs="1">
-                <R_Label>To</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_To"]</R_Label>
             </R_ItemLayout>
             <R_ItemLayout col="2">
                 <R_TextBox @bind-Value="_viewModelGLR00300.ToCenter.CCENTER_CODE"
@@ -197,7 +200,7 @@
                     ...
                 </R_Lookup>
             </R_ItemLayout>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout col="2">
                 <R_TextBox @bind-Value="@_viewModelGLR00300.ToCenter.CCENTER_NAME"
                            Enabled="false">
                 </R_TextBox>
@@ -209,13 +212,13 @@
     <R_StackLayout>
         <R_ItemLayout>
             <R_Label>
-                Print Method
+                @_localizer["_PrintMethod"]
             </R_Label>
         </R_ItemLayout>
     </R_StackLayout>
     <R_GroupBox>
         <R_StackLayout>
-            <R_ItemLayout Class="mb-3" col="5">
+            <R_ItemLayout Class="mb-2" col="4">
                 <R_ComboBox Enabled="@_viewModelGLR00300._lIsTrialBalanceTypeIsNormal"
                             Data="@_viewModelGLR00300.PrintMethodList"
                             ValueField="@nameof(GLR00300DTO.CCODE)"
@@ -225,15 +228,15 @@
             </R_ItemLayout>
         </R_StackLayout>
         <R_StackLayout Row>
-            <R_ItemLayout xs="2">
+            <R_ItemLayout col="2">
                 <R_CheckBox @bind-Value="@_viewModelGLR00300._lPrintBudget"
                             OnChanged="@OnChangedCheckBoxPrintBudget"> </R_CheckBox>
-                <R_Label>Print Budget</R_Label>
+                <R_Label>@_localizer["_PrintBudget"]</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="1">
-                <R_Label>Budget No.</R_Label>
+            <R_ItemLayout col="1">
+                <R_Label>@_localizer["_BudgetNo"]</R_Label>
             </R_ItemLayout>
-            <R_ItemLayout xs="3">
+            <R_ItemLayout col="3">
                 <R_ComboBox Data="@_viewModelGLR00300.BudgetNoList"
                             ValueField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NO)"
                             TextField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NAME_DISPLAY)"

@@ -126,7 +126,7 @@ namespace LMM06000Service
                 loDbParameter.LACTIVE_ONLY = false; //sesuai pernyataan dari bu Reni
                 
                 _loggerLMM06000.LogInfo("Get Parameter BillingRuleListStream on Controller");
-                _loggerLMM06000.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerLMM06000.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 var loCls = new LMM06000Cls();
                 _loggerLMM06000.LogInfo("Call method BillingRuleList");
@@ -226,7 +226,7 @@ namespace LMM06000Service
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
                 loDbParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CPROPERTY_ID);
                 loDbParameter.CUNIT_TYPE_CATEGORY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CUNIT_TYPE_ID);
-                _loggerLMM06000.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerLMM06000.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 _loggerLMM06000.LogInfo("Call method GetAllUnitTypeList");
                 loRtnTemp = loCls.GetAllUnitTypeList(loDbParameter);
@@ -263,7 +263,7 @@ namespace LMM06000Service
 
 
                 _loggerLMM06000.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
-                _loggerLMM06000.R_LogDebug("DbParameter {@Parameter} ", loParameter);
+                _loggerLMM06000.LogDebug("{@Parameter} ", loParameter);
 
                 _loggerLMM06000.LogInfo("Call method SetActiveInactive");
                 loCls.SetActiveInactiveDb(loParameter);

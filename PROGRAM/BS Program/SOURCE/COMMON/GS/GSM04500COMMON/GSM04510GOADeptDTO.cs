@@ -22,9 +22,9 @@ namespace GSM04500Common
         public string CGLACCOUNT_NO { get; set; }
         public string CGLACCOUNT_NAME { get; set; }
         public string CUPDATE_BY { get; set; }
-        public DateTime DUPDATE_DATE { get; set; }
+        public DateTime DUPDATE_DATE { get; set; } = DateTime.Now;
         public string CCREATE_BY { get; set; }
-        public DateTime DCREATE_DATE { get; set; }
+        public DateTime DCREATE_DATE { get; set; } = DateTime.Now;
 
     }
     public class GSM04510GOADeptListDTO : R_APIResultBaseDTO

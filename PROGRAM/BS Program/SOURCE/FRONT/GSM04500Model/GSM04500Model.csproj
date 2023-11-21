@@ -10,6 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\COMMON\GS\GSM04500COMMON\GSM04500Common.csproj" />
 	  <ProjectReference Include="..\..\COMMON\GS\GSM04500\GSM04500Common.csproj" />
 	</ItemGroup>
 

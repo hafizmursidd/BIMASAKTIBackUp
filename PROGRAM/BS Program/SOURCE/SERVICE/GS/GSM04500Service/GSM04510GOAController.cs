@@ -113,7 +113,7 @@ namespace GSM04500Service
                 loDbParameter.CJOURNAL_GRP_CODE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CJOURNAL_GRP_CODE);
 
                 _loggerGSM04500.LogInfo("Get Parameter JOURNAL_GRP_GOA_LIST on Controller");
-                _loggerGSM04500.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerGSM04500.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 var loCls = new GSM04510GOACls();
                 _loggerGSM04500.LogInfo("Call method JOURNAL_GROUP_GOA_LIST");

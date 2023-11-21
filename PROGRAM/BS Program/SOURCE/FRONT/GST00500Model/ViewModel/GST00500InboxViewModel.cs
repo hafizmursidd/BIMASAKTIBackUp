@@ -12,6 +12,7 @@ using R_CommonFrontBackAPI;
 using R_ProcessAndUploadFront;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GST00500FrontResources;
 
 namespace GST00500Model.ViewModel
 {
@@ -36,7 +37,7 @@ namespace GST00500Model.ViewModel
         private enum TYPE_APPROVE { Approve, Reject }
 
         private TYPE_APPROVE TipeApprove;
-
+        public Action StateChangeAction { get; set; }
         public async Task GetAllInboxTransaction()
         {
             R_Exception loException = new R_Exception();
@@ -113,7 +114,6 @@ namespace GST00500Model.ViewModel
 
             try
             {
-
                 loInboxApprovaltBatchListSelected = loInboxApprovaltBatchList.Where(x => x.LSELECTED == true).ToList();
 
                 await ProcessApproveTransaction(loInboxApprovaltBatchListSelected);
@@ -274,6 +274,7 @@ namespace GST00500Model.ViewModel
                     }
                 }
             }
+            StateChangeAction();
             await Task.CompletedTask;
         }
         public async Task ProcessError(string pcKeyGuid, R_APIException ex)
@@ -290,6 +291,7 @@ namespace GST00500Model.ViewModel
             }
 
             DisplayErrorAction.Invoke(loException);
+            StateChangeAction();
             await Task.CompletedTask;
         }
         public Task ReportProgress(int pnProgress, string pcStatus)
@@ -302,6 +304,7 @@ namespace GST00500Model.ViewModel
             {
                 Message = string.Format("Process Progress {0} with status {1}", pnProgress, pcStatus);
             }
+            StateChangeAction();
             return Task.CompletedTask;
         }
         private async Task ServiceGetError(string pcKeyGuid)

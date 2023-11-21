@@ -1,5 +1,5 @@
 ﻿@inherits R_Page
-
+@inject R_ILocalizer<Resources_GST00500_Class> _localizer
 <R_StackLayout>
     <R_ItemLayout>
 
@@ -16,27 +16,27 @@
             <R_GridColumns>
                 <R_GridTextColumn Width="250px"
                                   FieldName="CTRANS_NAME"
-                                  HeaderText="Transaction Name">
+                                  HeaderText=@_localizer["_TransName"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
                                   FieldName="CDEPT_CODE"
-                                  HeaderText="Department">
+                                  HeaderText=@_localizer["_DeptCode"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
                                   FieldName="CREF_NO"
-                                  HeaderText="Reference No">
+                                  HeaderText=@_localizer["_RefNo"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="250px"
                                   FieldName="CREF_DATE"
-                                  HeaderText="Reference Date">
+                                  HeaderText=@_localizer["_RefDate"]>
                 </R_GridTextColumn>
                 <R_GridTextColumn Width="150px"
                                   FieldName="CUPDATE_BY"
-                                  HeaderText="Updated By">
+                                  HeaderText=@_localizer["_UpdBy"]>
                 </R_GridTextColumn>
                 <R_GridDateTimePickerColumn Width="150px"
                                             FieldName="DUPDATE_DATE"
-                                            HeaderText="Updated Date">
+                                            HeaderText=@_localizer["_UpdDate"]>
                 </R_GridDateTimePickerColumn>
             </R_GridColumns>
         </R_Grid>
@@ -47,7 +47,7 @@
         <R_ItemLayout>
             <R_Detail R_Before_Open_Detail="R_Before_OpenDocNumbering_Detail"
                       R_After_Open_Detail="R_After_OpenDocNumbering_Detail">
-                View
+                @_localizer["_BtnView"]
             </R_Detail>
             @*<R_Button>View</R_Button>*@
         </R_ItemLayout>

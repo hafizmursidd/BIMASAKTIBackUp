@@ -13,13 +13,13 @@ namespace Lookup_GSModel.ViewModel
 
         public ObservableCollection<GSL01900DTO> LOBGrid = new ObservableCollection<GSL01900DTO>();
 
-        public async Task GetLOBList(GSL01900DTOParameter poParameter)
+        public async Task GetLOBList()
         {
             var loEx = new R_Exception();
 
             try
             {
-                var loResult = await _model.GSL01900GetLOBListAsync(poParameter);
+                var loResult = await _model.GSL01900GetLOBListAsync();
 
                 LOBGrid = new ObservableCollection<GSL01900DTO>(loResult);
             }

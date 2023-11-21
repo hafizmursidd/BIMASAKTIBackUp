@@ -147,7 +147,7 @@ namespace GSM06500Service
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
                 loDbParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CPROPERTY_ID);
 
-                _loggerGSM06500.R_LogDebug("DbParameter {@Parameter} ", loDbParameter);
+                _loggerGSM06500.LogDebug("DbParameter {@Parameter} ", loDbParameter);
                 _loggerGSM06500.LogInfo("Call method TERM_OF_LIST");
                 loRtnTemp = loCls.TERM_OF_LIST(loDbParameter);
                 loRtn = GetPaymentofTerm(loRtnTemp);

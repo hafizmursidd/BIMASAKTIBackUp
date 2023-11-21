@@ -2,10 +2,11 @@
 @using GST00500Common
 @using GST00500Front
 @inherits R_Page
+@inject R_ILocalizer<Resources_GST00500_Class> _localizer
 
 <R_StackLayout Row="true">
     <R_ItemLayout xs="1">
-        <R_Label>Welcome: </R_Label>
+        <R_Label>@_localizer["_Welcome"] </R_Label>
     </R_ItemLayout>
     <R_ItemLayout xs="2">
         <R_TextBox @bind-Value="@_viewModelGST00500Inbox.UserName.CUSER_NAME"
@@ -16,10 +17,15 @@
 </R_StackLayout>
 
 <R_TabStrip OnActiveTabIndexChanged="@ChangeTab">
-
     @* $1$ INBOX TAB#1# *@
     <R_TabStripTab Title="Inbox" Id="TabInbox">
         <R_ItemLayout>
+            <R_ItemLayout>
+                <R_Label>
+                    Transaction:
+                </R_Label>
+            </R_ItemLayout>
+
             <R_Grid @ref="@_gridInboxTransRef"
                     DataSource="_viewModelGST00500Inbox.InboxTransactionList"
                     R_ConductorGridSource="@_conductorInboxTrans"
@@ -38,27 +44,27 @@
                     </R_GridCheckBoxSelectColumn>
                     <R_GridTextColumn Width="250px"
                                       FieldName="CTRANS_NAME"
-                                      HeaderText="Transaction Name">
+                                      HeaderText=@_localizer["_TransName"]>
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="200px"
                                       FieldName="CDEPT_CODE"
-                                      HeaderText="Department">
+                                      HeaderText=@_localizer["_DeptCode"]>
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="250px"
                                       FieldName="CREF_NO"
-                                      HeaderText="Reference No">
+                                      HeaderText=@_localizer["_RefNo"]>
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="250px"
                                       FieldName="CREF_DATE"
-                                      HeaderText="Reference Date">
+                                      HeaderText=@_localizer["_RefDate"]>
                     </R_GridTextColumn>
                     <R_GridTextColumn Width="150px"
                                       FieldName="CUPDATE_BY"
-                                      HeaderText="Updated By">
+                                      HeaderText=@_localizer["_UpdBy"]>
                     </R_GridTextColumn>
                     <R_GridDateTimePickerColumn Width="150px"
                                                 FieldName="DUPDATE_DATE"
-                                                HeaderText="Updated Date">
+                                                HeaderText=@_localizer["_UpdDate"]>
                     </R_GridDateTimePickerColumn>
                 </R_GridColumns>
             </R_Grid>
@@ -69,19 +75,21 @@
                 <R_ItemLayout>
                     <R_Button Enabled="@_viewModelGST00500Inbox.BtnApprove"
                               R_ConductorGridSource="@_conductorInboxTrans"
-                              OnClick="@OnClickApprove">Approve</R_Button>
+                              OnClick="@OnClickApprove">@_localizer["_BtnApprove"]</R_Button>
                 </R_ItemLayout>
                 <R_ItemLayout>
                     <R_Popup Enabled="@_viewModelGST00500Inbox.BtnReject"
                              R_Before_Open_Popup="@R_Before_Open_Reject"
                              R_After_Open_Popup="@R_After_Open_Reject"
-                             R_ConductorGridSource="@_conductorInboxTrans">Reject Transaction</R_Popup>
+                             R_ConductorGridSource="@_conductorInboxTrans">
+                        @_localizer["_Reject"]
+                    </R_Popup>
                 </R_ItemLayout>
             </R_StackLayout>
 
             <R_StackLayout Row="true">
                 <R_ItemLayout>
-                    <R_Button>View</R_Button>
+                    <R_Button>@_localizer["_BtnView"]</R_Button>
                 </R_ItemLayout>
             </R_StackLayout>
         </R_StackLayout>
@@ -89,8 +97,7 @@
     </R_TabStripTab>
 
     <R_TabStripTab Title="Outbox" Id="TabOutbox">
-        <R_TabPage
-            R_Before_Open_TabPage="@R_Before_Open_TabPageOutbox">
+        <R_TabPage R_Before_Open_TabPage="@R_Before_Open_TabPageOutbox">
         </R_TabPage>
     </R_TabStripTab>
 

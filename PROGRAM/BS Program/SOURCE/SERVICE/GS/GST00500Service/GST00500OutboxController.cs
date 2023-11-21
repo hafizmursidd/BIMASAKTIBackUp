@@ -64,7 +64,7 @@ namespace GST00500Service
                 loParameter.CREF_NO = R_Utility.R_GetStreamingContext<string>(ContextConstant.CREF_NO);
                 
                 _loggerGST00500.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
-                _loggerGST00500.R_LogDebug("DbParameter {@Parameter} ", loParameter);
+                _loggerGST00500.LogDebug("DbParameter {@Parameter} ", loParameter);
 
                 _loggerGST00500.LogInfo("Call method ApproverStatusList");
                 loRtn = loCls.ApproverStatusList(loParameter);

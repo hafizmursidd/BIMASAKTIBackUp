@@ -16,6 +16,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BaseHeaderReportCOMMON;
+using GLR00300Common.Logs;
+using Microsoft.Extensions.Logging;
+using GLR00300Service.DTOLogs;
+using R_CommonFrontBackAPI.Log;
 
 namespace GLR00300Service
 {
@@ -23,11 +27,15 @@ namespace GLR00300Service
     {
         private R_ReportFastReportBackClass _ReportCls;
         private GLR00300ParamDBToGetReportDTO _Parameter;
+        private LoggerGLR00300 _loggerGLR00300Report;
 
         #region instantiate
 
-        public GLR00300ReportFormatCController()
+        public GLR00300ReportFormatCController(ILogger<GLR00300ReportFormatCController> logger)
         {
+            LoggerGLR00300.R_InitializeLogger(logger);
+            _loggerGLR00300Report = LoggerGLR00300.R_GetInstanceLogger();
+
             _ReportCls = new R_ReportFastReportBackClass();
             _ReportCls.R_InstantiateMainReportWithFileName += _ReportCls_R_InstantiateMainReportWithFileName;
             _ReportCls.R_GetMainDataAndName += _ReportCls_R_GetMainDataAndName;
@@ -63,42 +71,66 @@ namespace GLR00300Service
         [HttpPost]
         public R_DownloadFileResultDTO AllTrialBalanceReportPost(GLR00300ParamDBToGetReportDTO poParameter)
         {
+            string lcMethodName = nameof(AllTrialBalanceReportPost);
+            _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format C", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_DownloadFileResultDTO loRtn = null;
+            GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO> loCache = null;
             try
             {
                 loRtn = new R_DownloadFileResultDTO();
-                R_DistributedCache.R_Set(loRtn.GuidResult, R_NetCoreUtility.R_SerializeObjectToByte(poParameter));
+                loCache = new GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO>
+                {
+                    poParam = poParameter,
+                    poLogKey = (R_NetCoreLogKeyDTO)R_NetCoreLogAsyncStorage.GetData(R_NetCoreLogConstant.LOG_KEY)
+                };
+
+                // Set Guid Param 
+                _loggerGLR00300Report.LogInfo("Set GUID Param on method post");
+                R_DistributedCache.R_Set(loRtn.GuidResult, R_NetCoreUtility.R_SerializeObjectToByte<GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO>>(loCache));
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300Report.LogError(loException);
             }
 
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300Report.LogInfo(string.Format("END method {0} on Format C", lcMethodName));
+
             return loRtn;
         }
 
         [HttpGet, AllowAnonymous]
         public FileStreamResult AllTrialBalanceReportGet(string pcGuid)
         {
+            string lcMethodName = nameof(AllTrialBalanceReportGet);
+            _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format C", lcMethodName));
+
             R_Exception loException = new R_Exception();
             FileStreamResult loRtn = null;
+            GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO> loResultGUID = null;
             try
             {
                 //Get Parameter
-                _Parameter =
-                    R_NetCoreUtility.R_DeserializeObjectFromByte<GLR00300ParamDBToGetReportDTO>(
-                        R_DistributedCache.Cache.Get(pcGuid));
-                loRtn = new FileStreamResult(_ReportCls.R_GetStreamReport(),
-                    R_ReportUtility.GetMimeType(R_FileType.PDF));
+                loResultGUID = R_NetCoreUtility.R_DeserializeObjectFromByte<GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO>>(R_DistributedCache.Cache.Get(pcGuid));
+
+                //Get Data and Set Log Key
+                R_NetCoreLogUtility.R_SetNetCoreLogKey(loResultGUID.poLogKey);
+                _Parameter = loResultGUID.poParam;
+
+                _loggerGLR00300Report.LogInfo(string.Format("READ file report method {0}", lcMethodName));
+                loRtn = new FileStreamResult(_ReportCls.R_GetStreamReport(), R_ReportUtility.GetMimeType(R_FileType.PDF));
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLR00300Report.LogError(loException);
             }
 
             loException.ThrowExceptionIfErrors();
+            _loggerGLR00300Report.LogInfo(string.Format("END method {0} on Format C", lcMethodName));
 
             return loRtn;
         }
@@ -108,7 +140,9 @@ namespace GLR00300Service
         private GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO GenerateDataPrint(
             GLR00300ParamDBToGetReportDTO poParam)
         {
-            var loEx = new R_Exception();
+            _loggerGLR00300Report.LogInfo("START Method GenerateDataPrint on Controller");
+
+            var loException = new R_Exception();
             GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO loRtn =
                 new GLR00300AccountTrialBalanceResult_FormatAtoD_WithBaseHeaderDTO();
 
@@ -121,6 +155,8 @@ namespace GLR00300Service
             {
                 loCls = new GLR00300Cls();
                 poParam.CLANGUAGE_ID = R_BackGlobalVar.CULTURE;
+
+                _loggerGLR00300Report.LogInfo("Call Method GetAllTrialBalanceReportData");
                 var loCollectionFromDb = loCls.GetAllTrialBalanceReportData(poParam);
                 loConvertData = FromRaw_To_Display(loCollectionFromDb);
 
@@ -171,6 +207,7 @@ namespace GLR00300Service
                     };
                 }
 
+                _loggerGLR00300Report.LogInfo("Set BaseHeader Report");
                 //Assign raw data to Data list display
                 loData.Data = loConvertData;
                 var loParam = new BaseHeaderDTO()
@@ -180,23 +217,27 @@ namespace GLR00300Service
                     CPRINT_NAME = "Account Trial Balance",
                     CUSER_ID = poParam.CUSER_ID,
                 };
-
+                _loggerGLR00300Report.LogInfo("Set Data Report");
                 loRtn.BaseHeaderData = loParam;
                 loRtn.GLR00300AccountTrialBalanceResult_FormatAtoD_DataFormat = loData;
             }
             catch (Exception ex)
             {
-                loEx.Add(ex);
+                loException.Add(ex);
+                _loggerGLR00300Report.LogError(loException);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
+            _loggerGLR00300Report.LogInfo("END Method GenerateDataPrint on Controller");
+
             return loRtn;
         }
 
         private List<GLR00300DataAccountTrialBalanceAD> FromRaw_To_Display(
             List<GLR00300_DataDetail_AccountTrialBalance> poCollectionDataRaw)
         {
-            var loEx = new R_Exception();
+            _loggerGLR00300Report.LogInfo("START method for convert data to display");
+            var loException = new R_Exception();
             List<GLR00300DataAccountTrialBalanceAD> loReturn = null;
             try
             {
@@ -220,10 +261,12 @@ namespace GLR00300Service
             }
             catch (Exception ex)
             {
-                loEx.Add(ex);
+                loException.Add(ex);
+                _loggerGLR00300Report.LogError(loException);
             }
 
-            loEx.ThrowExceptionIfErrors();
+            loException.ThrowExceptionIfErrors();
+            _loggerGLR00300Report.LogInfo("END method for convert data to display");
 
             return loReturn;
 

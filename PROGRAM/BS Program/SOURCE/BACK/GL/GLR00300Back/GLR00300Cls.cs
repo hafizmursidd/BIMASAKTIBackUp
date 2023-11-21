@@ -4,8 +4,10 @@ using R_Common;
 using R_CommonFrontBackAPI;
 using System.Data.Common;
 using System.Data;
+using System.IO.MemoryMappedFiles;
 using GLR00300Common.GLR00300Print;
 using System.Reflection.Metadata;
+using AutoMapper;
 using GLR00300Common.Logs;
 
 namespace GLR00300Back
@@ -18,13 +20,18 @@ namespace GLR00300Back
             //Initial and Get Logger
             _loggerGLR00300 = LoggerGLR00300.R_GetInstanceLogger();
         }
-        public GLR00300PeriodDTO InitialProcess(GLR00300DBParameter poParameter)
+        //public GLR00300Cls(LoggerGLR00300 poLogger)
+        //{
+        //    //Initial and Get Logger
+        //    _loggerGLR00300 = LoggerGLR00300.R_GetInstanceLogger();
+        //}
+        public GLR00300InitialProcess InitialProcess(GLR00300DBParameter poParameter)
         {
             string lcMethodName = nameof(InitialProcess);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
-            GLR00300PeriodDTO loResult = null;
+            GLR00300InitialProcess loResult = null;
             R_Db loDb;
             DbCommand loCommand;
             try
@@ -44,22 +51,35 @@ namespace GLR00300Back
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
                 _loggerGLR00300.LogInfo("Execute query initial process to get year range");
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, false);
-                loResult = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTemp).FirstOrDefault();
+                loResult = R_Utility.R_ConvertTo<GLR00300InitialProcess>(loReturnTemp).FirstOrDefault();
 
                 //Initial Process GET DEFAULT YEAR
                 var lcQueryDefaultYear = $"EXEC RSP_GL_GET_SYSTEM_PARAM '{poParameter.CCOMPANY_ID}', '{poParameter.CLANGUAGE_ID}' ";
                 loCommand.CommandText = lcQueryDefaultYear;
                 loCommand.CommandType = CommandType.Text;
                 _loggerGLR00300.LogInfo("Execute query initial process to get default year");
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery (2)} ", lcQueryDefaultYear);
+                _loggerGLR00300.LogDebug("{@ObjectQuery (2)} ", lcQueryDefaultYear);
 
-                var loReturnTempVal = loDb.SqlExecQuery(loConn, loCommand, true);
-                var loResultTemp = R_Utility.R_ConvertTo<GLR00300PeriodDTO>(loReturnTempVal).FirstOrDefault();
+                var loReturnDefaultYear = loDb.SqlExecQuery(loConn, loCommand, false);
+                var LcDefaultYear = R_Utility.R_ConvertTo<GLR00300InitialProcess>(loReturnDefaultYear).FirstOrDefault();
+                loResult.CSOFT_PERIOD_YY = LcDefaultYear.CSOFT_PERIOD_YY;
 
-                loResult.CSOFT_PERIOD_YY = loResultTemp.CSOFT_PERIOD_YY;
+                //GET DEFAULT ACCOUNT FROM AND TO
+                var lcQueryDefaultAccount = $"RSP_GS_GET_MIN_MAX_GLACCOUNT_NO '{poParameter.CCOMPANY_ID}', 'N' ";
+                loCommand.CommandText = lcQueryDefaultAccount;
+                loCommand.CommandType = CommandType.Text;
+                _loggerGLR00300.LogInfo("Execute query initial process to get default account from and account to");
+                _loggerGLR00300.LogDebug("{@ObjectQuery (2)} ", lcQueryDefaultAccount);
+
+                var loReturnAccount = loDb.SqlExecQuery(loConn, loCommand, true);
+                var loResultDefaultAccount = R_Utility.R_ConvertTo<GLR00300InitialProcess>(loReturnAccount).FirstOrDefault();
+                loResult.CMIN_GLACCOUNT_NO = loResultDefaultAccount.CMIN_GLACCOUNT_NO;
+                loResult.CMIN_GLACCOUNT_NAME = loResultDefaultAccount.CMIN_GLACCOUNT_NAME;
+                loResult.CMAX_GLACCOUNT_NO = loResultDefaultAccount.CMAX_GLACCOUNT_NO;
+                loResult.CMAX_GLACCOUNT_NAME = loResultDefaultAccount.CMAX_GLACCOUNT_NAME;
             }
             catch (Exception ex)
             {
@@ -97,7 +117,7 @@ namespace GLR00300Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
@@ -138,7 +158,7 @@ namespace GLR00300Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
                 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300DTO>(loReturnTemp).ToList();
@@ -179,7 +199,7 @@ namespace GLR00300Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300BudgetNoDTO>(loReturnTemp).ToList();
@@ -231,7 +251,7 @@ namespace GLR00300Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGLR00300.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GLR00300_DataDetail_AccountTrialBalance>(loReturnTemp).ToList();
@@ -244,6 +264,43 @@ namespace GLR00300Back
             loException.ThrowExceptionIfErrors();
             _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
+            return loResult;
+        }
+        public List<GLR00300GetPeriod> GetPeriodList(GLR00300DBParameterDTO poParameter)
+        {
+            string lcMethodName = nameof(GetPeriodList);
+            _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+            R_Exception loException = new R_Exception();
+            List<GLR00300GetPeriod> loResult = null;
+            R_Db loDb;
+            DbCommand loCommand;
+            try
+            {
+                loDb = new R_Db();
+                var loConn = loDb.GetConnection();
+                loCommand = loDb.GetCommand();
+                var lcQuery = @"RSP_GS_GET_PERIOD_DT_LIST";
+                loCommand.CommandText = lcQuery;
+                loCommand.CommandType = CommandType.StoredProcedure;
+
+                loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 10, poParameter.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CYEAR", DbType.String, 10, poParameter.PERIOD_YEAR);
+
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLR00300.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCommand, true);
+                loResult = R_Utility.R_ConvertTo<GLR00300GetPeriod>(loReturnTemp).ToList();
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+                _loggerGLR00300.LogError(loException);
+            }
+            loException.ThrowExceptionIfErrors();
+            _loggerGLR00300.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return loResult;
         }
 

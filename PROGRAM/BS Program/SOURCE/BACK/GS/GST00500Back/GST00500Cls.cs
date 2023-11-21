@@ -65,7 +65,7 @@ namespace GST00500Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGST00500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGST00500.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConnection, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GST00500DTO>(loReturnTemp).ToList();
@@ -107,7 +107,7 @@ namespace GST00500Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGST00500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGST00500.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loResultTemp = loDb.SqlExecQuery(loConn, loCommand, true);
                 loResult.CUSER_NAME = loResultTemp.Rows[0]["CUSER_NAME"].ToString();
@@ -145,7 +145,7 @@ namespace GST00500Back
                               $"'{poParameter.CLANGUAGE_ID}') ";
 
                 
-                _loggerGST00500.R_LogDebug("{@ObjectQuery} ", lcQuery);
+                _loggerGST00500.LogDebug("{@ObjectQuery} ", lcQuery);
                 loResult = loDb.SqlExecObjectQuery<GST00500RejectDTO>(lcQuery, loConn, true);
             }
             catch (Exception ex)

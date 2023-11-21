@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\COMMON\GS\GST00500Common\GST00500Common.csproj" />
+    <ProjectReference Include="..\GST00500FrontResources\GST00500FrontResources.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

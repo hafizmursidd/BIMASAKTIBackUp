@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\COMMON\GS\GSM02000Common\GSM02000Common.csproj" />
+  <ProjectReference Include="..\..\..\COMMON\GS\GSM02000Common\GSM02000Common.csproj" />
       <ProjectReference Include="..\GS_SPR\RSP_GS_MAINTAIN_TAXResources\RSP_GS_MAINTAIN_TAXResources.csproj" />
       <ProjectReference Include="..\GS_SPR\RSP_GS_MAINTAIN_TAX_PCTResources\RSP_GS_MAINTAIN_TAX_PCTResources.csproj" />
     </ItemGroup>

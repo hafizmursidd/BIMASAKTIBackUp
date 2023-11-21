@@ -1,12 +1,14 @@
 ﻿using GLR00300Common;
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Exceptions;
+using R_BlazorFrontEnd.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GLR00300FrontResources;
 
 namespace GLR00300Model.ViewModel
 {
@@ -20,8 +22,10 @@ namespace GLR00300Model.ViewModel
             new ObservableCollection<GLR00300DTO>();
         public ObservableCollection<GLR00300BudgetNoDTO> BudgetNoList =
             new ObservableCollection<GLR00300BudgetNoDTO>();
+        public ObservableCollection<GLR00300GetPeriod> GetPeriodList =
+            new ObservableCollection<GLR00300GetPeriod>();
 
-        public GLR00300PeriodDTO PeriodYearMinMax = new GLR00300PeriodDTO();
+        public GLR00300InitialProcess InitialProcess = new GLR00300InitialProcess();
         public GLR00300DTO CurrencyType = new GLR00300DTO();
         public List<GLR00300DTO> CurrencyTypeList { get; set; } = new List<GLR00300DTO>
             { new GLR00300DTO { CCODE = "L", CNAME = "Local Currency" },
@@ -30,18 +34,14 @@ namespace GLR00300Model.ViewModel
         { new GLR00300DTO { CCODE = "S", CNAME = "Split" },
             new GLR00300DTO { CCODE = "M", CNAME = "Merged" } };
 
-        public GLR00300GetAccountCOA FromAccount = new GLR00300GetAccountCOA();
-        public GLR00300GetAccountCOA ToAccount = new GLR00300GetAccountCOA();
-
         public GLR00300GetAllCenter FromCenter = new GLR00300GetAllCenter();
         public GLR00300GetAllCenter ToCenter = new GLR00300GetAllCenter();
-        public List<GetPeriodDTO> GetPeriodList { get; set; }
 
         public string TrialBalanceTypeValue = "N";
         public string CurrencyTypeValue = "L";
         public string JournalAdjustModeValue = "S";
         public int PeriodYear;
-        public string PeriodId = "01";
+        public string PeriodNo = "01";
         public bool _lPrintByCenter = false;
         public string PrintMethodValue = "00";
         public bool _lPrintBudget = false;
@@ -69,9 +69,8 @@ namespace GLR00300Model.ViewModel
             try
             {
                 var loResult = await _modelGLR00300Model.GetInitialProcessAsyncModel();
-                PeriodYearMinMax = loResult;
+                InitialProcess = loResult;
                 PeriodYear = int.Parse(loResult.CSOFT_PERIOD_YY);
-                await GetPeriod();
             }
             catch (Exception ex)
             {
@@ -79,16 +78,39 @@ namespace GLR00300Model.ViewModel
             }
             loException.ThrowExceptionIfErrors();
         }
-        public async Task GetPeriod()
+        public void ValidationFieldEmpty()
         {
-            GetPeriodList = new List<GetPeriodDTO>();
-
-            for (int i = 1; i <= 15; i++)
+            var loEx = new R_Exception();
+            try
             {
-                string IdTemp = i.ToString("D2");
-                GetPeriodDTO IdPeriod = new GetPeriodDTO { Id = IdTemp };
-                GetPeriodList.Add(IdPeriod);
+                #region ValidationEmpty
+
+                if (string.IsNullOrEmpty(FromCenter.CCENTER_CODE) && _lPrintByCenter)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_01");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(ToCenter.CCENTER_CODE) && _lPrintByCenter)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_02");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(BudgetNoValue) && _lPrintBudget)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_03");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                #endregion
             }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+        EndBlock:
+            loEx.ThrowExceptionIfErrors();
         }
         public async Task GetPrintMethod()
         {
@@ -116,6 +138,28 @@ namespace GLR00300Model.ViewModel
 
                 var loResult = await _modelGLR00300Model.GetBudgetNoAsyncModel(loParam);
                 BudgetNoList = new ObservableCollection<GLR00300BudgetNoDTO>(loResult.Data);
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            loException.ThrowExceptionIfErrors();
+        }
+        public async Task GetPeriod()
+        {
+            R_Exception loException = new R_Exception();
+            try
+            {
+                string lcPeriodYear = PeriodYear.ToString();
+                var loParam = new GLR00300DBParameterDTO();
+                loParam.PERIOD_YEAR = lcPeriodYear;
+
+                var loResult = await _modelGLR00300Model.GetPeriodAsyncoModel(loParam);
+                GetPeriodList = new ObservableCollection<GLR00300GetPeriod>(loResult.Data);
+
+                var loPeriodNo = GetPeriodList.ToList().FirstOrDefault()?.CPERIOD_NO;
+                if (loPeriodNo != null)
+                    PeriodNo = loPeriodNo;
             }
             catch (Exception ex)
             {

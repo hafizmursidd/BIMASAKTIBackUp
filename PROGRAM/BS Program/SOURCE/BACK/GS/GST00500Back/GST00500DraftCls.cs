@@ -63,7 +63,7 @@ namespace GST00500Back
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerGST00500.R_LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
+                _loggerGST00500.LogDebug("{@ObjectQuery} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 var loReturnTemp = loDb.SqlExecQuery(loConnection, loCommand, true);
                 loResult = R_Utility.R_ConvertTo<GST00500DTO>(loReturnTemp).ToList();

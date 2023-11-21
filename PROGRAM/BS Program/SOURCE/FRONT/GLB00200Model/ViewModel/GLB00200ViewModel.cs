@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GLB00200Common;
+using GLB00200FrontResources;
 using R_APICommonDTO;
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Exceptions;
+using R_BlazorFrontEnd.Helpers;
 using R_CommonFrontBackAPI;
 using R_ProcessAndUploadFront;
 
@@ -123,7 +125,35 @@ namespace GLB00200Model.ViewModel
             }
 
         }
+        public void ValidationFieldEmpty()
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                #region ValidationEmpty
 
+                if (string.IsNullOrEmpty(lcSearchText))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_02");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (!string.IsNullOrEmpty(lcSearchText)
+                    && lcSearchText.Length < 3)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_03");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            EndBlock:
+            loEx.ThrowExceptionIfErrors();
+        }
         public async Task GetSelectedDataToReversingJournal()
         {
             R_Exception loException = new R_Exception();
@@ -133,7 +163,8 @@ namespace GLB00200Model.ViewModel
                 tempDataSelected = loProcessReversingList.Where(x => x.LSELECTED == true).ToList();
                 if (tempDataSelected.Count == 0)
                 {
-                    loException.Add(new Exception("Please select Reversing Journal to process!"));
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_04");
+                    loException.Add(loErr);
                     goto EndBlock;
                 }
                 Var_Data_Count = tempDataSelected.Count;

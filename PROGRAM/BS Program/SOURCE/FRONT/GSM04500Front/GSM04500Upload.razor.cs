@@ -95,8 +95,6 @@ namespace GSM04500Front
 
             try
             {
-
-
                 //import excel from user
                 var loMS = new MemoryStream();
                 await eventArgs.File.OpenReadStream().CopyToAsync(loMS);
