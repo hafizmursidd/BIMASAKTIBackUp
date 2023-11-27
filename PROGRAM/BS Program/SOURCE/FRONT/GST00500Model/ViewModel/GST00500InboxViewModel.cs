@@ -51,6 +51,11 @@ namespace GST00500Model.ViewModel
                     BtnReject = false;
                     BtnApprove = false;
                 }
+                else
+                {
+                    BtnReject = true;
+                    BtnApprove = true;
+                }
             }
             catch (Exception ex)
             {

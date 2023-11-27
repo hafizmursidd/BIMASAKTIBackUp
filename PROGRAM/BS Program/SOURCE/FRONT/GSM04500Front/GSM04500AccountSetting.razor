@@ -1,9 +1,10 @@
 ﻿@inherits R_Page
+@inject R_ILocalizer<Resources_GSM04500_Class> _localizer
 
 
 <R_StackLayout Row>
     <R_ItemLayout col="2">
-        <R_Label Class="ms-6">Journal Group</R_Label>
+        <R_Label Class="ms-6">@_localizer["_JGrpCode"]</R_Label>
     </R_ItemLayout>
     <R_ItemLayout col="1" Class="me-3">
         <R_TextBox @bind-Value="@JournalGOAViewModel.CurrentJournalGroup.CJRNGRP_CODE" Enabled="false">
@@ -29,14 +30,18 @@
             R_Before_Open_Grid_Lookup="BeforeOpenLookUPGOA"
             R_After_Open_Grid_Lookup="AfterOpenLookGOA">
         <R_GridColumns>
-            <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="170px" FieldName="GROUPOFACCOUNT" HeaderText="Group of Account" />
-            <R_GridCheckBoxColumn Width="100px" FieldName="LDEPARTMENT_MODE" HeaderText="By Dept" R_EnableEdit />
-            <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO" Name="GLAccount_No" HeaderText="GL Account No" R_EnableAdd R_EnableEdit />
-            <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" HeaderText="GL Account Name" />
-            <R_GridTextColumn Width="150px" FieldName="CUPDATE_BY" HeaderText="Updated By" />
-            <R_GridDateTimePickerColumn Width="200px" FieldName="DUPDATE_DATE" HeaderText="Updated Date" />
-            <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText="Created By" />
-            <R_GridDateTimePickerColumn Width="200px" FieldName="DCREATE_DATE" HeaderText="Created Date" />
+            <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="170px" FieldName="GROUPOFACCOUNT" 
+                              HeaderText=@_localizer["_GrpAcc"] />
+            <R_GridCheckBoxColumn Width="100px" FieldName="LDEPARTMENT_MODE" 
+                                  HeaderText=@_localizer["_LDept"] R_EnableEdit />
+            <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO" Name="GLAccount_No" 
+                                HeaderText=@_localizer["_GLAccNo"] R_EnableAdd R_EnableEdit />
+            <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" 
+                                HeaderText=@_localizer["_GLAccName"] />
+            <R_GridTextColumn Width="150px" FieldName="CUPDATE_BY" HeaderText=@_localizer["_UpdBy"] />
+            <R_GridDateTimePickerColumn Width="200px" FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"] />
+            <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText=@_localizer["_CreatedBy"]/>
+            <R_GridDateTimePickerColumn Width="200px" FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreatedDate"] />
         </R_GridColumns>
 
     </R_Grid>
@@ -44,7 +49,7 @@
 
 <R_StackLayout Row Class="mt-1">
     <R_ItemLayout col="2">
-        <R_Label Class="ms-6">Group of Account</R_Label>
+        <R_Label Class="ms-6">@_localizer["_GrpAcc"]</R_Label>
     </R_ItemLayout>
     <R_ItemLayout col="3">
         <R_TextBox @bind-Value="@GOADeptViewModel.GroupOfAccount"
@@ -70,14 +75,16 @@
         <R_GridColumns>
             <R_GroupBox Enabled="@JournalGOAViewModel.Data.LDEPARTMENT_MODE">
                 <R_StackLayout>
-                    <R_GridLookupColumn TextAlignment="R_eTextAlignment.Center" Width="200px" FieldName="@nameof(GSM04510GOADeptDTO.CDEPT_CODE)" Name="CDEPT_CODE" HeaderText="Department Code" R_EnableAdd />
-                    <R_GridTextColumn Width="200px" FieldName="CDEPT_NAME" HeaderText="Department Name" />
-                    <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO" Name="GLAccount_No" HeaderText="GL Account No" R_EnableAdd R_EnableEdit />
-                    <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" HeaderText="GL Account Name" />
-                    <R_GridTextColumn  Width="150px" FieldName="CUPDATE_BY" HeaderText="Updated By" />
-                    <R_GridDateTimePickerColumn  Width="200px" FieldName="DUPDATE_DATE" HeaderText="Updated Date" />
-                    <R_GridTextColumn  Width="150px" FieldName="CCREATE_BY" HeaderText="Created By" />
-                    <R_GridDateTimePickerColumn Width="200px" FieldName="DCREATE_DATE" HeaderText="Created Date" />
+                    <R_GridLookupColumn TextAlignment="R_eTextAlignment.Center" Width="200px" FieldName="@nameof(GSM04510GOADeptDTO.CDEPT_CODE)"
+                                        HeaderText=@_localizer["_DeptCode"] R_EnableAdd />
+                    <R_GridTextColumn Width="200px" FieldName="CDEPT_NAME" HeaderText=@_localizer["_DeptName"] />
+                    <R_GridLookupColumn Width="200px" FieldName="CGLACCOUNT_NO"  HeaderText=@_localizer["_GLAccNo"] 
+                                        R_EnableAdd R_EnableEdit />
+                    <R_GridTextColumn Width="350px" FieldName="CGLACCOUNT_NAME" HeaderText=@_localizer["_GLAccName"] />
+                    <R_GridTextColumn  Width="150px" FieldName="CUPDATE_BY" HeaderText=@_localizer["_UpdBy"] />
+                    <R_GridDateTimePickerColumn  Width="200px" FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"] />
+                    <R_GridTextColumn  Width="150px" FieldName="CCREATE_BY" HeaderText=@_localizer["_CreatedBy"]  />
+                    <R_GridDateTimePickerColumn Width="200px" FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreatedDate"]  />
                 </R_StackLayout>
             </R_GroupBox>
         </R_GridColumns>

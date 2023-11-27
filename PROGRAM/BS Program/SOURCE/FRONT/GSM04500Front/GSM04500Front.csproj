@@ -17,7 +17,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\BACK\Lookup_GSCOMMON\Lookup_GSCOMMON.csproj" />
+		<ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\FRONT\Lookup_GSFrontResources\Lookup_GSFrontResources.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\FRONT\Lookup_GSFRONT\Lookup_GSFRONT.csproj" />
+		<ProjectReference Include="..\GSM04500FrontResources\GSM04500FrontResources.csproj" />
 		<ProjectReference Include="..\GSM04500Model\GSM04500Model.csproj" />
 	</ItemGroup>
 

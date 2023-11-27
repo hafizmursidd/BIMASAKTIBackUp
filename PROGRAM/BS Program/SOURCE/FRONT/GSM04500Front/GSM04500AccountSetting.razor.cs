@@ -38,8 +38,6 @@ namespace GSM04500Front
             try
             {
                 await _gridRef.R_RefreshGrid((GSM04500DTO)poParameter);
-               // await _conGOADeptRef2.R_GetEntity();
-
             }
             catch (Exception ex)
             {
@@ -58,19 +56,11 @@ namespace GSM04500Front
                 var loParam = JournalGOAViewModel.CurrentJournalGroup;
                 await JournalGOAViewModel.GetAllJournalGrupGOAAsync(loParam.CPROPERTY_ID, loParam.CJRNGRP_TYPE, loParam.CJRNGRP_CODE);
                 eventArgs.ListEntityResult = JournalGOAViewModel.GOAList;
-
-                //JournalGOAViewModel.ButtonAddOnGOA_Dept = true;
-                //if (JournalGOAViewModel.GOAList.Count() < 1)
-                //{
-                //    //disable button add on GOA_Dept
-                //    JournalGOAViewModel.ButtonAddOnGOA_Dept = false;
-                //}
             }
             catch (Exception ex)
             {
                 loEx.Add(ex);
             }
-
             R_DisplayException(loEx);
         }
 
@@ -97,7 +87,6 @@ namespace GSM04500Front
             var loEx = new R_Exception();
             try
             {
-
                 var loParam = (GSM04510GOADTO)eventArgs.Data;
 
                 await JournalGOAViewModel.SaveGOA(loParam, eventArgs.ConductorMode);
@@ -133,7 +122,6 @@ namespace GSM04500Front
             var loParam = new GSL00520ParameterDTO();
             loParam.CGOA_CODE = JournalGOAViewModel.CurrentGOA.CGOA_CODE;
             eventArgs.Parameter = loParam;
-
             eventArgs.TargetPageType = typeof(GSL00520);
 
         }
@@ -204,7 +192,7 @@ namespace GSM04500Front
 
                 await GOADeptViewModel.SaveGOADept(loParam, eventArgs.ConductorMode);
                 eventArgs.Result = GOADeptViewModel.GOADept;
-               // await _gridGOADeptRef.R_RefreshGrid(null);
+                // await _gridGOADeptRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
@@ -223,9 +211,6 @@ namespace GSM04500Front
 
 
         #region LookUpGOADEPT
-
-
-
         //  Button LookUp DeptCode
         private void BeforeOpenLookUpDeptCode(R_BeforeOpenGridLookupColumnEventArgs eventArgs)
         {

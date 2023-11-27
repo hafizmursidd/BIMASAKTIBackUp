@@ -37,7 +37,6 @@ namespace LMM06000Front
 
 
         #region PropertyID
-
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -84,6 +83,205 @@ namespace LMM06000Front
             R_DisplayException(loEx);
         }
         #endregion
+
+        #region EnableGrid
+        private bool _gridEnabled = true;
+        private void ServiceSetOther(R_SetEventArgs eventArgs)
+        {
+            _gridEnabled = eventArgs.Enable;
+        }
+        #endregion
+
+        #region CheckboxChanging
+        private async Task CheckboxBookingFee(object poParam)
+        {
+            var loEx = new R_Exception();
+            bool lbCheckbox = (bool)poParam;
+            try
+            {
+                #region BookingFee
+                //when Booking fee have value
+                if (!string.IsNullOrEmpty(BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID))
+                {
+                    BillingRuleViewModel._IsDataNull = false;
+
+                    BillingRuleViewModel.TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO()
+                    {
+                        CBOOKING_FEE_CHARGE_ID = BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID,
+                        CCHARGES_NAME = BillingRuleViewModel.Data.CCHARGES_NAME
+                    };
+                }
+                if (!lbCheckbox)
+                {
+                    BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID = "";
+                    BillingRuleViewModel.Data.CCHARGES_NAME = "";
+                }
+                //re assign value from user
+                if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
+                {
+                    var loTempDt = BillingRuleViewModel.TemporaryBillingRuleDetail;
+
+                    BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID = loTempDt.CBOOKING_FEE_CHARGE_ID;
+                    BillingRuleViewModel.Data.CCHARGES_NAME = loTempDt.CCHARGES_NAME;
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            R_DisplayException(loEx);
+        }
+        private async Task CheckboxBankCredit(object poParam)
+        {
+            var loEx = new R_Exception();
+            bool lbCheckbox = (bool)poParam;
+            try
+            {
+              #region BankCredit
+                if ((BillingRuleViewModel.Data.IBANK_CREDIT_PERCENTAGE) != 0 ||
+                    (BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL) != 0)
+                {
+                    BillingRuleViewModel._IsDataNull = false;
+
+                    BillingRuleViewModel.TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO()
+                    {
+                        IBANK_CREDIT_PERCENTAGE = BillingRuleViewModel.Data.IBANK_CREDIT_PERCENTAGE,
+                        IBANK_CREDIT_INTERVAL = BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL
+                    };
+                }
+                if (!lbCheckbox)
+                {
+                    BillingRuleViewModel.Data.IBANK_CREDIT_PERCENTAGE = 0;
+                    BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL = 0;
+                }
+                //re assign value from user
+                if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
+                {
+                    var loTempDt = BillingRuleViewModel.TemporaryBillingRuleDetail;
+
+                    BillingRuleViewModel.Data.IBANK_CREDIT_PERCENTAGE = loTempDt.IBANK_CREDIT_PERCENTAGE;
+                    BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL = loTempDt.IBANK_CREDIT_INTERVAL;
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task CheckboxWithDP(object poParam)
+        {
+            var loEx = new R_Exception();
+            bool lbCheckbox = (bool)poParam;
+            try
+            {
+                #region WithDP
+                //when period have period
+                if (!string.IsNullOrEmpty(BillingRuleViewModel.Data.CDP_PERIOD_MODE) ||
+                    !string.IsNullOrEmpty(BillingRuleViewModel.Data.CDP_CHARGE_ID))
+                {
+                    BillingRuleViewModel._IsDataNull = false;
+
+                    BillingRuleViewModel.TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO()
+                    {
+                        IDP_PERCENTAGE = BillingRuleViewModel.Data.IDP_PERCENTAGE,
+                        IDP_INTERVAL = BillingRuleViewModel.Data.IDP_INTERVAL,
+                        CDP_PERIOD_MODE = BillingRuleViewModel.Data.CDP_PERIOD_MODE,
+                        CDP_CHARGE_ID = BillingRuleViewModel.Data.CDP_CHARGE_ID,
+                        CDP_CHARGE_NAME = BillingRuleViewModel.Data.CDP_CHARGE_NAME
+                    };
+                }
+
+                if (!lbCheckbox)
+                {
+                    BillingRuleViewModel.Data.IDP_PERCENTAGE = 0;
+                    BillingRuleViewModel.Data.IDP_INTERVAL = 0;
+                    BillingRuleViewModel.Data.CDP_PERIOD_MODE = "";
+                    BillingRuleViewModel.Data.CDP_CHARGE_ID = "";
+                    BillingRuleViewModel.Data.CDP_CHARGE_NAME = "";
+                }
+                //re assign value from user
+                if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
+                {
+                    var loTempDt = BillingRuleViewModel.TemporaryBillingRuleDetail;
+                    BillingRuleViewModel.Data.IDP_PERCENTAGE = loTempDt.IDP_PERCENTAGE;
+                    BillingRuleViewModel.Data.IDP_INTERVAL = loTempDt.IDP_INTERVAL;
+                    BillingRuleViewModel.Data.CDP_PERIOD_MODE = loTempDt.CDP_PERIOD_MODE;
+                    BillingRuleViewModel.Data.CDP_CHARGE_ID = loTempDt.CDP_CHARGE_ID;
+                    BillingRuleViewModel.Data.CDP_CHARGE_NAME = loTempDt.CDP_CHARGE_NAME;
+
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task CheckboxInstallment(object poParam)
+        {
+            var loEx = new R_Exception();
+            bool lbCheckbox = (bool)poParam;
+            try
+            {
+               #region Installment
+                //when this group box have value
+                if (!string.IsNullOrEmpty(BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE) ||
+                !string.IsNullOrEmpty(BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID))
+                {
+                    BillingRuleViewModel._IsDataNull = false;
+
+                    BillingRuleViewModel.TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO()
+                    {
+                        IINSTALLMENT_PERCENTAGE = BillingRuleViewModel.Data.IINSTALLMENT_PERCENTAGE,
+                        IINSTALLMENT_INTERVAL = BillingRuleViewModel.Data.IINSTALLMENT_INTERVAL,
+                        CINSTALLMENT_PERIOD_MODE = BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE,
+                        CINSTALLMENT_CHARGE_ID = BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID,
+                        CINSTALLMENT_CHARGE_NAME = BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_NAME
+                    };
+                }
+
+                if (!lbCheckbox)
+                {
+                    BillingRuleViewModel.Data.IINSTALLMENT_PERCENTAGE = 0;
+                    BillingRuleViewModel.Data.IINSTALLMENT_INTERVAL = 0;
+                    BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE = "";
+                    BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID = "";
+                    BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_NAME = "";
+                }
+                //re assign value from user
+                if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
+                {
+                    var loTempDt = BillingRuleViewModel.TemporaryBillingRuleDetail;
+                    BillingRuleViewModel.Data.IINSTALLMENT_PERCENTAGE = loTempDt.IINSTALLMENT_PERCENTAGE;
+                    BillingRuleViewModel.Data.IINSTALLMENT_INTERVAL = loTempDt.IINSTALLMENT_INTERVAL;
+                    BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE = loTempDt.CINSTALLMENT_PERIOD_MODE;
+                    BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID = loTempDt.CINSTALLMENT_CHARGE_ID;
+                    BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_NAME = loTempDt.CINSTALLMENT_CHARGE_NAME;
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        #endregion
+
+        private async Task ServiceBeforeCancel(R_BeforeCancelEventArgs eventArgs)
+        {
+            //disable when user click edit and edit, then user click cancel not save
+            BillingRuleViewModel._IsButtonAddEnable = true;
+
+            BillingRuleViewModel._IsDataNull = true;
+        }
 
         #region UnitType
         private async Task GetListRecordUnitType(R_ServiceGetListRecordEventArgs eventArgs)
@@ -155,7 +353,6 @@ namespace LMM06000Front
 
             loEx.ThrowExceptionIfErrors();
         }
-
         private async Task ServiceGetOneRecordBillingRule(R_ServiceGetRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -193,7 +390,28 @@ namespace LMM06000Front
 
             loEx.ThrowExceptionIfErrors();
         }
+        private async Task ServiceR_Display(R_DisplayEventArgs eventArgs)
+        {
+            var loException = new R_Exception();
 
+            try
+            {
+                switch (eventArgs.ConductorMode)
+                {
+                    case R_eConductorMode.Edit:
+                        //Focus Async
+                        await FocusLabelEdit.FocusAsync();
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+
+            loException.ThrowExceptionIfErrors();
+        }
         private async Task PropertyDropdown_GetPeriodeList(R_ServiceGetListRecordEventArgs args)
         {
             var loEx = new R_Exception();
@@ -320,20 +538,17 @@ namespace LMM06000Front
             await FocusLabelAdd.FocusAsync();
 
         }
-
         private async Task ServiceBeforeEdit(R_BeforeEditEventArgs eventArgs)
         {
-            //Focus Async
-            await FocusLabelEdit.FocusAsync();
+
             //disable button add when user click edit
             BillingRuleViewModel._IsButtonAddEnable = false;
         }
-        private async Task ServiceBeforeCancel(R_BeforeCancelEventArgs eventArgs)
+        private async Task ServiceAfterSave(R_AfterSaveEventArgs eventArgs)
         {
-            //disable when user click edit and edit, then user click cancel not save
+            //disable button add when user click edit
             BillingRuleViewModel._IsButtonAddEnable = true;
         }
-
         private async Task ServiceSaving(R_SavingEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -378,7 +593,6 @@ namespace LMM06000Front
             var loEx = new R_Exception();
             try
             {
-
                 var loParam = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
                 await BillingRuleViewModel.SaveUnitType_BillingRule(loParam, (eCRUDMode)eventArgs.ConductorMode);
                 eventArgs.Result = BillingRuleViewModel.BillingRuleDetail;
@@ -390,7 +604,6 @@ namespace LMM06000Front
 
             loEx.ThrowExceptionIfErrors();
         }
-
         private async Task R_Validation(R_ValidationEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -399,32 +612,8 @@ namespace LMM06000Front
             LMM06000BillingRuleDetailDTO loData = null;
             try
             {
-                var loParam = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
-
-                if (string.IsNullOrEmpty(loParam.CBILLING_RULE_CODE))
-                    loEx.Add(new Exception("Billing Rule Code is required."));
-                if (string.IsNullOrEmpty(loParam.CBILLING_RULE_NAME))
-                    loEx.Add(new Exception("Billing Rule Name is required."));
-
-                if (loParam.LBOOKING_FEE)
-                {
-                    if (string.IsNullOrEmpty(loParam.CBOOKING_FEE_CHARGE_ID))
-                        loEx.Add(new Exception("Charge Id Booking Fee is required."));
-                }
-                if (loParam.LWITH_DP)
-                {
-                    if (string.IsNullOrEmpty(loParam.CDP_PERIOD_MODE))
-                        loEx.Add(new Exception("Periode Mode With Dp is required."));
-                    if (string.IsNullOrEmpty(loParam.CDP_CHARGE_ID))
-                        loEx.Add(new Exception("Charge Id With DP is required."));
-                }
-                if (loParam.LINSTALLMENT)
-                {
-                    if (string.IsNullOrEmpty(loParam.CINSTALLMENT_PERIOD_MODE))
-                        loEx.Add(new Exception("Periode Mode Installment is required."));
-                    if (string.IsNullOrEmpty(loParam.CINSTALLMENT_CHARGE_ID))
-                        loEx.Add(new Exception("Charge Id Installment is required."));
-                }
+                //Validation field from user
+                BillingRuleViewModel.ValidationFieldEmpty((LMM06000BillingRuleDetailDTO)eventArgs.Data);
 
                 if (!loEx.HasError)
                 {
@@ -450,9 +639,11 @@ namespace LMM06000Front
                                     IAPPROVAL_CODE = "LMM06001"
                                 };
                                 loResult = await PopupService.Show(typeof(GFF00900FRONT.GFF00900), loParamPopup);
+                                
                                 if (loResult.Success == false || (bool)loResult.Result == false)
                                 {
                                     eventArgs.Cancel = true;
+                                    return;
                                 };
                             }
                         }
@@ -475,7 +666,6 @@ namespace LMM06000Front
         #endregion
 
         #region Delete
-
         public async Task ServiceDelete(R_ServiceDeleteEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -491,6 +681,10 @@ namespace LMM06000Front
             }
 
             loEx.ThrowExceptionIfErrors();
+        }
+        public async Task ServiceAfterDelete()
+        {
+            await R_MessageBox.Show("", "Delete Success", R_eMessageBoxButtonType.OK);
         }
         #endregion
 

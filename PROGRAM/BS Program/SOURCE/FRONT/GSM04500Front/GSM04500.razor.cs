@@ -160,10 +160,6 @@ namespace GSM04500Front
             try
             {
                 var loParam = (GSM04500DTO)eventArgs.Data;
-                //if (R_eConductorMode.Normal== eventArgs.ConductorMode || R_eConductorMode.Add == eventArgs.ConductorMode)
-                //{                   
-                //await journalGroupViewModel.SaveJournalGroup(loParam, R_eConductorMode.Add);
-                //}
                 await journalGroupViewModel.SaveJournalGroup(loParam, eventArgs.ConductorMode);
 
                 eventArgs.Result = journalGroupViewModel.JournalGroup;
@@ -190,12 +186,7 @@ namespace GSM04500Front
             var loEx = new R_Exception();
             try
             {
-                var loParam = (GSM04500DTO)eventArgs.Data;
-
-                if (string.IsNullOrEmpty(loParam.CJRNGRP_CODE))
-                    loEx.Add(new Exception("Journal Code is required."));
-                if (string.IsNullOrEmpty(loParam.CJRNGRP_NAME))
-                    loEx.Add(new Exception("Journal Group Name is required."));
+                journalGroupViewModel.ValidationFieldEmpty((GSM04500DTO)eventArgs.Data);
             }
             catch (Exception ex)
             {

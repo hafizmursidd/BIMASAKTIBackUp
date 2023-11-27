@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using GSM04500FrontResources;
+using R_BlazorFrontEnd.Helpers;
 
 namespace GSM04500Model
 {
@@ -50,7 +52,6 @@ namespace GSM04500Model
 
             loEx.ThrowExceptionIfErrors();
         }
-
         public async Task GetJournalGroupTypeList()
         {
             var loEx = new R_Exception();
@@ -68,8 +69,6 @@ namespace GSM04500Model
 
             loEx.ThrowExceptionIfErrors();
         }
-
-
         public async Task GetAllJournalAsync()
         {
             R_Exception loException = new R_Exception();
@@ -99,8 +98,6 @@ namespace GSM04500Model
         EndBlock:
             loException.ThrowExceptionIfErrors();
         }
-
-
         public async Task<GSM04500DTO> GetGroupJournaltOneRecord(GSM04500DTO poProperty)
         {
             var loEx = new R_Exception();
@@ -151,7 +148,31 @@ namespace GSM04500Model
             }
             loEx.ThrowExceptionIfErrors();
         }
-
+        public void ValidationFieldEmpty(GSM04500DTO poEntity)
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                if (string.IsNullOrEmpty(poEntity.CJRNGRP_CODE))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GSM04500_Class), "Error_01");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(poEntity.CJRNGRP_NAME))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GSM04500_Class), "Error_02");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            EndBlock:
+            loEx.ThrowExceptionIfErrors();
+        }
         public async Task<GSM04500DTO> SaveJournalGroup(GSM04500DTO poNewEntity, R_eConductorMode peConductorMode)
         {
             var loEx = new R_Exception();

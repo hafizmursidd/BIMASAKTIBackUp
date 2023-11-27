@@ -81,6 +81,10 @@ namespace GLB00200Model.ViewModel
                 {
                     ButtonEnable = true;
                 }
+                else
+                {
+                    ButtonEnable= false;
+                }
             }
             catch (Exception ex)
             {

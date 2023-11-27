@@ -114,7 +114,7 @@ namespace GSM06500Front
             R_DisplayException(loEx);
         }
 
-        public async Task Conductor_AfterDelete()
+        public async Task ServiceAfterDelete()
         {
             await R_MessageBox.Show("", "Delete Success", R_eMessageBoxButtonType.OK);
         }

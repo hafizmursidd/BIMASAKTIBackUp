@@ -5,9 +5,12 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using LMM06000Common;
+using LMM06000FrontResources;
 using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Exceptions;
+using R_BlazorFrontEnd.Helpers;
 using R_CommonFrontBackAPI;
 
 namespace LMM06000Model.ViewModel
@@ -16,19 +19,22 @@ namespace LMM06000Model.ViewModel
     {
         private LMM06000Model _model = new LMM06000Model();
 
-        public ObservableCollection<LMM06000UnitTypeDTO> UnitTypeList = 
+        public ObservableCollection<LMM06000UnitTypeDTO> UnitTypeList =
             new ObservableCollection<LMM06000UnitTypeDTO>();
-        public ObservableCollection<LMM06000BillingRuleDTO> BillingRuleList = 
+        public ObservableCollection<LMM06000BillingRuleDTO> BillingRuleList =
             new ObservableCollection<LMM06000BillingRuleDTO>();
 
         public LMM06000BillingRuleDetailDTO BillingRuleDetail = new LMM06000BillingRuleDetailDTO();
         public List<LMM06000PropertyDTO> PropertyList { get; set; } = new List<LMM06000PropertyDTO>();
         public string PropertyValueContext = "";
         public string UnitTypeValueContext = "";
-        public List<LMM06000PeriodDTO> PeriodList {get; set;} = new List<LMM06000PeriodDTO>();
+        public List<LMM06000PeriodDTO> PeriodList { get; set; } = new List<LMM06000PeriodDTO>();
 
         public LMM06000ActiveInactiveDTO ActiveInactiveEntity = new LMM06000ActiveInactiveDTO();
         public bool _IsButtonAddEnable = false;
+        public LMM06000BillingRuleDetailDTO TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO();
+        public bool _IsDataNull = true;
+
         public async Task GetPropertyList()
         {
             var loEx = new R_Exception();
@@ -121,6 +127,72 @@ namespace LMM06000Model.ViewModel
 
             loEx.ThrowExceptionIfErrors();
         }
+        public void ValidationFieldEmpty(LMM06000BillingRuleDetailDTO poParam)
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                #region ValidationEmpty
+
+                if (string.IsNullOrEmpty(poParam.CBILLING_RULE_CODE))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_01");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(poParam.CBILLING_RULE_NAME))
+                {
+                    //Billing Rule Name is required."
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_02");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (poParam.LBOOKING_FEE)
+                {
+                    if (string.IsNullOrEmpty(poParam.CBOOKING_FEE_CHARGE_ID))
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_03");
+                        loEx.Add(loErr);
+                        goto EndBlock;
+                    }
+                }
+                if (poParam.LWITH_DP)
+                {
+                    if (string.IsNullOrEmpty(poParam.CDP_PERIOD_MODE))
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_04");
+                        loEx.Add(loErr);
+                    }
+                    if (string.IsNullOrEmpty(poParam.CDP_CHARGE_ID))
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_05");
+                        loEx.Add(loErr);
+                    }
+                    goto EndBlock;
+                }
+                if (poParam.LINSTALLMENT)
+                {
+                    if (string.IsNullOrEmpty(poParam.CINSTALLMENT_PERIOD_MODE))
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_06");
+                        loEx.Add(loErr);
+                    }
+
+                    if (string.IsNullOrEmpty(poParam.CINSTALLMENT_CHARGE_ID))
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_07");
+                        loEx.Add(loErr);
+                    }
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+        EndBlock:
+            loEx.ThrowExceptionIfErrors();
+        }
 
         public async Task SaveUnitType_BillingRule(LMM06000BillingRuleDetailDTO poEntity, eCRUDMode peCRUDMode)
         {
@@ -137,7 +209,7 @@ namespace LMM06000Model.ViewModel
             loEx.ThrowExceptionIfErrors();
         }
 
-        public async Task DeleteUnitType_BillingRule (LMM06000BillingRuleDetailDTO poEntity)
+        public async Task DeleteUnitType_BillingRule(LMM06000BillingRuleDetailDTO poEntity)
         {
             var loEx = new R_Exception();
             try
@@ -152,14 +224,14 @@ namespace LMM06000Model.ViewModel
 
                     LBOOKING_FEE = poEntity.LBOOKING_FEE,
                     CBOOKING_FEE_CHARGE_ID = poEntity.CBOOKING_FEE_CHARGE_ID,
-                   
+
                     LWITH_DP = poEntity.LWITH_DP,
                     IDP_PERCENTAGE = poEntity.IDP_PERCENTAGE,
                     IDP_INTERVAL = poEntity.IDP_INTERVAL,
                     CDP_PERIOD_MODE = poEntity.CDP_PERIOD_MODE,
                     CDP_CHARGE_ID = poEntity.CDP_CHARGE_ID,
 
-                    LINSTALLMENT =  poEntity.LINSTALLMENT,
+                    LINSTALLMENT = poEntity.LINSTALLMENT,
                     IINSTALLMENT_PERCENTAGE = poEntity.IINSTALLMENT_PERCENTAGE,
                     IINSTALLMENT_INTERVAL = poEntity.IINSTALLMENT_INTERVAL,
                     CINSTALLMENT_PERIOD_MODE = poEntity.CINSTALLMENT_PERIOD_MODE,

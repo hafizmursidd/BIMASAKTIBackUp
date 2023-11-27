@@ -86,7 +86,8 @@
                 <R_ComboBox Data="@_viewModelGLR00300.GetPeriodList"
                             @bind-Value="_viewModelGLR00300.PeriodNo"
                             ValueField="@nameof(GLR00300GetPeriod.CPERIOD_NO)"
-                            TextField="@nameof(GLR00300GetPeriod.CPERIOD_NO)">
+                            TextField="@nameof(GLR00300GetPeriod.CPERIOD_NO)"
+                            PopupMaxHeight="150px">
                 </R_ComboBox>
             </R_ItemLayout>
         </R_StackLayout>
@@ -241,7 +242,8 @@
                             ValueField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NO)"
                             TextField="@nameof(GLR00300BudgetNoDTO.CBUDGET_NAME_DISPLAY)"
                             @bind-Value="_viewModelGLR00300.BudgetNoValue"
-                            Enabled="@_viewModelGLR00300._lPrintBudget">
+                            Enabled="@_viewModelGLR00300._lPrintBudget"
+                            PopupMaxHeight="100px">
                 </R_ComboBox>
             </R_ItemLayout>
         </R_StackLayout>
