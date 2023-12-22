@@ -127,10 +127,10 @@
     <value>Top Days is Too Long</value>
   </data>
   <data name="_CreateBy" xml:space="preserve">
-    <value>Create By</value>
+    <value>Created By</value>
   </data>
   <data name="_CreateDate" xml:space="preserve">
-    <value>Create Date</value>
+    <value>Created Date</value>
   </data>
   <data name="_PayCode" xml:space="preserve">
     <value>Term of Payment Code</value>

@@ -28,7 +28,7 @@ namespace LMM06000Back
             R_Db loDb;
             try
             {
-                var lcQuery = @"RSP_LM_GET_UNIT_TYPE_BILLING_RULE_DT";
+                var lcQuery = "RSP_LM_GET_STRATA_BILLING_RULE_DT";
                 loDb = new R_Db();
                 var loCommand = loDb.GetCommand();
                 var loConn = loDb.GetConnection();
@@ -38,7 +38,7 @@ namespace LMM06000Back
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poEntity.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 10, poEntity.CPROPERTY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poEntity.CUSER_ID);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_ID", DbType.String, 20, poEntity.CUNIT_TYPE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CTG_ID", DbType.String, 20, poEntity.CUNIT_TYPE_CATEGORY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_CODE", DbType.String, 20, poEntity.CBILLING_RULE_CODE);
 
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
@@ -89,17 +89,19 @@ namespace LMM06000Back
                     default:
                         break;
                 }
-                lcQuery = "RSP_LM_MAINTAIN_UNIT_TYPE_BILLING_RULE";
+                lcQuery = "RSP_LM_MAINTAIN_STRATA_BILLING_RULE";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 8, poNewEntity.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poNewEntity.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_ID", DbType.String, 20, poNewEntity.CUNIT_TYPE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CTG_ID", DbType.String, 20, poNewEntity.CUNIT_TYPE_CATEGORY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_CODE", DbType.String, 50, poNewEntity.CBILLING_RULE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_NAME", DbType.String, 100, poNewEntity.CBILLING_RULE_NAME);
 
                 loDb.R_AddCommandParameter(loCommand, "@LBOOKING_FEE", DbType.Boolean, 2, poNewEntity.LBOOKING_FEE);
+                loDb.R_AddCommandParameter(loCommand, "@LBOOKING_FEE_OVERWRITE", DbType.Boolean, 2, poNewEntity.LBOOKING_FEE);
+                loDb.R_AddCommandParameter(loCommand, "@NMIN_BOOKING_FEE", DbType.String, 21, poNewEntity.NMIN_BOOKING_FEE);
                 loDb.R_AddCommandParameter(loCommand, "@CBOOKING_FEE_CHARGES_ID", DbType.String, 50, poNewEntity.CBOOKING_FEE_CHARGE_ID);
 
                 loDb.R_AddCommandParameter(loCommand, "@LWITH_DP", DbType.Boolean, 2, poNewEntity.LWITH_DP);
@@ -176,17 +178,19 @@ namespace LMM06000Back
                 loCommand = loDb.GetCommand();
                 string lcAction = "DELETE";
 
-                var lcQuery = "RSP_LM_MAINTAIN_UNIT_TYPE_BILLING_RULE";
+                var lcQuery = "RSP_LM_MAINTAIN_STRATA_BILLING_RULE";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poEntity.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 10, poEntity.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_ID", DbType.String, 20, poEntity.CUNIT_TYPE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CTG_ID", DbType.String, 20, poEntity.CUNIT_TYPE_CATEGORY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_CODE", DbType.String, 50, poEntity.CBILLING_RULE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_NAME", DbType.String, 50, poEntity.CBILLING_RULE_NAME);
 
                 loDb.R_AddCommandParameter(loCommand, "@LBOOKING_FEE", DbType.Boolean, 2, poEntity.LBOOKING_FEE);
+                loDb.R_AddCommandParameter(loCommand, "@LBOOKING_FEE_OVERWRITE", DbType.Boolean, 2, poEntity.LBOOKING_FEE);
+                loDb.R_AddCommandParameter(loCommand, "@NMIN_BOOKING_FEE", DbType.String, 21, poEntity.NMIN_BOOKING_FEE);
                 loDb.R_AddCommandParameter(loCommand, "@CBOOKING_FEE_CHARGES_ID", DbType.String, 50, poEntity.CBOOKING_FEE_CHARGE_ID);
 
                 loDb.R_AddCommandParameter(loCommand, "@LWITH_DP", DbType.Boolean, 2, poEntity.LWITH_DP);
@@ -250,14 +254,14 @@ namespace LMM06000Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                var lcQuery = @"RSP_LM_GET_UNIT_TYPE_BILLING_RULE_LIST";
+                var lcQuery = @"RSP_LM_GET_STRATA_BILLING_RULE_LIST";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 10, poParameter.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_ID", DbType.String, 20, poParameter.CUNIT_TYPE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CTG_ID", DbType.String, 20, poParameter.CUNIT_TYPE_CTG_ID);
                 loDb.R_AddCommandParameter(loCommand, "@LACTIVE_ONLY", DbType.Boolean, 2, poParameter.LACTIVE_ONLY);
 
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
@@ -334,13 +338,12 @@ namespace LMM06000Back
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
 
-                var lcQuery = @"RSP_GS_GET_UNIT_TYPE_LIST";
+                var lcQuery = @"RSP_GS_GET_UNIT_TYPE_CTG_LIST";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 10, poParameter.CPROPERTY_ID);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CATEGORY_ID", DbType.String, 50, poParameter.CUNIT_TYPE_CATEGORY_ID);
 
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
@@ -433,7 +436,7 @@ namespace LMM06000Back
                 loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 50, poParameter.CCOMPANY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poParameter.PROPERTY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@LACTIVE", DbType.Boolean, 1, poParameter.LACTIVE);
-                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_ID", DbType.String, 50, poParameter.CUNIT_TYPE_ID);
+                loDb.R_AddCommandParameter(loCommand, "@CUNIT_TYPE_CATEGORY_ID", DbType.String, 50, poParameter.CUNIT_TYPE_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CBILLING_RULE_CODE", DbType.String, 50, poParameter.CBILLING_RULE_CODE);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 50, poParameter.CUSER_ID);
 

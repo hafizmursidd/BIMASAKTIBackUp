@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lookup_LMFrontResources
+namespace RSP_AP_DELETE_TRANS_ADDResources
 {
     public class Resources_Dummy_Class
     {

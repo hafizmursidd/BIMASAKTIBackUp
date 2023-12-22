@@ -214,7 +214,7 @@ namespace LMM06000FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit Type.
+        ///   Looks up a localized string similar to Unit Type Category.
         /// </summary>
         internal static string _UnitType {
             get {
@@ -309,6 +309,15 @@ namespace LMM06000FrontResources {
         internal static string Error_07 {
             get {
                 return ResourceManager.GetString("Error_07", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min Valueis required..
+        /// </summary>
+        internal static string Error_08 {
+            get {
+                return ResourceManager.GetString("Error_08", resourceCulture);
             }
         }
     }

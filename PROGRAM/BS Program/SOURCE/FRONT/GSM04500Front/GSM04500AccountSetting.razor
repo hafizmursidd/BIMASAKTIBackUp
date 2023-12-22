@@ -26,11 +26,12 @@
             AllowDeleteRow="true"
             AllowAddNewRow="false"
             AllowEditRow="true"
-            Height="150px"
+            Height="210px"
             R_Before_Open_Grid_Lookup="BeforeOpenLookUPGOA"
-            R_After_Open_Grid_Lookup="AfterOpenLookGOA">
+            R_After_Open_Grid_Lookup="AfterOpenLookGOA"
+            Enabled="@_gridEnabled">
         <R_GridColumns>
-            <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="170px" FieldName="GROUPOFACCOUNT" 
+            <R_GridTextColumn Width="210px" FieldName="GROUPOFACCOUNT" 
                               HeaderText=@_localizer["_GrpAcc"] />
             <R_GridCheckBoxColumn Width="100px" FieldName="LDEPARTMENT_MODE" 
                                   HeaderText=@_localizer["_LDept"] R_EnableEdit />
@@ -47,7 +48,7 @@
     </R_Grid>
 </R_StackLayout>
 
-<R_StackLayout Row Class="mt-1">
+<R_StackLayout Row Class="mt-2">
     <R_ItemLayout col="2">
         <R_Label Class="ms-6">@_localizer["_GrpAcc"]</R_Label>
     </R_ItemLayout>
@@ -58,7 +59,7 @@
     </R_ItemLayout>
 </R_StackLayout>
 
-<R_StackLayout Class="mt-1">
+<R_StackLayout>
     <R_Grid @ref="@_gridGOADeptRef"
             DataSource="GOADeptViewModel.GOADeptList"
             R_ConductorGridSource="@_conGOADeptRef"
@@ -68,7 +69,7 @@
             AllowDeleteRow="@JournalGOAViewModel.checking_ByDept"
             AllowAddNewRow="@JournalGOAViewModel.checking_ByDept"
             AllowEditRow="@JournalGOAViewModel.checking_ByDept"
-            Height="170px"
+            Height="230px"
             R_Before_Open_Grid_Lookup="BeforeOpenLookUpDeptCode"
             R_After_Open_Grid_Lookup="AfterOpenLookUpDeptCode">
 
@@ -96,11 +97,13 @@
                  R_IsHeader
                  R_Display="@Grid_Display"
                  R_ServiceGetRecord="@R_ServiceGetRecordAsync"
-                 R_ServiceSave="@ServiceSaveGOA" />
+                 R_ServiceSave="@ServiceSaveGOA" 
+                />
 
 <R_ConductorGrid @ref="@_conGOADeptRef"
                  R_ViewModel="@GOADeptViewModel"
                  R_ConductorParent="_conJournalGOARef"
                  R_ServiceGetRecord="R_ServiceGetRecordGOADeptAsync"
                  R_ServiceSave="@ServiceSaveGOADept"
-                 R_AfterAdd="@ServiceAfterAdd" />
+                 R_AfterAdd="@ServiceAfterAdd" 
+                 R_SetOther="@ServiceSetOther"/>

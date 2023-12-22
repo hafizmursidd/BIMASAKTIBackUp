@@ -1,0 +1,201 @@
+﻿@inherits R_Page
+
+<R_StackLayout Row>
+    <R_ItemLayout col="2">
+        <R_Label Class="ms-6">Invoice Group</R_Label>
+    </R_ItemLayout>
+    <R_ItemLayout col="1" Class="me-3">
+        <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel._TabParam.CPROPERTY_ID" Enabled="false">
+        </R_TextBox>
+    </R_ItemLayout>
+    <R_ItemLayout col="2">
+        <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel._TabParam.CINVGRP_CODE" Enabled="false">
+        </R_TextBox>
+    </R_ItemLayout>
+</R_StackLayout>
+
+
+<R_StackLayout>
+    <R_ItemLayout>
+        <R_Grid @ref="@_gridInvoiceGroupRef"
+                DataSource="_LMM01500InvoiceGrpDeptViewModel.InvoiceGroupDeptList"
+                R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                R_GridType="R_eGridType.Navigator"
+                R_ServiceGetListRecord="@GetInvoiceGroupDeptList"
+                Pageable
+                Height="230px">
+            <R_GridColumns>
+                <R_GridTextColumn MaxLength="20"
+                                  FieldName="CDEPT_NAME"
+                                  HeaderText=Department Width="175px" />
+                <R_GridTextColumn MaxLength="100" FieldName="CBANK_NAME"
+                                  HeaderText="Bank" Width="250px" />
+                <R_GridTextColumn MaxLength="20"
+                                  FieldName="CBANK_ACCOUNT"
+                                  HeaderText="Bank Account" Width="175px" />
+                <R_GridTextColumn MaxLength="100" FieldName="CINVOICE_TEMPLATE"
+                                  HeaderText="Invoice Template" Width="250px" />
+
+                <R_GridTextColumn FieldName="CUPDATE_BY"
+                                  HeaderText="Updated By" Width="125px" />
+                <R_GridDateTimePickerColumn FieldName="DUPDATE_DATE"
+                                            HeaderText="Updated Date" Width="225px" />
+                <R_GridTextColumn FieldName="CCREATE_BY"
+                                  HeaderText="Created By" Width="125px" />
+                <R_GridDateTimePickerColumn FieldName="DCREATE_DATE"
+                                            HeaderText="Created Dated" Width="225px" />
+
+            </R_GridColumns>
+        </R_Grid>
+        </R_ItemLayout>
+
+        </R_StackLayout>
+        <R_StackLayout>
+        @*Lookup With Department*@
+        <R_StackLayout Row="true">
+            <R_ItemLayout col="2">
+                <R_Label>Departement*</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CDEPT_CODE"
+                           R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+
+            <R_ItemLayout>
+                <R_Lookup @ref="@R_Lookup_DEPT"
+                          R_Before_Open_Lookup="@Department_Before_Open_Lookup"
+                          R_After_Open_Lookup="@Department_After_Open_Lookup"
+                          R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                          R_EnableAdd="true"
+                          R_EnableEdit="true">
+                    ...
+                </R_Lookup>
+            </R_ItemLayout>
+
+            <R_ItemLayout col="3">
+                <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CDEPT_NAME"
+                           R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        @*Invoice Template*@
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label>Invoice Template*</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="6">
+                <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CFileNameExtension"
+                           R_ConductorSource="@_conductorInvoiceGroupDeptRef">
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_OpenFileDialogButton Class="text-white bg-dark"
+                                        R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                                        R_EnableAdd="true"
+                                        R_EnableEdit="true"
+                                        Accepts="@accepts"
+                                        OnChange="@InputFileChangeLMM01500GeneralInfo">
+                    Browse File
+                </R_OpenFileDialogButton>
+
+            </R_ItemLayout>
+        </R_StackLayout>
+        
+
+        <R_StackLayout Row="true">
+        <R_Label FontColor="@R_eFontColor.Danger" Class="fw-bold" FontSize="13">Bank Receipt Info</R_Label>
+        </R_StackLayout>
+        @*Lookup With Bank*@
+        <R_StackLayout Row="true">
+        <R_ItemLayout col="2">
+            <R_Label>Bank*</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="2">
+            <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CBANK_CODE"
+                       R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                       Enabled="false">
+            </R_TextBox>
+        </R_ItemLayout>
+
+        <R_ItemLayout>
+            <R_Lookup @ref="@R_Lookup_BANK"
+                      R_Before_Open_Lookup="@BANK_Before_Open_Lookup"
+                      R_After_Open_Lookup="@BANK_After_Open_Lookup"
+                      R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                      R_EnableAdd="true"
+                      R_EnableEdit="true">
+                ...
+            </R_Lookup>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="3">
+            <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CBANK_NAME"
+                       R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                       Enabled="false">
+            </R_TextBox>
+        </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+        <R_ItemLayout col="2">
+            <R_Label>Bank Account*</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="3">
+            <R_TextBox @bind-Value="@_LMM01500InvoiceGrpDeptViewModel.Data.CBANK_ACCOUNT"
+                       R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                       Enabled="false">
+            </R_TextBox>
+        </R_ItemLayout>
+
+        <R_ItemLayout>
+            <R_Lookup @ref="@R_Lookup_BANKACC"
+                      R_Before_Open_Lookup="@BANKACCOUNT_Before_Open_Lookup"
+                      R_After_Open_Lookup="@BANKACCOUNT_After_Open_Lookup"
+                      R_ConductorSource="@_conductorInvoiceGroupDeptRef"
+                      R_EnableAdd="true"
+                      R_EnableEdit="true">
+                ...
+            </R_Lookup>
+        </R_ItemLayout>
+    </R_StackLayout>
+
+    <R_StackLayout>
+        <R_StackLayout Row="true" Spacing="3" Class="d-flex justify-content-between">
+            <R_StackLayout Row="true">
+                <R_ItemLayout>
+                    <R_AddButton R_Conductor="@_conductorInvoiceGroupDeptRef"></R_AddButton>
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_EditButton R_Conductor="@_conductorInvoiceGroupDeptRef"></R_EditButton>
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_DeleteButton R_Conductor="@_conductorInvoiceGroupDeptRef"></R_DeleteButton>
+                </R_ItemLayout>
+            </R_StackLayout>
+
+            <R_StackLayout Row="true">
+                <R_ItemLayout>
+                    <R_CancelButton R_Conductor="@_conductorInvoiceGroupDeptRef"></R_CancelButton>
+                </R_ItemLayout>
+                <R_ItemLayout>
+                    <R_SaveButton R_Conductor="@_conductorInvoiceGroupDeptRef"></R_SaveButton>
+                </R_ItemLayout>
+            </R_StackLayout>
+
+        </R_StackLayout>
+    </R_StackLayout>
+
+</R_StackLayout>
+
+<R_Conductor @ref="@_conductorInvoiceGroupDeptRef"
+             R_ViewModel="@_LMM01500InvoiceGrpDeptViewModel"
+             R_IsHeader="true"
+             R_ServiceGetRecord="@ServiceGetRecordInvoiceGroup"
+             R_ServiceDelete="@ServiceDelete"
+             R_ServiceSave="@ServiceSave" />

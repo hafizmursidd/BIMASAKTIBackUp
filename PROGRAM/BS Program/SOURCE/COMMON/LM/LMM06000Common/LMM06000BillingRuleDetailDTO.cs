@@ -10,13 +10,15 @@ namespace LMM06000Common
         public string CCOMPANY_ID { get; set; }
         public string CPROPERTY_ID { get; set; }
         public string CUSER_ID { get; set; }
-        public string CUNIT_TYPE_ID { get; set; }
+        public string CUNIT_TYPE_CATEGORY_ID { get; set; }
 
         public bool LACTIVE_ONLY { get; set; }
         public string CBILLING_RULE_CODE { get; set; }
         public string CBILLING_RULE_NAME { get; set; }
 
         public bool LBOOKING_FEE { get; set; }
+        public decimal NMIN_BOOKING_FEE { get; set; }
+        public bool LBOOKING_FEE_OVERWRITE { get; set; }
         public string CBOOKING_FEE_CHARGE_ID { get; set; }
         public string CCHARGES_NAME { get; set; }
 

@@ -66,7 +66,7 @@ namespace GST00500Service
                 _loggerGST00500.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
                 _loggerGST00500.LogDebug("DbParameter {@Parameter} ", loParameter);
 
-                _loggerGST00500.LogInfo("Call method ApproverStatusList");
+                _loggerGST00500.LogInfo("Call method ApproveStatusList");
                 loRtn = loCls.ApproverStatusList(loParameter);
             }
             catch (Exception ex)

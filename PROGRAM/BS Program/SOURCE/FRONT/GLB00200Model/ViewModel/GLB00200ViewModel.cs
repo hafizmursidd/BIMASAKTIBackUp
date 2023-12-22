@@ -140,14 +140,12 @@ namespace GLB00200Model.ViewModel
                 {
                     var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_02");
                     loEx.Add(loErr);
-                    goto EndBlock;
                 }
                 if (!string.IsNullOrEmpty(lcSearchText)
                     && lcSearchText.Length < 3)
                 {
                     var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLB00200_Class), "Error_03");
                     loEx.Add(loErr);
-                    goto EndBlock;
                 }
                 #endregion
             }
@@ -155,8 +153,11 @@ namespace GLB00200Model.ViewModel
             {
                 loEx.Add(ex);
             }
-            EndBlock:
+
+            if (loEx.HasError)
+            {
             loEx.ThrowExceptionIfErrors();
+            }
         }
         public async Task GetSelectedDataToReversingJournal()
         {

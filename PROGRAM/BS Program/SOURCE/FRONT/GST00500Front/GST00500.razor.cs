@@ -7,6 +7,7 @@ using BlazorClientHelper;
 using GST00500Common;
 using GST00500FrontResources;
 using GST00500Model.ViewModel;
+using LMM06000Front;
 using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
@@ -23,7 +24,6 @@ namespace GST00500Front
     public partial class GST00500 : R_Page
     {
         #region Declare ViewModel
-
         private GST00500InboxViewModel _viewModelGST00500Inbox = new();
         #endregion
 
@@ -259,13 +259,30 @@ namespace GST00500Front
         {
             eventArgs.TargetPageType = typeof(GST00500Draft);
         }
-
-
         private void R_After_Open_TabPage(R_AfterOpenTabPageEventArgs eventArgs)
         {
 
         }
 
+        #endregion
+        #region ButtonView
+        private void R_Before_ServiceOpenOthersProgram(R_BeforeOpenDetailEventArgs eventArgs)
+        {
+            var lcProgramId = "APT00100";
+
+            switch (lcProgramId)
+            {
+                case "APT00100":
+                    eventArgs.Parameter = _viewModelGST00500Inbox._currentRecord;
+                    eventArgs.TargetPageType = typeof(LMM06000);
+                    break;
+            }
+        }
+
+        private void R_After_ServiceOpenOthersProgram()
+        {
+
+        }
         #endregion
 
     }

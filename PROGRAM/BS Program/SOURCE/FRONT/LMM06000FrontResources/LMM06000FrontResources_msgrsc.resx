@@ -138,6 +138,9 @@
   <data name="Error_07" xml:space="preserve">
     <value>Charge Id Installment is required.</value>
   </data>
+  <data name="Error_08" xml:space="preserve">
+    <value>Min Valueis required.</value>
+  </data>
   <data name="_Active" xml:space="preserve">
     <value>Active</value>
   </data>
@@ -190,7 +193,7 @@
     <value>PROPERTY</value>
   </data>
   <data name="_UnitType" xml:space="preserve">
-    <value>Unit Type</value>
+    <value>Unit Type Category</value>
   </data>
   <data name="_UpdBy" xml:space="preserve">
     <value>Updated By</value>

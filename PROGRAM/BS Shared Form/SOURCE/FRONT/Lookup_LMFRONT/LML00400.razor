@@ -1,5 +1,6 @@
 ﻿@inherits R_Page
 @attribute [R_Page(Title = "Utility Charges")]
+@inject R_ILocalizer<Resources_LookupLM_Class> _localizer
 
 <R_StackLayout Row>
     <R_Grid @ref="@GridRef"
@@ -11,8 +12,8 @@
             Width="600px"
             >
         <R_GridColumns>
-            <R_GridTextColumn Width="150px" FieldName="CCHARGES_ID" HeaderText="Charges Id"></R_GridTextColumn>
-            <R_GridTextColumn Width="250px" FieldName="CCHARGES_NAME" HeaderText="Charges Name"></R_GridTextColumn>
+            <R_GridTextColumn Width="150px" FieldName="CCHARGES_ID" HeaderText=@_localizer["_ChargesId"]></R_GridTextColumn>
+            <R_GridTextColumn Width="250px" FieldName="CCHARGES_NAME" HeaderText=@_localizer["_ChargesName"]></R_GridTextColumn>
         </R_GridColumns>
     </R_Grid>
     </R_StackLayout>

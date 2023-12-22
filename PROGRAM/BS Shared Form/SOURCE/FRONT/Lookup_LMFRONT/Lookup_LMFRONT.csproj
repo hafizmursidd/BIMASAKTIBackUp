@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BACK\Lookup_LMCOMMON\Lookup_LMCOMMON.csproj" />
+    <ProjectReference Include="..\Lookup_LMFrontResources\Lookup_LMFrontResources.csproj" />
     <ProjectReference Include="..\Lookup_LMModel\Lookup_LMModel.csproj" />
   </ItemGroup>
 

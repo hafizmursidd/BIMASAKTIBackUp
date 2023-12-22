@@ -122,8 +122,8 @@ namespace LMM06000Service
                 loDbParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID; ;
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
                 loDbParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CPROPERTY_ID);
-                loDbParameter.CUNIT_TYPE_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CUNIT_TYPE_ID);
-                loDbParameter.LACTIVE_ONLY = false; //sesuai pernyataan dari bu Reni
+                loDbParameter.CUNIT_TYPE_CTG_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CUNIT_TYPE_ID);
+                loDbParameter.LACTIVE_ONLY = false; // this value false
                 
                 _loggerLMM06000.LogInfo("Get Parameter BillingRuleListStream on Controller");
                 _loggerLMM06000.LogDebug("DbParameter {@Parameter} ", loDbParameter);
@@ -225,7 +225,6 @@ namespace LMM06000Service
                 loDbParameter.CCOMPANY_ID = R_BackGlobalVar.COMPANY_ID;
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
                 loDbParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CPROPERTY_ID);
-                loDbParameter.CUNIT_TYPE_CATEGORY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CUNIT_TYPE_ID);
                 _loggerLMM06000.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 
                 _loggerLMM06000.LogInfo("Call method GetAllUnitTypeList");

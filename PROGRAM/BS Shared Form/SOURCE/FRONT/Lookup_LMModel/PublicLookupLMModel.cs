@@ -34,7 +34,6 @@ namespace Lookup_LMModel
         {
             throw new NotImplementedException();
         }
-
         public IAsyncEnumerable<LML00300DTO> LML00300SupervisorList()
         {
             throw new NotImplementedException();

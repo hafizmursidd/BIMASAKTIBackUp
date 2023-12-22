@@ -9,10 +9,11 @@
                 R_GridType="R_eGridType.Original"
                 R_ServiceGetListRecord="ServiceGetListDraftTransaction"
                 Pageable
+                PageSize="15"
                 AllowDeleteRow="false"
                 AllowAddNewRow="false"
                 AllowEditRow="false"
-                Height="325px">
+                Height="450px">
             <R_GridColumns>
                 <R_GridTextColumn Width="250px"
                                   FieldName="CTRANS_NAME"
@@ -45,8 +46,8 @@
 
         <R_StackLayout Row="true" Class="d-flex justify-content-end">
         <R_ItemLayout>
-            <R_Detail R_Before_Open_Detail="R_Before_OpenDocNumbering_Detail"
-                      R_After_Open_Detail="R_After_OpenDocNumbering_Detail">
+            <R_Detail R_Before_Open_Detail="R_Before_ServiceOpenOthersProgram"
+                      R_After_Open_Detail="R_After_ServiceOpenOthersProgram">
                 @_localizer["_BtnView"]
             </R_Detail>
             @*<R_Button>View</R_Button>*@

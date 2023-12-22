@@ -1,0 +1,381 @@
+﻿@inherits R_Page
+@attribute [R_Page(Title = "Invoice Entry")]
+@using APT00100COMMON.DTOs.APT00100
+@using APT00100COMMON.DTOs.APT00121
+@using APT00100MODEL
+
+<R_StackLayout Row>
+    <R_ItemLayout col="6">
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>Product Dept.*</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPROD_DEPT_CODE"
+                           R_ConductorSource="@_conductorRef"
+                           R_EnableAdd R_EnableEdit>
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Lookup R_ConductorSource="@_conductorRef"
+                          R_Before_Open_Lookup="@R_Before_Open_LookupProductDept"
+                          R_After_Open_Lookup="@R_After_Open_LookupProductDept"
+                          R_EnableAdd
+                          R_EnableEdit>...</R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout col="5">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPROD_DEPT_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>Prod Type*</R_Label>
+            </R_ItemLayout>
+
+            <R_ItemLayout col="6">
+                <R_ComboBox Data="@loViewModel.loProductTypeList"
+                            Value="@loViewModel.Data.CPROD_TYPE"
+                            R_ConductorSource="@_conductorRef"
+                            ValueField="@nameof(GetPropertyListDTO.CPROPERTY_ID)"
+                            TextField="@nameof(GetPropertyListDTO.CPROPERTY_NAME)"
+                            ValueChanged="@((string value) => ProductTypeComboBox_ValueChanged(value))"
+                            R_EnableAdd
+                            R_EnableEdit>
+                </R_ComboBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+        
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>lcExpProdLabel</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPRODUCT_ID"
+                           R_ConductorSource="@_conductorRef"
+                           R_EnableAdd R_EnableEdit>
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Lookup R_ConductorSource="@_conductorRef"
+                          R_Before_Open_Lookup="@R_Before_Open_LookupProductDept"
+                          R_After_Open_Lookup="@R_After_Open_LookupProductDept"
+                          R_EnableAdd
+                          R_EnableEdit>...</R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout col="5">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPRODUCT_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+        
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>Supplier's Product*</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPROD_DEPT_CODE"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="6">
+                <R_TextBox @bind-Value="@loViewModel.Data.CPROD_DEPT_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>Allocation ID</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CALLOC_ID"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="IsAllocationEnable">
+                </R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Lookup R_ConductorSource="@_conductorRef"
+                          R_Before_Open_Lookup="@R_Before_Open_LookupProductDept"
+                          R_After_Open_Lookup="@R_After_Open_LookupProductDept"
+                          Enabled="IsAllocationEnable">...</R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout col="5">
+                <R_TextBox @bind-Value="@loViewModel.Data.CALLOC_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false">
+                </R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout col="3">
+                <R_Label>Description*</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="9" Class="pe-4">
+                <R_TextArea @bind-Value="@loViewModel.Data.CNOTES"
+                            R_ConductorSource="@_conductorRef"
+                            R_EnableAdd R_EnableEdit>
+                </R_TextArea>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row="true">
+            <R_ItemLayout col="2">
+                <R_Label>Updated By</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_TextBox @bind-Value="@loViewModel.Data.CUPDATE_BY"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_Label>Date</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="6" Class="pe-3">
+                <R_DateTimePicker @bind-Value="@loViewModel.Data.DUPDATE_DATE"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_DateTimePicker>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row="true">
+            <R_ItemLayout col="2">
+                <R_Label>Created By</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_TextBox @bind-Value="@loViewModel.Data.CCREATE_BY"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_Label>Date</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="6" Class="pe-3">
+                <R_DateTimePicker @bind-Value="@loViewModel.Data.DCREATE_DATE"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_DateTimePicker>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+    </R_ItemLayout>
+
+    <R_ItemLayout col="6">
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label>Purchase Qty</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTRANS_QTY"
+                                  R_ConductorSource="@_conductorRef"
+                                  R_EnableAdd R_EnableEdit></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CBILL_UNIT"
+                           R_ConductorSource="@_conductorRef"
+                           R_EnableAdd R_EnableEdit></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>CF</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTRANS_QTY"
+                                  R_ConductorSource="@_conductorRef"
+                                  R_EnableAdd R_EnableEdit></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="@loViewModel.Data.CUNIT1"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label></R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="4">
+                <R_Label>Approved Qty</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_Label>Unit Price</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_Label>Total Price</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label></R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="4">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NAPPV_QTY"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>X</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NUNIT_PRICE"
+                                  R_ConductorSource="@_conductorRef"
+                                  R_EnableAdd R_EnableEdit></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>=</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NAMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label>Line Discount</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="4">
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NDISC_PCT"
+                                  R_ConductorSource="@_conductorRef"
+                                  R_EnableAdd R_EnableEdit></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>%</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NDISC_AMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                        R_EnableAdd R_EnableEdit></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>-</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+        
+        <R_StackLayout Row>
+            <R_ItemLayout col="8" Class="text-end">
+                <R_Label>Summary Discount</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NDIST_DISCOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>-</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="8" Class="text-end">
+                <R_Label>Add On</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NDIST_ADD_ON"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>+</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="8" Class="text-end">
+                <R_Label>Net Amount</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTAXABLE_AMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label></R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.CTAX_ID"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_TextBox @bind-Value="@loViewModel.Data.CTAX_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTAX_PCT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>%</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTAX_AMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>+</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Row>
+            <R_ItemLayout col="2">
+                <R_Label></R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="@loViewModel.Data.COTHER_TAX_ID"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_TextBox @bind-Value="@loViewModel.Data.COTHER_TAX_NAME"
+                           R_ConductorSource="@_conductorRef"
+                           Enabled="false"></R_TextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NOTHER_TAX_PCT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>%</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NOTHER_TAX_AMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+            <R_ItemLayout col="0">
+                <R_Label>+</R_Label>
+            </R_ItemLayout>
+        </R_StackLayout>
+        
+        <R_StackLayout Row>
+            <R_ItemLayout col="8" Class="text-end">
+                <R_Label>Purchase Amount</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="3">
+                <R_NumericTextBox @bind-Value="@loViewModel.Data.NTOTAL_AMOUNT"
+                                  R_ConductorSource="@_conductorRef"
+                                  Enabled="false"></R_NumericTextBox>
+            </R_ItemLayout>
+        </R_StackLayout>
+    </R_ItemLayout>
+</R_StackLayout>

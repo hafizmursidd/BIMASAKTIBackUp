@@ -329,5 +329,14 @@ namespace GLB00200FrontResources {
                 return ResourceManager.GetString("Error_05", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select Period.!.
+        /// </summary>
+        internal static string Error_06 {
+            get {
+                return ResourceManager.GetString("Error_06", resourceCulture);
+            }
+        }
     }
 }

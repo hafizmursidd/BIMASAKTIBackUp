@@ -1,5 +1,6 @@
 ﻿@inherits R_Page
 @attribute [R_Page(Title = "Sales Tax")]
+@inject R_ILocalizer<Resources_LookupLM_Class> _localizer
 
 <R_StackLayout Row>
     <R_Grid @ref="@GridRef"
@@ -10,9 +11,9 @@
             Height="300px"
             Width="600px">
         <R_GridColumns>
-            <R_GridTextColumn Width="150px" FieldName="CTAX_ID" HeaderText="Tax Id"></R_GridTextColumn>
-            <R_GridTextColumn  Width="300px" FieldName="CTAX_NAME" HeaderText="Tax Name"></R_GridTextColumn>
-            <R_GridNumericColumn  Width="150px" FieldName="NTAX_PERCENTAGE" HeaderText="Tax %"></R_GridNumericColumn>
+            <R_GridTextColumn Width="150px" FieldName="CTAX_ID" HeaderText=@_localizer["_TaxId"]></R_GridTextColumn>
+            <R_GridTextColumn  Width="300px" FieldName="CTAX_NAME" HeaderText=@_localizer["_TaxName"]></R_GridTextColumn>
+            <R_GridNumericColumn  Width="150px" FieldName="NTAX_PERCENTAGE" HeaderText=@_localizer["_Tax%"]></R_GridNumericColumn>
         </R_GridColumns>
     </R_Grid>
     </R_StackLayout>

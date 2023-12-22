@@ -51,10 +51,12 @@ namespace GSM04500Front
             var loEx = new R_Exception();
             try
             {
-                JournalGOAViewModel.CurrentJournalGroup = (GSM04500DTO)eventArgs.Parameter;
-
-                var loParam = JournalGOAViewModel.CurrentJournalGroup;
-                await JournalGOAViewModel.GetAllJournalGrupGOAAsync(loParam.CPROPERTY_ID, loParam.CJRNGRP_TYPE, loParam.CJRNGRP_CODE);
+                if ((GSM04500DTO)eventArgs.Parameter != null)
+                {
+                    JournalGOAViewModel.CurrentJournalGroup = (GSM04500DTO)eventArgs.Parameter;
+                    var loParam = JournalGOAViewModel.CurrentJournalGroup;
+                    await JournalGOAViewModel.GetAllJournalGrupGOAAsync(loParam.CPROPERTY_ID, loParam.CJRNGRP_TYPE, loParam.CJRNGRP_CODE);
+                }
                 eventArgs.ListEntityResult = JournalGOAViewModel.GOAList;
             }
             catch (Exception ex)
@@ -63,8 +65,7 @@ namespace GSM04500Front
             }
             R_DisplayException(loEx);
         }
-
-
+        
         private async Task R_ServiceGetRecordAsync(R_ServiceGetRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -88,7 +89,13 @@ namespace GSM04500Front
             try
             {
                 var loParam = (GSM04510GOADTO)eventArgs.Data;
-
+                if (loParam !=null)
+                {
+                    if (loParam.LDEPARTMENT_MODE)
+                    {
+                        loParam.CGLACCOUNT_NO = "";
+                    }
+                }
                 await JournalGOAViewModel.SaveGOA(loParam, eventArgs.ConductorMode);
                 eventArgs.Result = JournalGOAViewModel.GOA;
 
@@ -109,11 +116,18 @@ namespace GSM04500Front
                 JournalGOAViewModel.CurrentGOA = loParam;
 
                 //Checking By Dept to enable disable add, delete edit
-                JournalGOAViewModel.checking_ByDept = loParam.LDEPARTMENT_MODE ? true : false;
+                JournalGOAViewModel.checking_ByDept = loParam.LDEPARTMENT_MODE;
 
                 await _gridGOADeptRef.R_RefreshGrid(loParam);
             }
         }
+        #region EnableGrid
+        private bool _gridEnabled = true;
+        private void ServiceSetOther(R_SetEventArgs eventArgs)
+        {
+            _gridEnabled = eventArgs.Enable;
+        }
+        #endregion
 
         #region GOALOOKUP
         //  Button LookUp GOA
@@ -208,8 +222,7 @@ namespace GSM04500Front
             //    CJRNGRP_CODE =
             //};
         }
-
-
+        
         #region LookUpGOADEPT
         //  Button LookUp DeptCode
         private void BeforeOpenLookUpDeptCode(R_BeforeOpenGridLookupColumnEventArgs eventArgs)
@@ -220,13 +233,12 @@ namespace GSM04500Front
                     eventArgs.Parameter = new GSL00700ParameterDTO();
                     eventArgs.TargetPageType = typeof(GSL00700);
                     break;
-                case "GLAccount_No":
+                case "CGLACCOUNT_NO":
                     var loParam = new GSL00520ParameterDTO();
                     loParam.CGOA_CODE = JournalGOAViewModel.CurrentGOA.CGOA_CODE;
                     eventArgs.Parameter = loParam;
                     eventArgs.TargetPageType = typeof(GSL00520);
                     break;
-
             }
         }
 
@@ -244,7 +256,7 @@ namespace GSM04500Front
                     ((GSM04510GOADeptDTO)eventArgs.ColumnData).CDEPT_CODE = loTempResult.CDEPT_CODE;
                     ((GSM04510GOADeptDTO)eventArgs.ColumnData).CDEPT_NAME = loTempResult.CDEPT_NAME;
                     break;
-                case "GLAccount_No":
+                case "CGLACCOUNT_NO":
                     var loTempResult2 = R_FrontUtility.ConvertObjectToObject<GSL00520DTO>(eventArgs.Result);
                     ((GSM04510GOADeptDTO)eventArgs.ColumnData).CGLACCOUNT_NO = loTempResult2.CGLACCOUNT_NO;
                     ((GSM04510GOADeptDTO)eventArgs.ColumnData).CGLACCOUNT_NAME = loTempResult2.CGLACCOUNT_NAME;

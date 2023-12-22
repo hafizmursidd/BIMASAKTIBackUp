@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using R_BlazorFrontEnd.Enums;
+//using APT00100FRONT;
+using LMM06000Front;
 
 namespace GST00500Front
 {
@@ -20,6 +22,7 @@ namespace GST00500Front
         private R_Grid<GST00500ApprovalStatusDTO> _gridOutboxTransStatusRef;
         private R_ConductorGrid _conductorOutboxTrans;
         private R_ConductorGrid _conductorOutboxTransStatus;
+
 
         protected override async Task R_Init_From_Master(object poParameter)
         {
@@ -92,6 +95,27 @@ namespace GST00500Front
             }
 
             R_DisplayException(loEx);
+        }
+        #endregion
+        #region ButtonView
+        private void R_Before_ServiceOpenOthersProgram(R_BeforeOpenDetailEventArgs eventArgs)
+        {
+            var lcProgramId = "APT00100";
+            //var lcProgramId= "LMM06000";
+            //var lcProgramId = "GSM06500";
+
+            switch (lcProgramId)
+            {
+                case "APT00100":
+                    eventArgs.Parameter = _viewModelGST00500Outbox._currentRecord;
+                    eventArgs.TargetPageType = typeof(LMM06000);
+                    break;
+            }
+        }
+
+        private void R_After_ServiceOpenOthersProgram()
+        {
+
         }
         #endregion
     }

@@ -24,6 +24,7 @@ namespace GST00500Model.ViewModel
 
         public List<GST00500DTO> loInboxApprovaltBatchList = new List<GST00500DTO>();
         public List<GST00500RejectDTO> ReasonOfRejectList = new List<GST00500RejectDTO>();
+        public GST00500CurrentRecordParamDTO _currentRecord = new GST00500CurrentRecordParamDTO();
 
         //Assign on RejectPopUp.razor
         public GST00500ReasonRejectDTO ParamRejectTransactionStatus = new GST00500ReasonRejectDTO();

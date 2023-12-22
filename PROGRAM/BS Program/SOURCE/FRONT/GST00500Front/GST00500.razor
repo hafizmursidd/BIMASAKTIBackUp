@@ -1,6 +1,5 @@
 ﻿@page "/GST00500"
-@using GST00500Common
-@using GST00500Front
+@attribute [R_Page(Title = "Approval")]
 @inherits R_Page
 @inject R_ILocalizer<Resources_GST00500_Class> _localizer
 
@@ -32,10 +31,11 @@
                     R_GridType="R_eGridType.Batch"
                     R_ServiceGetListRecord="ServiceGetListInboxTransaction"
                     Pageable
+                    PageSize="15"
                     AllowDeleteRow="false"
                     AllowAddNewRow="false"
                     AllowEditRow="true"
-                    Height="325px">
+                    Height="450px">
                 <R_GridColumns>
                     <R_GridCheckBoxSelectColumn Width="75px" FieldName="LSELECTED"
                                                 R_EnableEdit
@@ -89,7 +89,10 @@
 
             <R_StackLayout Row="true">
                 <R_ItemLayout>
-                    <R_Button>@_localizer["_BtnView"]</R_Button>
+                    <R_Detail R_Before_Open_Detail="R_Before_ServiceOpenOthersProgram"
+                              R_After_Open_Detail="R_After_ServiceOpenOthersProgram">
+                        @_localizer["_BtnView"]
+                    </R_Detail>
                 </R_ItemLayout>
             </R_StackLayout>
         </R_StackLayout>

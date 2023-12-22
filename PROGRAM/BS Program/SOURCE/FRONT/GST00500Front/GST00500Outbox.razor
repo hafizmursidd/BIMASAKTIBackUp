@@ -11,7 +11,7 @@
             AllowDeleteRow="false"
             AllowAddNewRow="false"
             AllowEditRow="false"
-            Height="175px">
+            Height="255px">
         <R_GridColumns>
             <R_GridTextColumn Width="250px"
                               FieldName="CTRANS_NAME"
@@ -45,7 +45,10 @@
     </R_Grid>
     <R_StackLayout Row="true" Class="d-flex justify-content-end mt-1 mb-1">
         <R_ItemLayout>
-            <R_Button>@_localizer["_BtnView"]</R_Button>
+            <R_Detail R_Before_Open_Detail="R_Before_ServiceOpenOthersProgram"
+                      R_After_Open_Detail="R_After_ServiceOpenOthersProgram">
+                @_localizer["_BtnView"]
+            </R_Detail>
         </R_ItemLayout>
     </R_StackLayout>
     </R_ItemLayout>
@@ -64,7 +67,7 @@
             AllowDeleteRow="false"
             AllowAddNewRow="false"
             AllowEditRow="false"
-            Height="125px"
+            Height="185px"
             Width="800px">
         <R_GridColumns>
             <R_GridTextColumn Width="150px" FieldName="CUSER_ID"

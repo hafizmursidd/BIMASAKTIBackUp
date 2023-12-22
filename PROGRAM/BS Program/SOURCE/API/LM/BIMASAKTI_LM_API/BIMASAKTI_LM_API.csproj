@@ -13,6 +13,7 @@
   </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\..\BS Shared Form\SOURCE\SERVICES\Lookup_LMSERVICES\Lookup_LMSERVICES.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMM01500SERVICE\LMM01500SERVICE.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\LM\LMM06000Service\LMM06000Service.csproj" />
   </ItemGroup>
 

@@ -202,10 +202,16 @@ namespace GSM04500Front
         //CHANGE TAB
         private void Before_Open_AccountSetting(R_BeforeOpenTabPageEventArgs eventArgs)
         {
-            eventArgs.TargetPageType = typeof(GSM04500AccountSetting); ;
-            eventArgs.Parameter = journalGroupViewModel.JournalGroupCurrent;
+            eventArgs.TargetPageType = typeof(GSM04500AccountSetting);
+            if (journalGroupViewModel.JournalGroupList.Count > 0)
+            {
+                eventArgs.Parameter = journalGroupViewModel.JournalGroupCurrent;
+            }
+            else
+            {
+                eventArgs.Parameter = null;
+            }
         }
-
         private void onTabChange(R_TabStripActiveTabIndexChangingEventArgs eventArgs)
         {
             journalGroupViewModel.DropdownProperty = true;

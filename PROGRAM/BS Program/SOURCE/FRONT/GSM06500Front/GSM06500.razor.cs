@@ -14,7 +14,7 @@ namespace GSM06500Front
         private R_ConductorGrid _conGridPaymentRef;
         private R_Grid<GSM06500DTO> _gridRef;
         private R_Conductor _conductorRef;
-
+        private int lnCountPage = 15;
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
@@ -70,6 +70,7 @@ namespace GSM06500Front
             try
             {
                 await PaymentTermViewModel.GetAllTermOfPaymentAsync();
+               
                 eventArgs.ListEntityResult = PaymentTermViewModel.PaymentOfTermList;
             }
             catch (Exception ex)

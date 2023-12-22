@@ -48,16 +48,17 @@
             <R_Grid @ref="@_gridRef"
                     DataSource="journalGroupViewModel.JournalGroupList"
                     Pageable="true"
+                    PageSize="15"
                     R_ConductorGridSource="@_conJournalGroupRef"
                     R_GridType="@R_eGridType.Original"
                     R_ServiceGetListRecord="@R_ServiceGetListRecord"
                     AllowDeleteRow="true"
                     AllowAddNewRow="true"
                     AllowEditRow="true"
-                    Height="325px">
+                    Height="455px">
 
                 <R_GridColumns>
-                    <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" MaxLength="8" Width="150px" FieldName="CJRNGRP_CODE" 
+                    <R_GridTextColumn MaxLength="8" Width="150px" FieldName="CJRNGRP_CODE" 
                                       HeaderText=@_localizer["_JGrpCode"] R_EnableAdd />
                     <R_GridTextColumn MaxLength="80" Width="250px" FieldName="CJRNGRP_NAME" 
                                       HeaderText=@_localizer["_JGrpName"] R_EnableAdd R_EnableEdit />

@@ -1,5 +1,6 @@
 ﻿@page "/GSM06500"
 @inherits R_Page
+@attribute [R_Page(Title = "Term of Payment")]
 @inject R_ILocalizer<Resources_GSM06500_Class> _localizer
 
 <R_StackLayout>
@@ -28,23 +29,24 @@
     <R_Grid @ref="@_gridRef"
             DataSource="PaymentTermViewModel.PaymentOfTermList"
             Pageable="true"
+            PageSize="20"
             R_ConductorGridSource="@_conGridPaymentRef"
             R_GridType="@R_eGridType.Original"
             R_ServiceGetListRecord="@R_ServiceGetListRecord"
             AllowDeleteRow="true"
             AllowAddNewRow="true"
             AllowEditRow="true"
-            Height="400px"
+            Height="525px"
             >
 
         <R_GridColumns>
             <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="200px" MaxLength="8" FieldName="CPAY_TERM_CODE" HeaderText=@_localizer["_PayCode"] R_EnableAdd />
-            <R_GridTextColumn Width="275px"  MaxLength="100" FieldName="CPAY_TERM_NAME" HeaderText=@_localizer["_PayName"] R_EnableAdd R_EnableEdit />
+            <R_GridTextColumn Width="225px"  MaxLength="100" FieldName="CPAY_TERM_NAME" HeaderText=@_localizer["_PayName"] R_EnableAdd R_EnableEdit />
             <R_GridNumericColumn TextAlignment="R_eTextAlignment.Center" Width="100px" Min="0" Max="999999" FieldName="IPAY_TERM_DAYS" HeaderText=@_localizer["_TopDays"] R_EnableAdd R_EnableEdit Arrows="false" />
             <R_GridTextColumn Width="150px"FieldName="CUPDATE_BY" HeaderText=@_localizer["_UpdBY"] />
-            <R_GridDateTimePickerColumn Width="250px"FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"]/>
+            <R_GridDateTimePickerColumn Width="225px"FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"]/>
             <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText=@_localizer["_CreateBy"] />
-            <R_GridDateTimePickerColumn Width="250px"  FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreateDate"] />
+            <R_GridDateTimePickerColumn Width="225px"  FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreateDate"] />
         </R_GridColumns>
     </R_Grid>
 </R_StackLayout>

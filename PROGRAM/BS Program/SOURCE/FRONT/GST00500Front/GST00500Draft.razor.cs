@@ -12,6 +12,8 @@ using R_BlazorFrontEnd;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
 using R_BlazorFrontEnd.Helpers;
+//using APT00100FRONT;
+using LMM06000Front;
 
 namespace GST00500Front
 {
@@ -73,19 +75,29 @@ namespace GST00500Front
 
             R_DisplayException(loEx);
         }
+        
         #region ButtonView
-        private void R_Before_OpenDocNumbering_Detail(R_BeforeOpenDetailEventArgs eventArgs)
+        private void R_Before_ServiceOpenOthersProgram(R_BeforeOpenDetailEventArgs eventArgs)
         {
-            eventArgs.Parameter = _viewModelGST00500Draft._currentRecord;
+            var lcProgramId = _viewModelGST00500Draft._currentRecord.CPROGRAM_ID;
+            lcProgramId = "LMM06000";
+            //var lcProgramId= "LMM06000";
+            //var lcProgramId = "GSM06500";
 
-           // string abc = "GSM04500Front.GSM04500";
-           // var type = Type.GetType(abc);
-
-          // eventArgs.TargetPageType = typeof(GSM04500);
-      //     eventArgs.TargetPageType = type;
+            switch (lcProgramId)
+            {
+                case "APT00100":
+                    eventArgs.Parameter = _viewModelGST00500Draft._currentRecord;
+                //    eventArgs.TargetPageType = typeof(APT00100);
+                    break;
+                case "LMM06000":
+                    eventArgs.Parameter = _viewModelGST00500Draft._currentRecord;
+                    eventArgs.TargetPageType = typeof(LMM06000);
+                    break;
+            }
         }
 
-        private void R_After_OpenDocNumbering_Detail()
+        private void R_After_ServiceOpenOthersProgram()
         {
 
         }

@@ -108,13 +108,16 @@ namespace LMM06000Front
                     BillingRuleViewModel.TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO()
                     {
                         CBOOKING_FEE_CHARGE_ID = BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID,
-                        CCHARGES_NAME = BillingRuleViewModel.Data.CCHARGES_NAME
+                        CCHARGES_NAME = BillingRuleViewModel.Data.CCHARGES_NAME,
+                        NMIN_BOOKING_FEE = BillingRuleViewModel.Data.NMIN_BOOKING_FEE,
+                        LBOOKING_FEE_OVERWRITE = BillingRuleViewModel.Data.LBOOKING_FEE_OVERWRITE
                     };
                 }
                 if (!lbCheckbox)
                 {
                     BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID = "";
-                    BillingRuleViewModel.Data.CCHARGES_NAME = "";
+                    BillingRuleViewModel.Data.CCHARGES_NAME = ""; 
+                    BillingRuleViewModel.Data.NMIN_BOOKING_FEE = 0;
                 }
                 //re assign value from user
                 if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
@@ -123,6 +126,8 @@ namespace LMM06000Front
 
                     BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID = loTempDt.CBOOKING_FEE_CHARGE_ID;
                     BillingRuleViewModel.Data.CCHARGES_NAME = loTempDt.CCHARGES_NAME;
+                    BillingRuleViewModel.Data.NMIN_BOOKING_FEE = loTempDt.NMIN_BOOKING_FEE;
+                    BillingRuleViewModel.Data.LBOOKING_FEE_OVERWRITE = loTempDt.LBOOKING_FEE_OVERWRITE;
                 }
                 #endregion
             }
@@ -301,8 +306,8 @@ namespace LMM06000Front
                 else
                 {
                     BillingRuleViewModel._IsButtonAddEnable = true;
-                    BillingRuleViewModel.UnitTypeValueContext = BillingRuleViewModel.UnitTypeList[0].CUNIT_TYPE_ID;
-                    await _gridBillingRuleRef.R_RefreshGrid(null);
+                    //BillingRuleViewModel.UnitTypeValueContext = BillingRuleViewModel.UnitTypeList[0].CUNIT_TYPE_CATEGORY_ID;
+                    //await _gridBillingRuleRef.R_RefreshGrid(null);
                 }
             }
             catch (Exception ex)
@@ -322,13 +327,13 @@ namespace LMM06000Front
 
                 var loParam = (LMM06000UnitTypeDTO)eventArgs.Data;
                 BillingRuleViewModel.PropertyValueContext = loParam.CPROPERTY_ID;
-                BillingRuleViewModel.UnitTypeValueContext = loParam.CUNIT_TYPE_ID;
+                BillingRuleViewModel.UnitTypeValueContext = loParam.CUNIT_TYPE_CATEGORY_ID;
                 await _gridBillingRuleRef.R_RefreshGrid(null);
             }
         }
         #endregion
 
-        #region BillingRule
+        #region BillingRuleSRATA
         private async Task GetListRecordBillingRules(R_ServiceGetListRecordEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -337,14 +342,6 @@ namespace LMM06000Front
                 await BillingRuleViewModel.GetAllBillingRule();
                 eventArgs.ListEntityResult = BillingRuleViewModel.BillingRuleList;
 
-                //if (BillingRuleViewModel.UnitTypeList.Count() < 1)
-                //{
-                //BillingRuleViewModel._IsButtonAddEnable = true;
-                //    //disable when, unit type didn't have data
-                //    BillingRuleViewModel.UnitTypeValueContext = "";
-                //    BillingRuleViewModel._IsButtonAddEnable = false;
-                //    await _gridBillingRuleRef.R_RefreshGrid(null);
-                //}
             }
             catch (Exception ex)
             {
@@ -369,7 +366,7 @@ namespace LMM06000Front
 
                 //Set ActiveInactive Value
                 BillingRuleViewModel.ActiveInactiveEntity.PROPERTY_ID = temp.CPROPERTY_ID;
-                BillingRuleViewModel.ActiveInactiveEntity.CUNIT_TYPE_ID = temp.CUNIT_TYPE_ID;
+                BillingRuleViewModel.ActiveInactiveEntity.CUNIT_TYPE_ID = temp.CUNIT_TYPE_CATEGORY_ID;
                 BillingRuleViewModel.ActiveInactiveEntity.CBILLING_RULE_CODE = temp.CBILLING_RULE_CODE;
 
                 if (loParam.LACTIVE)
@@ -518,10 +515,12 @@ namespace LMM06000Front
         {
             eventArgs.Data = new LMM06000BillingRuleDetailDTO()
             {
-                CUNIT_TYPE_ID = BillingRuleViewModel.UnitTypeValueContext,
+                CUNIT_TYPE_CATEGORY_ID = BillingRuleViewModel.UnitTypeValueContext,
                 CPROPERTY_ID = BillingRuleViewModel.PropertyValueContext,
                 LACTIVE = true,
                 LBOOKING_FEE = false,
+                LBOOKING_FEE_OVERWRITE = false,
+                NMIN_BOOKING_FEE = 0,
                 CBOOKING_FEE_CHARGE_ID = "",
                 CDP_PERIOD_MODE = "",
                 LWITH_DP = false,

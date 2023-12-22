@@ -61,7 +61,7 @@ namespace GSM06500FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create By.
+        ///   Looks up a localized string similar to Created By.
         /// </summary>
         internal static string _CreateBy {
             get {
@@ -70,7 +70,7 @@ namespace GSM06500FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Date.
+        ///   Looks up a localized string similar to Created Date.
         /// </summary>
         internal static string _CreateDate {
             get {

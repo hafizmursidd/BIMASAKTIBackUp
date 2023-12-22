@@ -1,6 +1,7 @@
 ﻿@page "/GLB00200"
-@using GLB00200FrontResources
+
 @inherits R_Page
+@attribute [R_Page(Title = "Reversing Journal Process")]
 @inject R_ILocalizer<Resources_GLB00200_Class> _localizer
 
 <R_StackLayout>
@@ -67,7 +68,7 @@
                 AllowDeleteRow="false"
                 AllowAddNewRow="false"
                 AllowEditRow="false"
-                Height="350px">
+                Height="500px">
             <R_GridColumns>
                 <R_GridCheckBoxSelectColumn Width="75px" FieldName="LSELECTED"
                                             R_EnableEdit

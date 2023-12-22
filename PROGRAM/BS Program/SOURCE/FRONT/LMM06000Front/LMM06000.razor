@@ -1,5 +1,6 @@
 ﻿@page "/LMM06000"
 @inherits R_Page
+@attribute [R_Page(Title = "Unit Type Billing Rule Strata")]
 @inject R_ILocalizer<Resources_LMM06000_Class> _localizer
 
 <R_StackLayout Class="mb-1">
@@ -36,10 +37,10 @@
                     AllowAddNewRow="false"
                     AllowEditRow="false"
                     Pageable
-                    Height="400px"
+                    Height="510px"
                     Enabled="@_gridEnabled">
                 <R_GridColumns>
-                    <R_GridTextColumn FieldName="CUNIT_TYPE_NAME"
+                    <R_GridTextColumn FieldName="CUNIT_TYPE_CATEGORY_NAME"
                                       HeaderText=@_localizer["_UnitType"]>
                     </R_GridTextColumn>
                 </R_GridColumns>
@@ -54,15 +55,23 @@
                     R_GridType="R_eGridType.Navigator"
                     R_ServiceGetListRecord="GetListRecordBillingRules"
                     Pageable
-                    Height="200px"
+                    Height="230px"
                     Enabled="@_gridEnabled">
                 @*List Of Billing Rule*@
                 <R_GridColumns>
-                    <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" MaxLength="20" 
+                    <R_GridTextColumn MaxLength="20"
                                       FieldName="CBILLING_RULE_CODE"
                                       HeaderText=@_localizer["_ColumnBillingCode"] Width="175px" />
                     <R_GridTextColumn MaxLength="100" FieldName="CBILLING_RULE_NAME"
                                       HeaderText=@_localizer["_ColumnBillingCode"] Width="250px" />
+                                      
+                    
+                    <R_GridMultiHeaderColumn HeaderText="Booking Fee">
+                        <R_GridNumericColumn FieldName="NMIN_BOOKING_FEE"
+                                          HeaderText="Min Value" Width="125px" />
+                        <R_GridCheckBoxColumn FieldName="LBOOKING_FEE_OVERWRITE"
+                                              HeaderText="Booking Fee" Width="125px" />
+                    </R_GridMultiHeaderColumn>
 
                     <R_GridMultiHeaderColumn HeaderText="DP">
                         <R_GridTextColumn FieldName="IDP_PERCENTAGE"
@@ -105,9 +114,9 @@
 
             @*Billing Rule Detail*@
             <R_StackLayout Row="true" Class="mt-1">
-                <R_ItemLayout col="6">
+                <R_ItemLayout col="8">
                     <R_StackLayout Row="true">
-                        <R_ItemLayout col="3">
+                        <R_ItemLayout col="2">
                             <R_Label>@_localizer["_BillingRule"]</R_Label>
                         </R_ItemLayout>
                         <R_ItemLayout col="3">
@@ -119,7 +128,7 @@
                                        MaxLength="20">
                             </R_TextBox>
                         </R_ItemLayout>
-                        <R_ItemLayout col="5">
+                        <R_ItemLayout col="5" Class="ms-2">
                             <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CBILLING_RULE_NAME"
                                        R_ConductorSource="@_conductorBillingRuleRef"
                                        R_EnableAdd="true"
@@ -140,8 +149,8 @@
             </R_StackLayout>
 
             @*Checkbox Booking Fee*@
-            <R_StackLayout Row="true">
-                <R_ItemLayout col="6">
+            <R_StackLayout Class="mt-1" Row="true">
+                <R_ItemLayout col="8">
                     <R_StackLayout Row="true">
                         <R_CheckBox @bind-Value="@BillingRuleViewModel.Data.LBOOKING_FEE"
                                     R_ConductorSource="@_conductorBillingRuleRef"
@@ -152,19 +161,40 @@
                         <R_Label>@_localizer["_BookingFee"]</R_Label>
                     </R_StackLayout>
 
-                    @*Lookup Booking Fee*@
+                    @*GROUPBOX Booking Fee*@
                     <R_GroupBox Enabled="@BillingRuleViewModel.Data.LBOOKING_FEE">
-                        <R_StackLayout Row="true">
+                        <R_StackLayout Row=true>
+                            <R_ItemLayout col="2">
+                                <R_Label>Min Value*</R_Label>
+                            </R_ItemLayout>
                             <R_ItemLayout col="3">
+                                <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.NMIN_BOOKING_FEE"
+                                           R_ConductorSource="@_conductorBillingRuleRef"
+                                           R_EnableAdd="true"
+                                           R_EnableEdit="true">
+                                </R_NumericTextBox>
+                            </R_ItemLayout>
+                            <R_ItemLayout col="4" Class="ms-2">
+                                <R_CheckBox @bind-Value="@BillingRuleViewModel.Data.LBOOKING_FEE_OVERWRITE"
+                                            R_ConductorSource="@_conductorBillingRuleRef"
+                                            R_EnableAdd="true"
+                                            R_EnableEdit="true">
+                                </R_CheckBox>
+                                <R_Label>Overwrite Agreement</R_Label>
+                            </R_ItemLayout>
+                        </R_StackLayout>
+                        @*LOOKUP CHARGE ID*@
+                        <R_StackLayout Row="true">
+                            <R_ItemLayout col="2">
                                 <R_Label>@_localizer["_ChargeId"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2">
+                            <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
                                 </R_TextBox>
                             </R_ItemLayout>
-                            <R_ItemLayout>
+                            <R_ItemLayout Class="ms-2">
                                 <R_Lookup @ref="@R_Lookup_Unit_Charges_Button"
                                           R_Before_Open_Lookup="@BeforeOpenLookUp_Unit_Charges"
                                           R_After_Open_Lookup="@AfterOpenLookUp_Unit_ChargesBookingFee"
@@ -174,7 +204,7 @@
                                     ...
                                 </R_Lookup>
                             </R_ItemLayout>
-                            <R_ItemLayout col="5">
+                            <R_ItemLayout col="6">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CCHARGES_NAME"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
@@ -186,7 +216,7 @@
 
 
                 @*REGION Bank Credit*@
-                <R_ItemLayout col="6">
+                <R_ItemLayout col="4">
                     <R_StackLayout Row="true">
                         <R_CheckBox @bind-Value="@BillingRuleViewModel.Data.LBANK_CREDIT"
                                     R_ConductorSource="@_conductorBillingRuleRef"
@@ -196,10 +226,10 @@
                         </R_CheckBox>
                         <R_Label>@_localizer["_BankCredit"]</R_Label>
                     </R_StackLayout>
-
+                    @*Lookup Bank Credit*@
                     <R_GroupBox Enabled="@BillingRuleViewModel.Data.LBANK_CREDIT">
                         <R_StackLayout Row="true">
-                            <R_ItemLayout col="3">
+                            <R_ItemLayout col="4">
                                 <R_Label>@_localizer["_Percentage"]</R_Label>
                             </R_ItemLayout>
                             <R_ItemLayout col="2">
@@ -214,10 +244,12 @@
                             <R_ItemLayout>
                                 <R_Label>@_localizer["_Percent"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="1" Class="ms-5">
+                        </R_StackLayout>
+                        <R_StackLayout Row="true">
+                            <R_ItemLayout col="4">
                                 <R_Label>@_localizer["_Interval"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2" Class="ms-4">
+                            <R_ItemLayout col="2">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL"
                                                   R_ConductorSource="@_conductorBillingRuleRef"
                                                   R_EnableAdd="true"
@@ -228,14 +260,12 @@
                             </R_ItemLayout>
                         </R_StackLayout>
                     </R_GroupBox>
-
                 </R_ItemLayout>
             </R_StackLayout>
 
             @*REGION With-DP*@
             <R_StackLayout Row="true">
-                <R_ItemLayout col="6">
-
+                <R_ItemLayout col="8">
                     <R_StackLayout Row="true">
                         <R_CheckBox @bind-Value="@BillingRuleViewModel.Data.LWITH_DP"
                                     R_ConductorSource="@_conductorBillingRuleRef"
@@ -248,10 +278,10 @@
 
                     <R_GroupBox Enabled="@BillingRuleViewModel.Data.LWITH_DP">
                         <R_StackLayout Row="true">
-                            <R_ItemLayout col="3">
+                            <R_ItemLayout col="2">
                                 <R_Label>@_localizer["_Percentage"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2">
+                            <R_ItemLayout col="1">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.IDP_PERCENTAGE"
                                                   R_ConductorSource="@_conductorBillingRuleRef"
                                                   R_EnableAdd="true"
@@ -266,7 +296,7 @@
                             <R_ItemLayout Class="ms-5">
                                 <R_Label>@_localizer["_Interval"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2" Class="ms-4">
+                            <R_ItemLayout col="1">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.IDP_INTERVAL"
                                                   R_ConductorSource="@_conductorBillingRuleRef"
                                                   R_EnableAdd="true"
@@ -275,14 +305,12 @@
                                                   Arrows="false">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
-                        </R_StackLayout>
 
-                        @*Period Mode*@
-                        <R_StackLayout Row="true" Class="mt-1">
-                            <R_ItemLayout col="3">
+                            @*Period Mode*@
+                            <R_ItemLayout Class="ms-6">
                                 <R_Label>@_localizer["_PeriodMode"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="4">
+                            <R_ItemLayout col="3">
                                 <R_DropDownList Data="@BillingRuleViewModel.PeriodList"
                                                 @bind-Value="BillingRuleViewModel.Data.CDP_PERIOD_MODE"
                                                 ValueField="@nameof(LMM06000PeriodDTO.CCODE)"
@@ -296,17 +324,17 @@
 
                         @*Lookup With DP Fee*@
                         <R_StackLayout Row="true" Class="mt-1">
-                            <R_ItemLayout col="3">
+                            <R_ItemLayout col="2">
                                 <R_Label>@_localizer["_ChargeId"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2">
+                            <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CDP_CHARGE_ID"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
                                 </R_TextBox>
                             </R_ItemLayout>
 
-                            <R_ItemLayout>
+                            <R_ItemLayout Class="ms-2">
                                 <R_Lookup @ref="@R_Lookup_Unit_Charges_Button"
                                           R_Before_Open_Lookup="@BeforeOpenLookUp_Unit_Charges_WithDP"
                                           R_After_Open_Lookup="@AfterOpenLookUp_Unit_ChargesWithDP"
@@ -316,21 +344,21 @@
                                     ...
                                 </R_Lookup>
                             </R_ItemLayout>
-                            <R_ItemLayout col="5">
+                            <R_ItemLayout col="6" Class="ms-1">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CDP_CHARGE_NAME"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
                                 </R_TextBox>
                             </R_ItemLayout>
                         </R_StackLayout>
-
                     </R_GroupBox>
                 </R_ItemLayout>
-                @*ENDREGION With DP*@
+            </R_StackLayout>
+            @*ENDREGION With DP*@
 
-                @* NEWW *@
-                @* REGION INSTALLMENT *@
-                <R_ItemLayout col="6">
+            @*REGION INSTALLLMENT*@
+            <R_StackLayout Row="true">
+                <R_ItemLayout Class="mt-1" col="8">
                     <R_StackLayout Row="true">
                         <R_CheckBox @bind-Value="@BillingRuleViewModel.Data.LINSTALLMENT"
                                     R_ConductorSource="@_conductorBillingRuleRef"
@@ -343,10 +371,10 @@
 
                     <R_GroupBox Enabled="@BillingRuleViewModel.Data.LINSTALLMENT">
                         <R_StackLayout Row="true">
-                            <R_ItemLayout col="3">
+                            <R_ItemLayout col="2">
                                 <R_Label>@_localizer["_Percentage"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2">
+                            <R_ItemLayout col="1">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.IINSTALLMENT_PERCENTAGE"
                                                   R_ConductorSource="@_conductorBillingRuleRef"
                                                   R_EnableAdd="true"
@@ -358,10 +386,10 @@
                             <R_ItemLayout>
                                 <R_Label>@_localizer["_Percent"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="1" Class="ms-5">
+                            <R_ItemLayout Class="ms-5">
                                 <R_Label>@_localizer["_Interval"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2" Class="ms-4">
+                            <R_ItemLayout col="1">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.IINSTALLMENT_INTERVAL"
                                                   R_ConductorSource="@_conductorBillingRuleRef"
                                                   R_EnableAdd="true"
@@ -370,14 +398,12 @@
                                                   Arrows="false">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
-                        </R_StackLayout>
 
-                        @*Period Mode*@
-                        <R_StackLayout Row="true" Class="mt-1">
-                            <R_ItemLayout col="3">
+                            @*Period Mode*@
+                            <R_ItemLayout Class="ms-6">
                                 <R_Label>@_localizer["_PeriodMode"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="4">
+                            <R_ItemLayout col="3">
                                 <R_DropDownList Data="@BillingRuleViewModel.PeriodList"
                                                 @bind-Value="BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE"
                                                 ValueField="@nameof(LMM06000PeriodDTO.CCODE)"
@@ -389,20 +415,19 @@
                             </R_ItemLayout>
                         </R_StackLayout>
 
-                        @*Lookup With DP Fee*@
+                        @*Lookup INSTALLMENT*@
                         <R_StackLayout Row="true" Class="mt-1">
-                            <R_ItemLayout col="3">
+                            <R_ItemLayout col="2">
                                 <R_Label>@_localizer["_ChargeId"]</R_Label>
                             </R_ItemLayout>
-                            <R_ItemLayout col="2">
+                            <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
-
                                 </R_TextBox>
                             </R_ItemLayout>
 
-                            <R_ItemLayout>
+                            <R_ItemLayout Class="ms-2">
                                 <R_Lookup @ref="@R_Lookup_Unit_Charges_Button"
                                           R_Before_Open_Lookup="@BeforeOpenLookUp_Unit_Charges"
                                           R_After_Open_Lookup="@AfterOpenLookUp_Unit_ChargesWithInstallment"
@@ -412,25 +437,24 @@
                                     ...
                                 </R_Lookup>
                             </R_ItemLayout>
-                            <R_ItemLayout col="5">
+                            <R_ItemLayout col="6" Class="ms-1">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_NAME"
                                            R_ConductorSource="@_conductorBillingRuleRef"
                                            Enabled="false">
                                 </R_TextBox>
                             </R_ItemLayout>
                         </R_StackLayout>
-
                     </R_GroupBox>
                 </R_ItemLayout>
-                @* END NEWW *@
-
             </R_StackLayout>
+            @*ENDREGION INSTALLMENT*@
+
             </R_ItemLayout>
             </R_StackLayout>
 
             @*Button ADD EDIT DELETE ACTIVE/INACTIVE, SAVE CANCEL*@
             <R_StackLayout>
-            <R_StackLayout Row="true" Spacing="3" Class="d-flex justify-content-around">
+            <R_StackLayout Row="true" Spacing="3" Class="d-flex justify-content-between">
             <R_StackLayout Row="true">
                 <R_ItemLayout>
                     <R_AddButton Enabled="BillingRuleViewModel._IsButtonAddEnable" R_Conductor="@_conductorBillingRuleRef"></R_AddButton>
@@ -468,9 +492,7 @@
 
             <R_ConductorGrid @ref="@_conductorUnitTypeRef"
                  R_ViewModel="@BillingRuleViewModel"
-                 R_Display="@Grid_DisplayUnitType"
-                 R_SetOther="ServiceSetOther"
-                />
+                 R_Display="@Grid_DisplayUnitType" />
 
             <R_Conductor @ref="@_conductorBillingRuleRef"
              R_ViewModel="@BillingRuleViewModel"
@@ -486,5 +508,4 @@
              R_AfterDelete="@ServiceAfterDelete"
              R_Saving="@ServiceSaving"
              R_Display="@ServiceR_Display"
-             R_SetOther="ServiceSetOther"
-             />
+             R_SetOther="ServiceSetOther" />

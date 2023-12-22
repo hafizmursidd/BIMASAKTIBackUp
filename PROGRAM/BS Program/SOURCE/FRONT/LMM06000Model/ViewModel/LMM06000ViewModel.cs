@@ -75,8 +75,8 @@ namespace LMM06000Model.ViewModel
             R_Exception loException = new R_Exception();
             try
             {
-                R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CPROPERTY_ID, PropertyValueContext);
-                R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CUNIT_TYPE_ID, UnitTypeValueContext);
+                R_FrontContext.R_SetStreamingContext(ContextConstant.CPROPERTY_ID, PropertyValueContext);
+                R_FrontContext.R_SetStreamingContext(ContextConstant.CUNIT_TYPE_ID, UnitTypeValueContext);
 
                 var loResult = await _model.GetBillingRuleListAsyncModel();
                 BillingRuleList = new ObservableCollection<LMM06000BillingRuleDTO>(loResult.Data);
@@ -98,7 +98,7 @@ namespace LMM06000Model.ViewModel
                     CCOMPANY_ID = poProperty.CCOMPANY_ID,
                     CUSER_ID = poProperty.CUSER_ID,
                     CPROPERTY_ID = poProperty.CPROPERTY_ID,
-                    CUNIT_TYPE_ID = poProperty.CUNIT_TYPE_ID,
+                    CUNIT_TYPE_CATEGORY_ID = poProperty.CUNIT_TYPE_CATEGORY_ID,
                     CBILLING_RULE_CODE = poProperty.CBILLING_RULE_CODE
                 };
                 loResult = await _model.R_ServiceGetRecordAsync(loParam);
@@ -152,6 +152,12 @@ namespace LMM06000Model.ViewModel
                     if (string.IsNullOrEmpty(poParam.CBOOKING_FEE_CHARGE_ID))
                     {
                         var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_03");
+                        loEx.Add(loErr);
+                        goto EndBlock;
+                    }
+                    if (poParam.NMIN_BOOKING_FEE == null)
+                    {
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_08");
                         loEx.Add(loErr);
                         goto EndBlock;
                     }
@@ -218,7 +224,7 @@ namespace LMM06000Model.ViewModel
                 {
                     CCOMPANY_ID = poEntity.CCOMPANY_ID,
                     CPROPERTY_ID = poEntity.CPROPERTY_ID,
-                    CUNIT_TYPE_ID = poEntity.CUNIT_TYPE_ID,
+                    CUNIT_TYPE_CATEGORY_ID = poEntity.CUNIT_TYPE_CATEGORY_ID,
                     CBILLING_RULE_CODE = poEntity.CBILLING_RULE_CODE,
                     CBILLING_RULE_NAME = poEntity.CBILLING_RULE_NAME,
 

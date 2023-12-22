@@ -178,7 +178,7 @@ namespace GLR00300FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select From Center Code.!.
+        ///   Looks up a localized string similar to Please select Trial Balance Type.!.
         /// </summary>
         internal static string Error_01 {
             get {
@@ -187,7 +187,7 @@ namespace GLR00300FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select To Center Code.!.
+        ///   Looks up a localized string similar to Please select Period.!.
         /// </summary>
         internal static string Error_02 {
             get {
@@ -196,11 +196,38 @@ namespace GLR00300FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select Budget No.!.
+        ///   Looks up a localized string similar to Please select From Center Code.!.
         /// </summary>
         internal static string Error_03 {
             get {
                 return ResourceManager.GetString("Error_03", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select To Center Code.!.
+        /// </summary>
+        internal static string Error_04 {
+            get {
+                return ResourceManager.GetString("Error_04", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select Print Method.!.
+        /// </summary>
+        internal static string Error_05 {
+            get {
+                return ResourceManager.GetString("Error_05", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select Budget No.!.
+        /// </summary>
+        internal static string Error_06 {
+            get {
+                return ResourceManager.GetString("Error_06", resourceCulture);
             }
         }
     }

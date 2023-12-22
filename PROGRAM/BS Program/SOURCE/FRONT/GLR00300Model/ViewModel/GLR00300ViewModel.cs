@@ -85,23 +85,35 @@ namespace GLR00300Model.ViewModel
             {
                 #region ValidationEmpty
 
-                if (string.IsNullOrEmpty(FromCenter.CCENTER_CODE) && _lPrintByCenter)
+                if (string.IsNullOrEmpty(TrialBalanceTypeValue))
                 {
                     var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_01");
                     loEx.Add(loErr);
-                    goto EndBlock;
                 }
-                if (string.IsNullOrEmpty(ToCenter.CCENTER_CODE) && _lPrintByCenter)
+                if (string.IsNullOrEmpty(PeriodNo))
                 {
                     var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_02");
                     loEx.Add(loErr);
-                    goto EndBlock;
                 }
-                if (string.IsNullOrEmpty(BudgetNoValue) && _lPrintBudget)
+                if (string.IsNullOrEmpty(FromCenter.CCENTER_CODE) && _lPrintByCenter)
                 {
                     var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_03");
                     loEx.Add(loErr);
-                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(ToCenter.CCENTER_CODE) && _lPrintByCenter)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_04");
+                    loEx.Add(loErr);
+                }
+                if (string.IsNullOrEmpty(PrintMethodValue))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_05");
+                    loEx.Add(loErr);
+                }
+                if (string.IsNullOrEmpty(BudgetNoValue) && _lPrintBudget)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_GLR00300_Class), "Error_06");
+                    loEx.Add(loErr);
                 }
                 #endregion
             }
@@ -109,8 +121,11 @@ namespace GLR00300Model.ViewModel
             {
                 loEx.Add(ex);
             }
-        EndBlock:
-            loEx.ThrowExceptionIfErrors();
+
+            if (loEx.HasError)
+            {
+                loEx.ThrowExceptionIfErrors();
+            }
         }
         public async Task GetPrintMethod()
         {

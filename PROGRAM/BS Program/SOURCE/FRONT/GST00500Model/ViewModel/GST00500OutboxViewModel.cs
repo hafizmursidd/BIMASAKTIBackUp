@@ -16,13 +16,13 @@ namespace GST00500Model.ViewModel
             new ObservableCollection<GST00500DTO>();
         public  ObservableCollection<GST00500ApprovalStatusDTO> OutboxApprovalStatusTransactionList = 
             new ObservableCollection<GST00500ApprovalStatusDTO>();
+        public GST00500CurrentRecordParamDTO _currentRecord = new GST00500CurrentRecordParamDTO();
 
         public async Task GetAllOutboxTransaction()
         {
             R_Exception loException = new R_Exception();
             try
             {
-
                 var loResult = await _modelGST00500Outbox.GetOutboxListAsyncModel();
                 OutboxTransactionList = new ObservableCollection<GST00500DTO>(loResult);
             }
@@ -40,8 +40,7 @@ namespace GST00500Model.ViewModel
                 R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CTRANS_CODE, poEntity.CTRANS_CODE);
                 R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CDEPT_CODE, poEntity.CDEPT_CODE);
                 R_BlazorFrontEnd.R_FrontContext.R_SetStreamingContext(ContextConstant.CREF_NO, poEntity.CREF_NO); ;
-
-
+                
                 var loResult = await _modelGST00500Outbox.GetApprovalStatusListAsyncModel();
                 OutboxApprovalStatusTransactionList = new ObservableCollection<GST00500ApprovalStatusDTO>(loResult);
             }

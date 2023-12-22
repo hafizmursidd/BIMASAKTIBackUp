@@ -132,6 +132,9 @@
   <data name="Error_05" xml:space="preserve">
     <value>Cannot process Recurring Journal with Manual Numbering! Transaction numbering setting for Recurring Journal should be auto increment, not manual numbering!</value>
   </data>
+  <data name="Error_06" xml:space="preserve">
+    <value>Please select Period.!</value>
+  </data>
   <data name="_AccName" xml:space="preserve">
     <value>Account Name</value>
   </data>
