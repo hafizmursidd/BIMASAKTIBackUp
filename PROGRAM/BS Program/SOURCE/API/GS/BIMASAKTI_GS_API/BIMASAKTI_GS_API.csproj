@@ -29,6 +29,7 @@
 		<ProjectReference Include="..\..\..\..\..\BS Shared Form\SOURCE\SERVICES\Lookup_GSSERVICES\Lookup_GSSERVICES.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\GS\GSM00100Service\GSM00100Service.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\GS\GSM04500Service\GSM04500Service.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\GS\GSM05000Service\GSM05000Service.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\GS\GSM06500Service\GSM06500Service.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\GS\GST00500Service\GST00500Service.csproj" />
 	</ItemGroup>

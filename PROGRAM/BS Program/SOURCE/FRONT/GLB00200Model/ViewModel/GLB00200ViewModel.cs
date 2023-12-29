@@ -112,7 +112,7 @@ namespace GLB00200Model.ViewModel
             }
         }
 
-        public async Task ConvertBigIntToInt()
+        public void ConvertBigIntToInt()
         {
             R_Exception loException = new R_Exception();
             try
