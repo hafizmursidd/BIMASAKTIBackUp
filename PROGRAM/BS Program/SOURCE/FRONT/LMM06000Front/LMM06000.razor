@@ -33,6 +33,7 @@
                     R_ConductorGridSource="@_conductorUnitTypeRef"
                     R_GridType="R_eGridType.Original"
                     R_ServiceGetListRecord="GetListRecordUnitType"
+                    R_Display="@Grid_DisplayUnitType"
                     AllowDeleteRow="false"
                     AllowAddNewRow="false"
                     AllowEditRow="false"
@@ -63,12 +64,12 @@
                                       FieldName="CBILLING_RULE_CODE"
                                       HeaderText=@_localizer["_ColumnBillingCode"] Width="175px" />
                     <R_GridTextColumn MaxLength="100" FieldName="CBILLING_RULE_NAME"
-                                      HeaderText=@_localizer["_ColumnBillingCode"] Width="250px" />
-                                      
-                    
+                                      HeaderText=@_localizer["_ColumnBillingName"] Width="250px" />
+
+
                     <R_GridMultiHeaderColumn HeaderText="Booking Fee">
                         <R_GridNumericColumn FieldName="NMIN_BOOKING_FEE"
-                                          HeaderText="Min Value" Width="125px" />
+                                             HeaderText="Min Value" Width="125px" />
                         <R_GridCheckBoxColumn FieldName="LBOOKING_FEE_OVERWRITE"
                                               HeaderText="Booking Fee" Width="125px" />
                     </R_GridMultiHeaderColumn>
@@ -169,9 +170,9 @@
                             </R_ItemLayout>
                             <R_ItemLayout col="3">
                                 <R_NumericTextBox @bind-Value="@BillingRuleViewModel.Data.NMIN_BOOKING_FEE"
-                                           R_ConductorSource="@_conductorBillingRuleRef"
-                                           R_EnableAdd="true"
-                                           R_EnableEdit="true">
+                                                  R_ConductorSource="@_conductorBillingRuleRef"
+                                                  R_EnableAdd="true"
+                                                  R_EnableEdit="true">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
                             <R_ItemLayout col="4" Class="ms-2">
@@ -191,7 +192,9 @@
                             <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID"
                                            R_ConductorSource="@_conductorBillingRuleRef"
-                                           Enabled="false">
+                                           OnLostFocus="@LostFocusLookupBooking"
+                                           R_EnableAdd="true"
+                                           R_EnableEdit="true">
                                 </R_TextBox>
                             </R_ItemLayout>
                             <R_ItemLayout Class="ms-2">
@@ -238,6 +241,7 @@
                                                   R_EnableAdd="true"
                                                   R_EnableEdit="true"
                                                   Min="0"
+                                                  Max="100"
                                                   Arrows="false">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
@@ -287,6 +291,7 @@
                                                   R_EnableAdd="true"
                                                   R_EnableEdit="true"
                                                   Min="0"
+                                                  Max="100"
                                                   Arrows="false">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
@@ -329,8 +334,10 @@
                             </R_ItemLayout>
                             <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CDP_CHARGE_ID"
+                                           OnLostFocus="@LostFocusLookupDP"
                                            R_ConductorSource="@_conductorBillingRuleRef"
-                                           Enabled="false">
+                                           R_EnableAdd="true"
+                                           R_EnableEdit="true">
                                 </R_TextBox>
                             </R_ItemLayout>
 
@@ -380,6 +387,7 @@
                                                   R_EnableAdd="true"
                                                   R_EnableEdit="true"
                                                   Min="0"
+                                                  Max="100"
                                                   Arrows="false">
                                 </R_NumericTextBox>
                             </R_ItemLayout>
@@ -423,7 +431,9 @@
                             <R_ItemLayout col="3">
                                 <R_TextBox @bind-Value="@BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID"
                                            R_ConductorSource="@_conductorBillingRuleRef"
-                                           Enabled="false">
+                                           OnLostFocus="@LostFocusLookupInstallment"
+                                           R_EnableAdd="true"
+                                           R_EnableEdit="true">
                                 </R_TextBox>
                             </R_ItemLayout>
 
@@ -490,17 +500,13 @@
             </R_StackLayout>
             </R_StackLayout>
 
-            <R_ConductorGrid @ref="@_conductorUnitTypeRef"
-                 R_ViewModel="@BillingRuleViewModel"
-                 R_Display="@Grid_DisplayUnitType" />
+            <R_ConductorGrid @ref="@_conductorUnitTypeRef" />
 
             <R_Conductor @ref="@_conductorBillingRuleRef"
              R_ViewModel="@BillingRuleViewModel"
              R_IsHeader="true"
              R_ServiceGetRecord="@ServiceGetOneRecordBillingRule"
-             R_BeforeEdit="@ServiceBeforeEdit"
              R_BeforeCancel="@ServiceBeforeCancel"
-             R_AfterSave="@ServiceAfterSave"
              R_AfterAdd="@AfterAdd"
              R_Validation="@R_Validation"
              R_ServiceSave="@ServiceSave"

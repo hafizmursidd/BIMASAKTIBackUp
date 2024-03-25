@@ -9,6 +9,7 @@ using GLR00300Common;
 using GLR00300Model.ViewModel;
 using Lookup_GSCOMMON.DTOs;
 using Lookup_GSFRONT;
+using Lookup_GSModel.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using R_BlazorFrontEnd.Controls.DataControls;
@@ -24,6 +25,7 @@ namespace GLR00300Front
     {
         private GLR00300ViewModel _viewModelGLR00300 = new();
         private R_Conductor _conducterRef;
+
         [Inject] private IClientHelper _clientHelper { get; set; }
         [Inject] private R_IReport _reportService { get; set; }
 
@@ -132,7 +134,7 @@ namespace GLR00300Front
             }
             R_DisplayException(loEx);
         }
-        private async Task IsTrialBalanceTypeNormal(object poParam)
+        private void IsTrialBalanceTypeNormal(object poParam)
         {
             var loEx = new R_Exception();
             string TrialBalanceValue = (string)poParam;
@@ -365,6 +367,176 @@ namespace GLR00300Front
             {
                 loEx.Add(ex);
             }
+            R_DisplayException(loEx);
+        }
+
+        #endregion
+
+        #region onLostFocus
+        private async Task LostFocusLookupFromAccount()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = _viewModelGLR00300.InitialProcess;
+                if (!string.IsNullOrWhiteSpace(loGetData.CMIN_GLACCOUNT_NO))
+                {
+                    LookupGSL00510ViewModel loLookupViewModel = new LookupGSL00510ViewModel();
+                    var param = new GSL00510ParameterDTO
+                    {
+                        CCOMPANY_ID = _clientHelper.CompanyId,
+                        CUSER_ID = _clientHelper.UserId,
+                        CGLACCOUNT_TYPE = "N",
+                        CSEARCH_TEXT = _viewModelGLR00300.InitialProcess.CMIN_GLACCOUNT_NO!,
+                    };
+                    var loResult = await loLookupViewModel.GetCOA(param);
+
+
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(Lookup_GSFrontResources.Resources_Dummy_Class),
+                                "_ErrLookup01"));
+                        loGetData.CMIN_GLACCOUNT_NO = "";
+                        loGetData.CMIN_GLACCOUNT_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CMIN_GLACCOUNT_NO = loResult.CGLACCOUNT_NO;
+                        loGetData.CMIN_GLACCOUNT_NAME = loResult.CGLACCOUNT_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task LostFocusLookupToAccount()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = _viewModelGLR00300.InitialProcess;
+                if (!string.IsNullOrWhiteSpace(loGetData.CMAX_GLACCOUNT_NO))
+                {
+                    LookupGSL00510ViewModel loLookupViewModel = new LookupGSL00510ViewModel();
+                    var param = new GSL00510ParameterDTO
+                    {
+                        CCOMPANY_ID = _clientHelper.CompanyId,
+                        CUSER_ID = _clientHelper.UserId,
+                        CGLACCOUNT_TYPE = "N",
+                        CSEARCH_TEXT = _viewModelGLR00300.InitialProcess.CMAX_GLACCOUNT_NO!,
+                    };
+                    var loResult = await loLookupViewModel.GetCOA(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(Lookup_GSFrontResources.Resources_Dummy_Class),
+                                "_ErrLookup01"));
+                        loGetData.CMAX_GLACCOUNT_NO = "";
+                        loGetData.CMAX_GLACCOUNT_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CMAX_GLACCOUNT_NO = loResult.CGLACCOUNT_NO;
+                        loGetData.CMAX_GLACCOUNT_NAME = loResult.CGLACCOUNT_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task LostFocusLookupFromCenter()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = _viewModelGLR00300.FromCenter;
+                if (!string.IsNullOrWhiteSpace(loGetData.CCENTER_CODE))
+                {
+                    LookupGSL00510ViewModel loLookupViewModel = new LookupGSL00510ViewModel();
+                    var param = new GSL00510ParameterDTO
+                    {
+                        CCOMPANY_ID = _clientHelper.CompanyId,
+                        CUSER_ID = _clientHelper.UserId,
+                        CGLACCOUNT_TYPE = "N",
+                        CSEARCH_TEXT = _viewModelGLR00300.FromCenter.CCENTER_CODE!,
+                    };
+                    var loResult = await loLookupViewModel.GetCOA(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(Lookup_GSFrontResources.Resources_Dummy_Class),
+                                "_ErrLookup01"));
+                        loGetData.CCENTER_CODE = "";
+                        loGetData.CCENTER_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CCENTER_CODE = loResult.CGLACCOUNT_NO;
+                        loGetData.CCENTER_NAME = loResult.CGLACCOUNT_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task LostFocusLookupToCenter()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = _viewModelGLR00300.ToCenter;
+                if (!string.IsNullOrWhiteSpace(loGetData.CCENTER_CODE))
+                {
+                    LookupGSL00510ViewModel loLookupViewModel = new LookupGSL00510ViewModel();
+                    var param = new GSL00510ParameterDTO
+                    {
+                        CCOMPANY_ID = _clientHelper.CompanyId,
+                        CUSER_ID = _clientHelper.UserId,
+                        CGLACCOUNT_TYPE = "N",
+                        CSEARCH_TEXT = _viewModelGLR00300.ToCenter.CCENTER_CODE!,
+                    };
+                    var loResult = await loLookupViewModel.GetCOA(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(Lookup_GSFrontResources.Resources_Dummy_Class),
+                                "_ErrLookup01"));
+                        loGetData.CCENTER_CODE = "";
+                        loGetData.CCENTER_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CCENTER_CODE = loResult.CGLACCOUNT_NO;
+                        loGetData.CCENTER_NAME = loResult.CGLACCOUNT_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
             R_DisplayException(loEx);
         }
 

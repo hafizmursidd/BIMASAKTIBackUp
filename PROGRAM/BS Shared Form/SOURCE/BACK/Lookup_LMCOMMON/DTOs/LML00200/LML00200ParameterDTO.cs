@@ -6,5 +6,6 @@
         public string CUSER_ID { get; set; }
         public string CPROPERTY_ID { get; set; }
         public string CCHARGE_TYPE_ID { get; set; }
+        public string CSEARCH_TEXT { get; set; } = "";
     }
 }

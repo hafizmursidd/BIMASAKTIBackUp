@@ -12,8 +12,8 @@ namespace Lookup_LMModel.ViewModel.LML00500
     public class LookupLML00500ViewModel
     {
         private PublicLookupLMModel _model = new PublicLookupLMModel();
-
-        public ObservableCollection<LML00500DTO> SalesmanList = new ObservableCollection<LML00500DTO>();
+        private PublicLookupLMGetRecordModel _modelGetRecord = new PublicLookupLMGetRecordModel();
+                public ObservableCollection<LML00500DTO> SalesmanList = new ObservableCollection<LML00500DTO>();
         public async Task GetSalesmanList(LML00500ParameterDTO poParam)
         {
             var loEx = new R_Exception();
@@ -33,6 +33,22 @@ namespace Lookup_LMModel.ViewModel.LML00500
             }
 
             loEx.ThrowExceptionIfErrors();
+        }
+        public async Task<LML00500DTO> GetSalesman(LML00500ParameterDTO poParam)
+        {
+            var loEx = new R_Exception();
+            LML00500DTO loRtn = null;
+            try
+            {
+                var loResult = await _modelGetRecord.LML00500GetSalesmanAsync(poParam);
+                loRtn = loResult;
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            return loRtn;
         }
     }
 }

@@ -1,0 +1,30 @@
+Image Build
+=============
+docker image build -f Dockerfile.GSAPI --no-cache=true -t otl-api .
+
+docker image build -f Dockerfile.GSAPI --no-cache=false -t otl-api .
+
+docker image build -f Dockerfile.GSAPI --no-cache=true -t gs-api .
+
+docker image build -f Dockerfile.GSAPI --no-cache=false -t gs-api .
+
+Lihat Image
+==================
+docker run --rm -it --entrypoint=/bin/bash otl-api
+docker run --rm -it --entrypoint=/bin/bash gs-api
+
+Docker Compose
+===============
+1.Create
+	docker-compose -f docker-compose.OtlAPI.yml build
+2.Deploy
+	docker-compose -f docker-compose.OtlAPI.yml up
+3.Drop
+	docker-compose -f docker-compose.OtlAPI.yml down
+
+Untuk melakukan deployment dan 
+
+
+
+http://localhost:5001/swagger
+

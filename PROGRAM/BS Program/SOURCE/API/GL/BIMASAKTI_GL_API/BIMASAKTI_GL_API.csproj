@@ -7,7 +7,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Realta.BackCollectionNuGet" Version="1.0.0" />
+		<PackageReference Include="Realta.BackCollectionNuGet" Version="1.0.1" />
 		<PackageReference Include="Realta.CommonCollectionNuGet" Version="1.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\SERVICE\GL\GLB00200Service\GLB00200Service.csproj" />
     <ProjectReference Include="..\..\..\SERVICE\GL\GLR00300Service\GLR00300Service.csproj" />
+    <ProjectReference Include="..\..\..\SERVICE\GL\GLT00100SERVICE\GLT00100Service.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

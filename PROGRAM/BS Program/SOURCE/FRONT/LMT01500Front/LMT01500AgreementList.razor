@@ -1,0 +1,213 @@
+@page "/LMT01500"
+@inherits R_Page;
+@inject R_ILocalizer<Resources_LMT01500_Class> _localizer
+
+<R_StackLayout>
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label FontStyle="R_eFontStyle.Bold" FontColor="R_eFontColor.Danger">
+                PROPERTY
+            </R_Label>
+
+        </R_ItemLayout>
+        <R_ItemLayout col="3">
+            <R_ComboBox Data="@_viewModelLMT01500AgreementList.loPropertyList"
+                        Value="@_viewModelLMT01500AgreementList._cPropertyId"
+                        ValueField="@nameof(LMT01500PropertyListDTO.CPROPERTY_ID)"
+                        TextField="@nameof(LMT01500PropertyListDTO.CPROPERTY_NAME)"
+                        Enabled="_viewModelLMT01500AgreementList._lComboBoxProperty"
+                        R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                        ValueChanged="@((string value) => PropertyDropdown_OnChange(value))">
+            </R_ComboBox>
+        </R_ItemLayout>
+    </R_StackLayout>
+</R_StackLayout>
+
+
+<R_TabStrip @ref="@_tabStripRef"
+            OnActiveTabIndexChanged="OnActiveTabIndexChanged"
+            OnActiveTabIndexChanging="OnActiveTabIndexChanging">
+    <!-- List -->
+    <R_TabStripTab Title="Agreement List" Id="AgreementList">
+        <R_StackLayout>
+
+            <!-- R_ServiceGetList -->
+            <R_StackLayout>
+
+                <R_Grid @ref="@_gridRefLMT01500AgreementList"
+                        DataSource="_viewModelLMT01500AgreementList.loListLMT01500Agreement"
+                        R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                        R_GridType="@R_eGridType.Original"
+                        R_ServiceGetListRecord="@R_ServiceGetListRecord"
+                        Pageable
+                         Width="1050px"
+                         Height="220px"
+                         PageSize="15"
+                         AllowDeleteRow="false"
+                         AllowAddNewRow="false"
+                         AllowEditRow="false">
+                     <R_GridColumns>
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CDEPT_NAME)"
+                                           HeaderText="Department" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CREF_NO)"
+                                           HeaderText="Agreement No" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CSTART_DATE)"
+                                           HeaderText="Start Date" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CEND_DATE)"
+                                           HeaderText="End Date" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CTENANT_NAME)"
+                                           HeaderText="Tenant" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CBUILDING_NAME)"
+                                           HeaderText="Building" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CLEASE_MODE_DESCR)"
+                                           HeaderText="Lease Mode" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CCHARGE_MODE_DESCR)"
+                                           HeaderText="Charge Mode" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CTRANS_STATUS_DESCR)"
+                                           HeaderText="Status" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CDOC_NO)"
+                                           HeaderText="Document No" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CDOC_DATE)"
+                                           HeaderText="Document Date" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CUPDATE_BY)"
+                                           HeaderText="Updated By" />
+
+                         <R_GridDateTimePickerColumn Width="140px"
+                                                     FieldName="@nameof(LMT01500AgreementListOriginalDTO.DUPDATE_DATE)"
+                                                     HeaderText="Updated Date" />
+
+                         <R_GridTextColumn Width="140px"
+                                           FieldName="@nameof(LMT01500AgreementListOriginalDTO.CCREATE_BY)"
+                                           HeaderText="Created By" />
+
+                         <R_GridDateTimePickerColumn Width="140px"
+                                                     FieldName="@nameof(LMT01500AgreementListOriginalDTO.DCREATE_DATE)"
+                                                     HeaderText="Created  Date" />
+
+                     </R_GridColumns>
+                 </R_Grid>
+
+                 <!-- R_ServiceGetList -->
+             </R_StackLayout>
+
+             <!-- Button -->
+             <R_StackLayout Row>
+
+                <R_ItemLayout>
+                    <R_Button R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                              Enabled="true"
+                              OnClick="OnClickNexttoPageAgreementButton">
+                        New Agreement
+                    </R_Button>
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_Button R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                              Enabled="true"
+                              OnClick="BlankFunction">
+                        Renewal Agreement
+                    </R_Button>
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_Button R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                              Enabled="true"
+                              OnClick="BlankFunction">
+                        Change Status
+                    </R_Button>
+                </R_ItemLayout>
+
+
+                <R_ItemLayout Class="ms-5">
+                    <R_Button R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                              Enabled="true"
+                              OnClick="BlankFunction">
+                        Template
+                    </R_Button>
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_Button R_ConductorGridSource="@_conductorLMT01500AgreementList"
+                              Enabled="true"
+                              OnClick="BlankFunction">
+                        Upload
+                    </R_Button>
+                </R_ItemLayout>
+
+            </R_StackLayout>
+
+        </R_StackLayout>
+    </R_TabStripTab>
+
+    <!-- Agreement -->
+    <R_TabStripTab Title="Agreement" Id="Agreement">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_Agreement_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabAgreementRef" />
+    </R_TabStripTab>
+
+    <!-- UnitInfo -->
+    <R_TabStripTab Title="Unit Info" Id="UnitInfo" Enabled="_isDataExist">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_UnitInfo_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabUnitInfoRef" />
+    </R_TabStripTab>
+
+    <!-- ChargesInfo -->
+    <R_TabStripTab Title="Charges Info" Id="ChargesInfo" Enabled="_isDataExist">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_ChargesInfo_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabChargesInfoRef" />
+    </R_TabStripTab>
+
+    <!-- InvoicePlan -->
+    <R_TabStripTab Title="Invoice Plan" Id="InvoicePlan" Enabled="_isDataExist">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_InvoicePlan_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabInvoicePlanRef" />
+    </R_TabStripTab>
+
+    <!-- Deposit -->
+    <R_TabStripTab Title="Deposit" Id="Deposit" Enabled="_isDataExist">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_Deposit_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabDepositRef" />
+    </R_TabStripTab>
+
+    <!-- Document -->
+    <R_TabStripTab Title="Document" Id="Document" Enabled="_isDataExist">
+        <R_TabPage R_Before_Open_TabPage="General_Before_Open_Document_TabPage"
+                   R_TabEventCallback="@R_TabEventCallback"
+                   @ref="_tabDocumentRef" />
+    </R_TabStripTab>
+
+
+</R_TabStrip>
+
+<R_ConductorGrid @ref="@_conductorLMT01500AgreementList"
+                 R_ViewModel="@_viewModelLMT01500AgreementList"
+                      R_IsHeader
+                  R_Display="R_DisplayGetRecord" />

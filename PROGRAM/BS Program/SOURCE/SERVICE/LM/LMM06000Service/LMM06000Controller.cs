@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using LMM06000Common.Logs;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace LMM06000Service
 {
@@ -16,17 +17,20 @@ namespace LMM06000Service
     public class LMM06000Controller : ControllerBase, ILMM06000
     {
         private LoggerLMM06000 _loggerLMM06000;
-
+        private readonly ActivitySource _activitySource;
         public LMM06000Controller(ILogger<LMM06000Controller> logger)
         {
             //Initial and Get Logger
             LoggerLMM06000.R_InitializeLogger(logger);
             _loggerLMM06000 = LoggerLMM06000.R_GetInstanceLogger();
+            _activitySource = LMM06000Activity.R_InitializeAndGetActivitySource(nameof(LMM06000Controller));
         }
         [HttpPost]
         public R_ServiceGetRecordResultDTO<LMM06000BillingRuleDetailDTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<LMM06000BillingRuleDetailDTO> poParameter)
         {
-            _loggerLMM06000.LogInfo("START process method R_ServiceGetRecord on Controller");
+            string lcMethodName = nameof(R_ServiceGetRecord);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
             var loRtn = new R_ServiceGetRecordResultDTO<LMM06000BillingRuleDetailDTO>();
@@ -52,7 +56,9 @@ namespace LMM06000Service
         [HttpPost]
         public R_ServiceSaveResultDTO<LMM06000BillingRuleDetailDTO> R_ServiceSave(R_ServiceSaveParameterDTO<LMM06000BillingRuleDetailDTO> poParameter)
         {
-            _loggerLMM06000.LogInfo("START process method R_ServiceSave on Controller");
+            string lcMethodName = nameof(R_ServiceSave);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
             R_ServiceSaveResultDTO<LMM06000BillingRuleDetailDTO> loRtn = null;
@@ -81,7 +87,10 @@ namespace LMM06000Service
         [HttpPost]
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<LMM06000BillingRuleDetailDTO> poParameter)
         {
-            _loggerLMM06000.LogInfo("START process method R_ServiceDelete on Controller");
+            string lcMethodName = nameof(R_ServiceDelete);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_ServiceDeleteResultDTO loRtn = null;
             LMM06000Cls loCls;
@@ -110,7 +119,10 @@ namespace LMM06000Service
         [HttpPost]
         public IAsyncEnumerable<LMM06000BillingRuleDTO> BillingRuleListStream()
         {
-            _loggerLMM06000.LogInfo("START process method BillingRuleListStream on Controller");
+            string lcMethodName = nameof(BillingRuleListStream);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             LMM06000DBParameter loDbParameter;
             IAsyncEnumerable<LMM06000BillingRuleDTO> loRtn = null;
@@ -132,7 +144,7 @@ namespace LMM06000Service
                 _loggerLMM06000.LogInfo("Call method BillingRuleList");
                 loRtnTemp = loCls.BillingRuleList(loDbParameter);
                 _loggerLMM06000.LogInfo("Call method GetBillingRule to streaming data");
-                loRtn = Get_BillingRuleList(loRtnTemp);
+                loRtn = HelperStream(loRtnTemp);
 
             }
             catch (Exception ex)
@@ -150,7 +162,9 @@ namespace LMM06000Service
         [HttpPost]
         public LMM06000PropertyListDTO GetAllPropertyList()
         {
-            _loggerLMM06000.LogInfo("START process method GetAllPropertyList on Controller");
+            string lcMethodName = nameof(GetAllPropertyList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
             LMM06000PropertyListDTO loRtn = null;
@@ -181,7 +195,10 @@ namespace LMM06000Service
         [HttpPost]
         public LMM06000PeriodListDTO GetAllPeriodList()
         {
-            _loggerLMM06000.LogInfo("START process method GetAllPeriodList on Controller");
+            string lcMethodName = nameof(GetAllPeriodList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
+
             var loEx = new R_Exception();
             LMM06000PeriodListDTO loRtn = null;
 
@@ -204,14 +221,17 @@ namespace LMM06000Service
             }
 
             loEx.ThrowExceptionIfErrors();
-            _loggerLMM06000.LogInfo("END process method GetAllPeriodList on Controller");
+            _loggerLMM06000.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
+
             return loRtn;
         }
 
         [HttpPost]
         public IAsyncEnumerable<LMM06000UnitTypeDTO> GetAllUnitTypeList()
         {
-            _loggerLMM06000.LogInfo("START process method GetAllUnitTypeList on Controller");
+            string lcMethodName = nameof(GetAllUnitTypeList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
             IAsyncEnumerable<LMM06000UnitTypeDTO> loRtn = null;
@@ -229,8 +249,8 @@ namespace LMM06000Service
 
                 _loggerLMM06000.LogInfo("Call method GetAllUnitTypeList");
                 loRtnTemp = loCls.GetAllUnitTypeList(loDbParameter);
-                _loggerLMM06000.LogInfo("Call method UnitType to streaming data");
-                loRtn = Get_UnitType(loRtnTemp);
+                _loggerLMM06000.LogInfo("Call method to streaming data");
+                loRtn = HelperStream(loRtnTemp);
             }
             catch (Exception ex)
             {
@@ -239,8 +259,7 @@ namespace LMM06000Service
             }
 
             loEx.ThrowExceptionIfErrors();
-            _loggerLMM06000.LogInfo("END process method GetAllUnitTypeList on Controller");
-
+            _loggerLMM06000.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
         }
 
@@ -248,6 +267,7 @@ namespace LMM06000Service
         public LMM06000ActiveInactiveDTO SetActiveInactive(LMM06000ActiveInactiveDTO loParameter)
         {
             string lcMethodName = nameof(SetActiveInactive);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
            R_Exception loEx = new R_Exception();
@@ -277,14 +297,8 @@ namespace LMM06000Service
            
             return loRtn;
         }
-        private async IAsyncEnumerable<LMM06000BillingRuleDTO> Get_BillingRuleList(List<LMM06000BillingRuleDTO> poParameter)
-        {
-            foreach (var item in poParameter)
-            {
-                yield return item;
-            }
-        }
-        private async IAsyncEnumerable<LMM06000UnitTypeDTO> Get_UnitType(List<LMM06000UnitTypeDTO> poParameter)
+
+        private async IAsyncEnumerable<T> HelperStream<T>(List<T> poParameter)
         {
             foreach (var item in poParameter)
             {

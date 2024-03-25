@@ -181,7 +181,7 @@
     <value>Docoment No.</value>
   </data>
   <data name="_JournalPeriod" xml:space="preserve">
-    <value>Journal Period :</value>
+    <value>Journal Period</value>
   </data>
   <data name="_LocAmount" xml:space="preserve">
     <value>Local Amount</value>
@@ -196,7 +196,7 @@
     <value>Process</value>
   </data>
   <data name="_ReferenceNo" xml:space="preserve">
-    <value>Reference No.:</value>
+    <value>Reference No.</value>
   </data>
   <data name="_RefNo" xml:space="preserve">
     <value>Master Ref. No.</value>

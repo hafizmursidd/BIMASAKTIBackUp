@@ -1,0 +1,366 @@
+@using GLT00100Common.DTOs
+@inherits R_Page
+
+
+<R_GroupBox Title="Journal Description" Style="color:red" ShowBorder>
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label>Department</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CDEPT_CODE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false"
+                       R_EnableAdd
+                       R_EnableEdit
+                       CharacterCasing="R_eCharacterCasing.Upper"
+                       MaxLength="5" />
+            </R_ItemLayout>
+            <R_ItemLayout Class="d-flex justify-content-center">
+            <R_Lookup @ref="R_LookupBtnDept" R_Before_Open_Lookup="@Before_Open_lookupDept" R_After_Open_Lookup="@After_Open_lookupDept" Enabled="_JournalListViewModel.EnableDept">...</R_Lookup>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CDEPT_NAME"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false"
+                       R_EnableAdd
+                       R_EnableEdit />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_Label>Currency*</R_Label>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="2">
+            <R_ComboBox Data="@_JournalListViewModel.currencyData"
+                        @bind-Value="_JournalListViewModel.Data.CCURRENCY_CODE"
+                        ValueField="@nameof(CurrencyCodeDTO.CCURRENCY_CODE)"
+                        TextField="@nameof(CurrencyCodeDTO.CCURRENCY_NAME)"
+                        R_ConductorSource="@_conductorRef"
+                        R_EnableAdd
+                        R_EnableEdit>
+            </R_ComboBox>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1" Class="ms-1">
+            <R_Label>Prelist</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NPRELIST_AMOUNT"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                                    R_EnableAdd
+                                    R_EnableEdit />
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label>Reference No.*</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CREF_NO"
+                       R_ConductorSource="_conductorRef"
+                       MaxLength="30"
+                       R_EnableAdd />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_Label>Ref. Date*</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_DateInput @bind-Value="_JournalListViewModel.Drefdate"
+                         R_ConductorSource="_conductorRef"
+                          R_EnableAdd
+                          R_EnableEdit />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_Label>Base Rate</R_Label>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="2">
+            <R_Label>Currency Rate</R_Label>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1" Class="ms-6">
+            <R_Label>Total Debit</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1" Class="ms-1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NDEBIT_AMOUNT"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                              Enabled="false" />
+        </R_ItemLayout>
+    </R_StackLayout>
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label>Document No</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CDOC_NO"
+                       R_ConductorSource="_conductorRef"
+                       MaxLength="30"
+                       R_EnableAdd
+                       R_EnableEdit />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_Label>Doc. Date*</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_DateInput @bind-Value="_JournalListViewModel.Ddocdate"
+                         R_ConductorSource="_conductorRef"
+                          R_EnableAdd
+                          R_EnableEdit />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_Label>Local Currency</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NLBASE_RATE"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                                    R_EnableAdd
+                                    R_EnableEdit />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCURRENCY_CODE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NLCURRENCY_RATE"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                                    R_EnableAdd
+                                    R_EnableEdit />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCURRENCY_CODE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1" Class="ms-6">
+            <R_Label>Total Credit</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NCREDIT_AMOUNT"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                              Enabled="false" />
+        </R_ItemLayout>
+    </R_StackLayout>
+
+    <R_StackLayout Row>
+        <R_ItemLayout col="4" />
+        <R_ItemLayout col="1" Class="ms-1">
+            <R_Label>Base Currency</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NBBASE_RATE"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                                    R_EnableAdd
+                                    R_EnableEdit />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCURRENCY_CODE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.NBCURRENCY_RATE"
+                              R_ConductorSource="_conductorRef"
+                              Arrows="false"
+                                    R_EnableAdd
+                                    R_EnableEdit />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCURRENCY_CODE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+
+    </R_StackLayout>
+
+    <R_StackLayout Row>
+        <R_ItemLayout col="1">
+            <R_Label>Description*</R_Label>
+        </R_ItemLayout>
+
+        <R_ItemLayout col="6">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CTRANS_DESC"
+                       R_ConductorSource="_conductorRef"
+                       MaxLength="200"
+                       R_EnableAdd
+                       R_EnableEdit />
+        </R_ItemLayout>
+
+        <R_ItemLayout col="1">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1" Class="ms-7">
+            <R_Label>Updated By</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CUPDATE_BY"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CUPDATE_DATE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+    </R_StackLayout>
+
+    <R_StackLayout Row Class="mt-1">
+        <R_ItemLayout col="1">
+            <R_Label>Status</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="2">
+            @* <R_TextBox @bind-Value="_JournalListViewModel.Data.CSTATUS_NAME"
+            R_ConductorSource="_conductorRef"
+            Enabled="false" />*@
+
+            <R_ComboBox Data="@_JournalListViewModel.allStatusData"
+                        @bind-Value="_JournalListViewModel.Data.CSTATUS"
+                        ValueField="@nameof(StatusDTO.CCODE)"
+                        TextField="@nameof(StatusDTO.CNAME)"
+                        R_ConductorSource="@_conductorRef"
+                        R_EnableAdd
+                        R_EnableEdit>
+            </R_ComboBox>
+        </R_ItemLayout>
+        <R_ItemLayout col="5">
+            <R_Label></R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1" Class="ms-7">
+            <R_Label>Created By</R_Label>
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCREATE_BY"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+        <R_ItemLayout col="1">
+            <R_TextBox @bind-Value="_JournalListViewModel.Data.CCREATE_DATE"
+                       R_ConductorSource="_conductorRef"
+                       Enabled="false" />
+        </R_ItemLayout>
+    </R_StackLayout>
+
+    <R_StackLayout Row Class="justify-content-between">
+        <R_StackLayout Row>
+            <R_ItemLayout>
+                <R_AddButton R_Conductor="_conductorRef">Add</R_AddButton>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.EnableCopy" OnClick="CopyJournalEntryProcess">Copy</R_Button>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_EditButton R_Conductor="_conductorRef">Modify</R_EditButton>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.EnableDelete" OnClick="DeleteJournalProcess">Delete</R_Button>
+            </R_ItemLayout>
+            <R_ItemLayout Class="ms-2">
+                <R_CancelButton R_Conductor="_conductorRef">Cancel</R_CancelButton>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_SaveButton R_Conductor="_conductorRef">Save</R_SaveButton>
+            </R_ItemLayout>
+            <R_ItemLayout Class="ms-2">
+                @* <R_Lookup @ref="R_LookupBtnPrint" R_Before_Open_Lookup="@Before_Open_lookupPrint" R_After_Open_Lookup="@After_Open_lookupPrint">Print</R_Lookup>*@
+            </R_ItemLayout>
+        </R_StackLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.EnableSubmit" OnClick="SubmitJournalProcess">@_JournalListViewModel.SubmitLabel</R_Button>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.EnableApprove" OnClick="ApproveJournalProcess">Approve</R_Button>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.EnableCommit" OnClick="CommitJournalProcess">@_JournalListViewModel.CommitLabel</R_Button>
+            </R_ItemLayout>
+            @*             <R_ItemLayout>
+            <R_Button Enabled="" OnClick="CloseJournalEntry">Close</R_Button>
+            </R_ItemLayout> *@
+        </R_StackLayout>
+    </R_StackLayout>
+
+</R_GroupBox>
+<R_Conductor @ref="_conductorRef"
+             R_ViewModel="_JournalListViewModel"
+              R_IsHeader
+             R_ServiceGetRecord="JournalForm_GetRecord"
+             R_ServiceSave="JournalForm_ServiceSave"
+             R_AfterAdd="JournalForm_AfterAdd"
+             R_Display="JournalForm_RDisplay"
+             R_Saving="JournalForm_RSaving"
+             R_BeforeCancel="JournalForm_BeforeCancel"
+             R_BeforeEdit="JournalForm_BeforeEdit"
+             R_Validation="ValidationFormGLT00100JournalEntry">
+
+</R_Conductor>
+
+<R_GroupBox Title="Journal Detail" ShowBorder>
+    <R_Grid @ref="_gridDetailRef"
+            DataSource="_JournalListViewModel._JournaDetailList"
+            Pageable
+            R_ConductorGridSource="_conductorGridDetailRef"
+            R_GridType="R_eGridType.Batch"
+            R_ServiceGetListRecord="JournalDet_ServiceGetListRecord"
+            AllowAddNewRow="_enableCrudJournalDetail"
+            AllowDeleteRow="_enableCrudJournalDetail"
+            AllowEditRow="_enableCrudJournalDetail"
+            Height="230px"
+            R_Before_Open_Grid_Lookup="Before_Open_Lookup"
+            R_After_Open_Grid_Lookup="After_Open_Lookup">
+        <R_GridColumns>
+            <R_GridNumericColumn Width="70px" FieldName="@nameof(GLT00100JournalGridDetailDTO.INO)" HeaderText="No."></R_GridNumericColumn>
+            <R_GridLookupColumn Width="300px" FieldName="@nameof(GLT00100JournalGridDetailDTO.CGLACCOUNT_NO)" R_EnableAdd="true" R_EnableEdit="true" HeaderText="Account No."></R_GridLookupColumn>
+            <R_GridTextColumn Width="160px" FieldName="@nameof(GLT00100JournalGridDetailDTO.CGLACCOUNT_NAME)" R_EnableAdd="false" R_EnableEdit="false" HeaderText="Account Name"></R_GridTextColumn>
+            <R_GridComboBoxColumn Width="180px" Data="@_JournalListViewModel.CenterListData"
+                                  FieldName="@nameof(GLT00100JournalGridDetailDTO.CCENTER_CODE)"
+                                  ValueField="@nameof(GetCenterDTO.CCENTER_CODE)"
+                                  TextField="@nameof(GetCenterDTO.CCENTER_NAME)"
+                                  HeaderText="Center"
+                                  R_EnableAdd="true"
+                                  R_EnableEdit="true" />
+            <R_GridTextColumn Width="73px" FieldName="@nameof(GLT00100JournalGridDetailDTO.CDBCR)" HeaderText="D/C"></R_GridTextColumn>
+            <R_GridNumericColumn Width="180px" Decimals="2" FieldName="@nameof(GLT00100JournalGridDetailDTO.NDEBIT)" R_EnableAdd R_EnableEdit HeaderText="Debit"></R_GridNumericColumn>
+            <R_GridNumericColumn Width="180px" Decimals="2" FieldName="@nameof(GLT00100JournalGridDetailDTO.NCREDIT)" R_EnableAdd R_EnableEdit HeaderText="Credit"></R_GridNumericColumn>
+            <R_GridTextColumn Width="500px" FieldName="@nameof(GLT00100JournalGridDetailDTO.CDETAIL_DESC)" R_EnableAdd R_EnableEdit HeaderText="Description"></R_GridTextColumn>
+            <R_GridNumericColumn Width="150px" FieldName="@nameof(GLT00100JournalGridDetailDTO.NLDEBIT)" R_EnableAdd R_EnableEdit HeaderText="DB (Local)"></R_GridNumericColumn>
+            <R_GridNumericColumn Width="150px" FieldName="@nameof(GLT00100JournalGridDetailDTO.NLCREDIT)" R_EnableAdd R_EnableEdit HeaderText="CR (Local)"></R_GridNumericColumn>
+            <R_GridNumericColumn Width="150px" FieldName="@nameof(GLT00100JournalGridDetailDTO.NBDEBIT)" R_EnableAdd R_EnableEdit HeaderText="DB (Base)"></R_GridNumericColumn>
+            <R_GridNumericColumn Width="150px" FieldName="@nameof(GLT00100JournalGridDetailDTO.NBCREDIT)" R_EnableAdd R_EnableEdit HeaderText="CR (Base)"></R_GridNumericColumn>
+        </R_GridColumns>
+        </R_Grid>
+        </R_GroupBox>
+        <R_ConductorGrid @ref="_conductorGridDetailRef"
+                 R_ViewModel="@_JournalListViewModel"
+                 R_ConductorParent="@_conductorRef"
+                 R_ServiceGetRecord="JournalDet_ServiceGetRecord"
+                 R_Display="JournalDet_RDisplay"
+                 R_AfterAdd="JournalDet_AfterAdd"
+                 R_Validation="JournalDet_Validation">
+
+        </R_ConductorGrid>

@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ValidationAddress" xml:space="preserve">
+    <value>Address cannot be null.</value>
+    <comment>Address cannot be null.</comment>
+  </data>
+  <data name="ValidationPICName" xml:space="preserve">
+    <value>PIC Name cannot be null.</value>
+    <comment>PIC Name cannot be null.</comment>
+  </data>
+  <data name="ValidationTenantGroupID" xml:space="preserve">
+    <value>Tenant Group Id cannot be null.</value>
+    <comment>Tenant Group Id cannot be null.</comment>
+  </data>
+  <data name="ValidationTenantGroupName" xml:space="preserve">
+    <value>Tenant Group Name cannot be null.</value>
+    <comment>Tenant Group Name cannot be null.</comment>
+  </data>
+  <data name="_Address" xml:space="preserve">
+    <value>Address</value>
+    <comment>Address</comment>
+  </data>
+  <data name="_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Cancel</comment>
+  </data>
+  <data name="_CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+    <comment>Created By</comment>
+  </data>
+  <data name="_CreatedDate" xml:space="preserve">
+    <value>Created Date</value>
+    <comment>Created Date</comment>
+  </data>
+  <data name="_Date" xml:space="preserve">
+    <value>Date</value>
+    <comment>Date</comment>
+  </data>
+  <data name="_Email" xml:space="preserve">
+    <value>Email</value>
+    <comment>Email</comment>
+  </data>
+  <data name="_FromTenantCategory" xml:space="preserve">
+    <value>From Tenant Category</value>
+    <comment>From Tenant Category</comment>
+  </data>
+  <data name="_IdExpiredDate" xml:space="preserve">
+    <value>ID Expired Date</value>
+    <comment>ID Expired Date</comment>
+  </data>
+  <data name="_IdNumber" xml:space="preserve">
+    <value>Id Number</value>
+    <comment>Id Number</comment>
+  </data>
+  <data name="_IdType" xml:space="preserve">
+    <value>Id Type</value>
+    <comment>Id Type</comment>
+  </data>
+  <data name="_LimitAmount" xml:space="preserve">
+    <value>Limit Amount</value>
+    <comment>Limit Amount</comment>
+  </data>
+  <data name="_MobileNo1" xml:space="preserve">
+    <value>Mobile No (1)</value>
+    <comment>Mobile No (1)</comment>
+  </data>
+  <data name="_MobileNo2" xml:space="preserve">
+    <value>Mobile No (2)</value>
+    <comment>Mobile No (2)</comment>
+  </data>
+  <data name="_Move" xml:space="preserve">
+    <value>Move</value>
+    <comment>Move</comment>
+  </data>
+  <data name="_Next" xml:space="preserve">
+    <value>Next</value>
+    <comment>Next</comment>
+  </data>
+  <data name="_Phone1" xml:space="preserve">
+    <value>Phone No (1)</value>
+    <comment>Phone No (1)</comment>
+  </data>
+  <data name="_Phone2" xml:space="preserve">
+    <value>Phone No (2)</value>
+    <comment>Phone No (2)</comment>
+  </data>
+  <data name="_PhoneTenant1" xml:space="preserve">
+    <value>Phone 1</value>
+  </data>
+  <data name="_PICEmail" xml:space="preserve">
+    <value>PIC Email</value>
+    <comment>PIC Email</comment>
+  </data>
+  <data name="_PICName" xml:space="preserve">
+    <value>PIC Name</value>
+    <comment>PIC Name</comment>
+  </data>
+  <data name="_PICPhone1" xml:space="preserve">
+    <value>PIC Mobile No (1)</value>
+    <comment>PIC Mobile No (1)</comment>
+  </data>
+  <data name="_PICPosition" xml:space="preserve">
+    <value>PIC Position</value>
+    <comment>PIC Position</comment>
+  </data>
+  <data name="_Process" xml:space="preserve">
+    <value>Process</value>
+    <comment>Process</comment>
+  </data>
+  <data name="_PropertyUppercase" xml:space="preserve">
+    <value>PROPERTY</value>
+    <comment>PROPERTY</comment>
+  </data>
+  <data name="_ReceiptPayment" xml:space="preserve">
+    <value>Receipt Payment with Withholding Tax(PPh) Deduction</value>
+    <comment>Receipt Payment with Withholding Tax(PPh) Deduction</comment>
+  </data>
+  <data name="_TaxCode" xml:space="preserve">
+    <value>Tax Code</value>
+    <comment>Tax Code</comment>
+  </data>
+  <data name="_TaxId" xml:space="preserve">
+    <value>Tax Id</value>
+    <comment>Tax Id</comment>
+  </data>
+  <data name="_TaxName" xml:space="preserve">
+    <value>Tax Name</value>
+    <comment>Tax Name</comment>
+  </data>
+  <data name="_TenantCategory" xml:space="preserve">
+    <value>Tenant Category</value>
+    <comment>Tenant Category</comment>
+  </data>
+  <data name="_TenantGroup" xml:space="preserve">
+    <value>Tenant Group</value>
+    <comment>Tenant Group</comment>
+  </data>
+  <data name="_TenantGroupId" xml:space="preserve">
+    <value>Tenant Group Id</value>
+    <comment>Tenant Group Id</comment>
+  </data>
+  <data name="_TenantGroupName" xml:space="preserve">
+    <value>Tenant Group Name</value>
+    <comment>Tenant Group Name</comment>
+  </data>
+  <data name="_TenantId" xml:space="preserve">
+    <value>Tenant Id</value>
+    <comment>Tenant Id</comment>
+  </data>
+  <data name="_TenantName" xml:space="preserve">
+    <value>Tenant Name</value>
+    <comment>Tenant Name</comment>
+  </data>
+  <data name="_TenantType" xml:space="preserve">
+    <value>Tenant Type</value>
+    <comment>Tenant Type</comment>
+  </data>
+  <data name="_ToTenantCategory" xml:space="preserve">
+    <value>To Tenant Category</value>
+    <comment>To Tenant Category</comment>
+  </data>
+  <data name="_Type" xml:space="preserve">
+    <value>Type</value>
+    <comment>Type</comment>
+  </data>
+  <data name="_Units" xml:space="preserve">
+    <value>Units</value>
+    <comment>Units</comment>
+  </data>
+  <data name="_UpdatedBy" xml:space="preserve">
+    <value>Updated By</value>
+    <comment>Updated By</comment>
+  </data>
+  <data name="_UpdatedDate" xml:space="preserve">
+    <value>Updated Date</value>
+    <comment>Updated Date</comment>
+  </data>
+  <data name="_UseGroupTaxInfo" xml:space="preserve">
+    <value>Use Group Tax Info</value>
+    <comment>Use Group Tax Info</comment>
+  </data>
+</root>

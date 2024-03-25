@@ -17,7 +17,7 @@ namespace GSM04500Model
         private GSM04502Model _modelGOADept = new GSM04502Model();
         public ObservableCollection<GSM04510GOADeptDTO> GOADeptList = new ObservableCollection<GSM04510GOADeptDTO>();
         public GSM04510GOADeptDTO GOADept { get; set; } = new GSM04510GOADeptDTO();
-        public string GroupOfAccount { get; set; }
+        public string? GroupOfAccount { get; set; }
 
         public async Task GetGOAAllByDept(GSM04510GOADTO poEntity)
         {

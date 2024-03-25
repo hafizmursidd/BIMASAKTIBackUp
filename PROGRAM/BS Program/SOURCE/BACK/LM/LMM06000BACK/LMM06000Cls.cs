@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 using System.Windows.Input;
 using LMM06000Common;
@@ -8,21 +9,28 @@ using LMM06000Common.Logs;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using RSP_LM_MAINTAIN_UNIT_TYPE_BILLING_RULEResources;
 
 namespace LMM06000Back
 {
     public class LMM06000Cls : R_BusinessObject<LMM06000BillingRuleDetailDTO>
     {
+        Resources_Dummy_Class _loRSP = new();
+
         private LoggerLMM06000 _loggerLMM06000;
+        private readonly ActivitySource _activitySource;
         public LMM06000Cls()
         {
             //Initial and Get Logger
             _loggerLMM06000 = LoggerLMM06000.R_GetInstanceLogger();
+            _activitySource = LMM06000Activity.R_GetInstanceActivitySource();
         }
         protected override LMM06000BillingRuleDetailDTO R_Display(LMM06000BillingRuleDetailDTO poEntity)
         {
-            _loggerLMM06000.LogInfo("Start process method R_Display on Cls");
-
+            string lcMethodName = nameof(R_Display);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+            
             R_Exception loException = new R_Exception();
             LMM06000BillingRuleDetailDTO loReturn = null;
             R_Db loDb;
@@ -63,7 +71,10 @@ namespace LMM06000Back
 
         protected override void R_Saving(LMM06000BillingRuleDetailDTO poNewEntity, eCRUDMode poCRUDMode)
         {
-            _loggerLMM06000.LogInfo("Start process method R_Saving on Cls");
+            string lcMethodName = nameof(R_Saving);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             string lcQuery = null;
             R_Db loDb;
@@ -167,7 +178,10 @@ namespace LMM06000Back
 
         protected override void R_Deleting(LMM06000BillingRuleDetailDTO poEntity)
         {
-            _loggerLMM06000.LogInfo("START process method R_Deleting on Cls");
+            string lcMethodName = nameof(R_Deleting);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             var loException = new R_Exception();
             DbCommand loCommand;
             try
@@ -243,6 +257,7 @@ namespace LMM06000Back
         public List<LMM06000BillingRuleDTO> BillingRuleList(LMM06000DBParameter poParameter)
         {
             string lcMethodName = nameof(BillingRuleList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -277,14 +292,20 @@ namespace LMM06000Back
                 loException.Add(ex);
                 _loggerLMM06000.LogError(loException);
             }
-            loException.ThrowExceptionIfErrors();
+            if (loException.Haserror)
+                loException.ThrowExceptionIfErrors();
+            
             _loggerLMM06000.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+           
+#pragma warning disable CS8603
             return loReturn;
+#pragma warning restore CS8603
         }
 
         public List<LMM06000PropertyDTO> GetAllPropertyList(LMM06000DBParameter poParameter)
         {
             string lcMethodName = nameof(GetAllPropertyList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             List<LMM06000PropertyDTO> loReturn = null;
@@ -326,6 +347,7 @@ namespace LMM06000Back
         public List<LMM06000UnitTypeDTO> GetAllUnitTypeList(LMM06000DBParameter poParameter)
         {
             string lcMethodName = nameof(GetAllUnitTypeList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -369,6 +391,7 @@ namespace LMM06000Back
         public List<LMM06000PeriodDTO> GetAllPeriodList(LMM06000DBParameter poParameter)
         {
             string lcMethodName = nameof(GetAllPeriodList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -415,6 +438,7 @@ namespace LMM06000Back
         public void SetActiveInactiveDb(LMM06000ActiveInactiveDTO poParameter)
         {
             string lcMethodName = nameof(SetActiveInactiveDb);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLMM06000.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();

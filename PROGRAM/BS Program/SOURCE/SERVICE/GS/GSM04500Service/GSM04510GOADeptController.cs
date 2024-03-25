@@ -9,6 +9,7 @@ using R_CommonFrontBackAPI;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,16 +21,19 @@ namespace GSM04500Service
     public class GSM04510GOADeptController : ControllerBase, IGSM04510GOADept
     {
         private LoggerGSM04500 _loggerGSM04500;
-
+        private readonly ActivitySource _activitySource;
         public GSM04510GOADeptController(ILogger<GSM04510GOADeptController> logger)
         {
             LoggerGSM04500.R_InitializeLogger(logger);
             _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+            _activitySource = GSM04500Activity.R_InitializeAndGetActivitySource(nameof(GSM04510GOADeptController));
+
         }
         [HttpPost]
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceDelete);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -64,6 +68,7 @@ namespace GSM04500Service
         public R_ServiceGetRecordResultDTO<GSM04510GOADeptDTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceGetRecord);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -92,6 +97,7 @@ namespace GSM04500Service
         public R_ServiceSaveResultDTO<GSM04510GOADeptDTO> R_ServiceSave(R_ServiceSaveParameterDTO<GSM04510GOADeptDTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceSave);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -124,6 +130,7 @@ namespace GSM04500Service
         public IAsyncEnumerable<GSM04510GOADeptDTO> JOURNAL_GRP_GOA_DEPT_LIST()
         {
             string lcMethodName = nameof(JOURNAL_GRP_GOA_DEPT_LIST);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();

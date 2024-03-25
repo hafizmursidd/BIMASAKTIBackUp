@@ -10,16 +10,21 @@ using R_Common;
 using System.Data.Common;
 using System.Data;
 using GST00500Common.Logs;
+using RSP_GS_MAINTAIN_APPROVALResources;
+using System.Diagnostics;
 
 namespace GST00500Back
 {
     public class GST00500OutboxCls : R_IServiceCRUDBase<GST00500DTO>
     {
+        Resources_Dummy_Class _loRSP = new();
         private LoggerGST00500 _loggerGST00500;
+        private readonly ActivitySource _activitySource;
         public GST00500OutboxCls()
         {
             //Initial and Get Logger
             _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = GST00500Activity.R_GetInstanceActivitySource();
         }
 
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
@@ -39,6 +44,7 @@ namespace GST00500Back
         public List<GST00500DTO> Approval_Outbox_List(GST00500DBParameter poEntity)
         {
             string lcMethodName = nameof(Approval_Outbox_List);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
 
@@ -87,6 +93,7 @@ namespace GST00500Back
         public List<GST00500ApprovalStatusDTO> ApproverStatusList(GST00500DBParameter poParameter)
         {
             string lcMethodName = nameof(ApproverStatusList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loException = new R_Exception();

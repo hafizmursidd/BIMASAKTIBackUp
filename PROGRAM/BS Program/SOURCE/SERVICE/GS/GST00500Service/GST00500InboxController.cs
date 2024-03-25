@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using GST00500Common.Logs;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace GST00500Service
 {
@@ -15,13 +16,13 @@ namespace GST00500Service
     [Route("api/[controller]/[action]")]
     public class GST00500InboxController : ControllerBase, IGST00500
     {
-
         private LoggerGST00500 _loggerGST00500;
-
+        private readonly ActivitySource _activitySource;
         public GST00500InboxController(ILogger<GST00500InboxController> logger)
         {
             LoggerGST00500.R_InitializeLogger(logger);
             _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = GST00500Activity.R_InitializeAndGetActivitySource(nameof(GST00500InboxController));
         }
 
         [HttpPost]
@@ -44,6 +45,7 @@ namespace GST00500Service
         public GST00500UserNameDTO GetUserName()
         {
             string lcMethodName = nameof(GetUserName);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -75,6 +77,7 @@ namespace GST00500Service
         public GST00500RejectListDTO ReasonRejectList()
         {
             string lcMethodName = nameof(ReasonRejectList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -107,6 +110,7 @@ namespace GST00500Service
         public IAsyncEnumerable<GST00500DTO> ApprovalInboxListStream()
         {
             string lcMethodName = nameof(ApprovalInboxListStream);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -135,7 +139,6 @@ namespace GST00500Service
 
             _loggerGST00500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
             return loRtn;
-
         }
 
         private async IAsyncEnumerable<GST00500DTO> GetApprovalInboxList(List<GST00500DTO> poParameter)

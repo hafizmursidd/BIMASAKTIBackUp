@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using System.Diagnostics;
 
 namespace GLR00300Service
 {
@@ -14,10 +15,12 @@ namespace GLR00300Service
     public class GLR00300Controller : ControllerBase, IGLR00300
     {
         private LoggerGLR00300 _loggerGLR00300;
+        private readonly ActivitySource _activitySource;
         public GLR00300Controller(ILogger<GLR00300Controller> logger)
         {
             LoggerGLR00300.R_InitializeLogger(logger);
             _loggerGLR00300 = LoggerGLR00300.R_GetInstanceLogger();
+            _activitySource = GLR00300Activity.R_InitializeAndGetActivitySource(nameof(GLR00300Controller));
         }
 
         [HttpPost]
@@ -39,6 +42,7 @@ namespace GLR00300Service
         public GLR00300InitialProcess InitialProcess()
         {
             string lcMethodName = nameof(InitialProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -68,6 +72,7 @@ namespace GLR00300Service
         public GenericList<GLR00300GetPeriod> GetPeriod(GLR00300DBParameterDTO poParam)
         {
             string lcMethodName = nameof(GetPeriod);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -102,6 +107,7 @@ namespace GLR00300Service
         public GenericList<GLR00300DTO> GetTrialBalanceType()
         {
             string lcMethodName = nameof(GetTrialBalanceType);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -132,6 +138,7 @@ namespace GLR00300Service
         public GenericList<GLR00300DTO> GetPrintMethodType()
         {
             string lcMethodName = nameof(GetPrintMethodType);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -162,6 +169,7 @@ namespace GLR00300Service
         public GenericList<GLR00300BudgetNoDTO> GetBudgetNo(GLR00300DBParameterDTO loParam)
         {
             string lcMethodName = nameof(GetBudgetNo);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();

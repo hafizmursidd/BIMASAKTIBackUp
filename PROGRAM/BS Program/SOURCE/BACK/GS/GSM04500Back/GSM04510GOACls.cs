@@ -12,16 +12,23 @@ using System.Threading.Tasks;
 using System.Reflection.Metadata;
 using System.Windows.Input;
 using GSM04500Common.Logs;
+using System.Diagnostics;
 
 namespace GSM04500Back
 {
     public class GSM04510GOACls : R_BusinessObject<GSM04510GOADTO>
     {
+        RSP_GS_MAINTAIN_JOURNAL_GROUP_ACCOUNT_DEPTResources.Resources_Dummy_Class _loRSPGroupAcc = new();
+        RSP_GS_MAINTAIN_JOURNAL_GROUPResources.Resources_Dummy_Class _loRSPGroup = new();
+        RSP_GS_UPLOAD_JOURNAL_GROUPResources.Resources_Dummy_Class _loRSPUpload = new();
+
         private LoggerGSM04500 _loggerGSM04500;
+        private readonly ActivitySource _activitySource;
         public GSM04510GOACls()
         {
             //Initial and Get Logger
             _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+            _activitySource = GSM04500Activity.R_GetInstanceActivitySource();
         }
         protected override void R_Deleting(GSM04510GOADTO poEntity)
         {
@@ -31,6 +38,7 @@ namespace GSM04500Back
         protected override GSM04510GOADTO R_Display(GSM04510GOADTO poEntity)
         {
             string lcMethodName = nameof(R_Display);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             GSM04510GOADTO loReturn = null;
@@ -74,6 +82,7 @@ namespace GSM04500Back
         protected override void R_Saving(GSM04510GOADTO poNewEntity, eCRUDMode poCRUDMode)
         {
             string lcMethodName = nameof(R_Saving);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -145,6 +154,7 @@ namespace GSM04500Back
         public List<GSM04510GOADTO> JOURNAL_GROUP_GOA_LIST(GSM04510GOADBParameter poParameter)
         {
             string lcMethodName = nameof(JOURNAL_GROUP_GOA_LIST);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             List<GSM04510GOADTO> loReturn = null;

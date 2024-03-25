@@ -6,7 +6,7 @@
 <R_StackLayout>
     <R_StackLayout Row>
         <R_ItemLayout col="1">
-            <R_Label FontStyle="R_eFontStyle.Bold"
+            <R_Label FontStyle="R_eFontStyle.Bold"j
                      FontColor="R_eFontColor.Danger">
                 @_localizer["_Property"]
             </R_Label>
@@ -33,6 +33,11 @@
             R_ConductorGridSource="@_conGridPaymentRef"
             R_GridType="@R_eGridType.Original"
             R_ServiceGetListRecord="@R_ServiceGetListRecord"
+            R_ServiceSave="@ServiceSave"
+            R_ServiceDelete="@ServiceDelete"
+            R_ServiceGetRecord="@R_ServiceGetRecordAsync"
+            R_Validation="@ServiceValidation"
+            R_AfterDelete="@ServiceAfterDelete"
             AllowDeleteRow="true"
             AllowAddNewRow="true"
             AllowEditRow="true"
@@ -41,22 +46,18 @@
 
         <R_GridColumns>
             <R_GridTextColumn TextAlignment="R_eTextAlignment.Center" Width="200px" MaxLength="8" FieldName="CPAY_TERM_CODE" HeaderText=@_localizer["_PayCode"] R_EnableAdd />
-            <R_GridTextColumn Width="225px"  MaxLength="100" FieldName="CPAY_TERM_NAME" HeaderText=@_localizer["_PayName"] R_EnableAdd R_EnableEdit />
+            <R_GridTextColumn Width="225px"  MaxLength="100" FieldName="CPAY_TERM_NAME"
+                              HeaderText=@_localizer["_PayName"] R_EnableAdd R_EnableEdit />
             <R_GridNumericColumn TextAlignment="R_eTextAlignment.Center" Width="100px" Min="0" Max="999999" FieldName="IPAY_TERM_DAYS" HeaderText=@_localizer["_TopDays"] R_EnableAdd R_EnableEdit Arrows="false" />
             <R_GridTextColumn Width="150px"FieldName="CUPDATE_BY" HeaderText=@_localizer["_UpdBY"] />
             <R_GridDateTimePickerColumn Width="225px"FieldName="DUPDATE_DATE" HeaderText=@_localizer["_UpdDate"]/>
             <R_GridTextColumn Width="150px" FieldName="CCREATE_BY" HeaderText=@_localizer["_CreateBy"] />
-            <R_GridDateTimePickerColumn Width="225px"  FieldName="DCREATE_DATE" HeaderText=@_localizer["_CreateDate"] />
+            <R_GridDateTimePickerColumn Width="225px"  FieldName="DCREATE_DATE" 
+                                        HeaderText=@_localizer["_CreateDate"] />
         </R_GridColumns>
     </R_Grid>
 </R_StackLayout>
 
 <R_ConductorGrid @ref="@_conGridPaymentRef"
-                 R_IsHeader="true"
-                 R_ViewModel="@PaymentTermViewModel"
-                 R_ServiceGetRecord="@R_ServiceGetRecordAsync"
-                 R_ServiceDelete="@ServiceDelete"
-                 R_AfterDelete="ServiceAfterDelete"
-                 R_ServiceSave="@ServiceSave"
-                 R_Validation="@ServiceValidation"
+                 R_IsHeader
                  />

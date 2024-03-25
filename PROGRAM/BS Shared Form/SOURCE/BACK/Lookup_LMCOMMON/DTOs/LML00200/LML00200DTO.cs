@@ -8,6 +8,8 @@ namespace Lookup_LMCOMMON.DTOs
     {
         public string CCHARGES_ID { get; set; }
         public string CCHARGES_NAME { get; set; }
+        public string CCHARGES_TYPE { get; set; }
+        public string CCHARGES_TYPE_DESCR { get; set; }
 
     }
 }

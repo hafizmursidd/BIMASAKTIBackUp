@@ -10,6 +10,9 @@ using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
 using Microsoft.JSInterop;
 using BlazorClientHelper;
+using R_BlazorFrontEnd.Controls.Enums;
+using R_CommonFrontBackAPI;
+using R_LockingFront;
 
 namespace GSM04500Front
 {
@@ -147,7 +150,7 @@ namespace GSM04500Front
             {
                 loEx.Add(ex);
             }
-
+           // R_DisplayException(loEx);
             loEx.ThrowExceptionIfErrors();
         }
         public async Task AfterDelete()
@@ -294,5 +297,65 @@ namespace GSM04500Front
         }
 
         #endregion
-    }
+
+
+        #region UserLocking
+        private const string DEFAULT_HTTP_NAME = "R_DefaultServiceUrl";
+
+        protected override async Task<bool> R_LockUnlock(R_LockUnlockEventArgs eventArgs)
+        {
+            var loEx = new R_Exception();
+            var llRtn = false;
+            R_LockingFrontResult loLockResult = null;
+            try
+            {
+                var loData = (GSM04500DTO)eventArgs.Data;
+
+                if (eventArgs.Mode == R_eLockUnlock.Lock)
+                {
+                    var loLockPar = new R_ServiceLockingLockParameterDTO
+                    {
+                        Company_Id = clientHelper.CompanyId,
+                        User_Id = clientHelper.UserId,
+                        Program_Id = "GSM04500",
+                        Table_Name = "GSM_JRNGRP",
+                        Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CJRNGRP_TYPE, loData.CJRNGRP_CODE)
+                    };
+
+                    var loCls = new R_LockingServiceClient(DEFAULT_HTTP_NAME);
+
+                    loLockResult = await loCls.R_Lock(loLockPar);
+                }
+                else
+                {
+                    var loUnlockPar = new R_ServiceLockingUnLockParameterDTO
+                    {
+                        Company_Id = clientHelper.CompanyId,
+                        User_Id = clientHelper.UserId,
+                        Program_Id = "GSM04500",
+                        Table_Name = "GSM_JRNGRP",
+                        Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CJRNGRP_TYPE, loData.CJRNGRP_CODE)
+                    };
+
+                    var loCls = new R_LockingServiceClient(DEFAULT_HTTP_NAME);
+
+                    loLockResult = await loCls.R_UnLock(loUnlockPar);
+                }
+
+                llRtn = loLockResult.IsSuccess;
+                if (!loLockResult.IsSuccess && loLockResult.Exception != null)
+                    throw loLockResult.Exception;
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            loEx.ThrowExceptionIfErrors();
+
+            return llRtn;
+        }
+
+        #endregion
+        }
 }

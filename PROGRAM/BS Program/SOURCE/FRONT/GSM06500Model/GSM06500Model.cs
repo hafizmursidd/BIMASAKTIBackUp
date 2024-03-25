@@ -16,7 +16,9 @@ namespace GSM06500Model
 
         public string lcPropertyId { get; set; }
 
+#pragma warning disable CS8618
         public GSM06500Model(
+#pragma warning restore CS8618
             string pcHttpClientName = DEFAULT_HTTP,
             string pcRequestServiceEndPoint = DEFAULT_ENDPOINT,
             string pcModuleName = DEFAULT_MODULE,

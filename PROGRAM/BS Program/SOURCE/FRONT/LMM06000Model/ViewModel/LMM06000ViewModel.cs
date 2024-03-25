@@ -31,7 +31,7 @@ namespace LMM06000Model.ViewModel
         public List<LMM06000PeriodDTO> PeriodList { get; set; } = new List<LMM06000PeriodDTO>();
 
         public LMM06000ActiveInactiveDTO ActiveInactiveEntity = new LMM06000ActiveInactiveDTO();
-        public bool _IsButtonAddEnable = false;
+        public bool _IsButtonAddEnable = true;
         public LMM06000BillingRuleDetailDTO TemporaryBillingRuleDetail = new LMM06000BillingRuleDetailDTO();
         public bool _IsDataNull = true;
 
@@ -136,29 +136,33 @@ namespace LMM06000Model.ViewModel
 
                 if (string.IsNullOrEmpty(poParam.CBILLING_RULE_CODE))
                 {
-                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_01");
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6001");
                     loEx.Add(loErr);
                     goto EndBlock;
                 }
+
                 if (string.IsNullOrEmpty(poParam.CBILLING_RULE_NAME))
                 {
                     //Billing Rule Name is required."
-                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_02");
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6002");
                     loEx.Add(loErr);
                     goto EndBlock;
                 }
+
                 if (poParam.LBOOKING_FEE)
                 {
-                    if (string.IsNullOrEmpty(poParam.CBOOKING_FEE_CHARGE_ID))
+                    if (string.IsNullOrWhiteSpace(poParam.CBOOKING_FEE_CHARGE_ID))
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_03");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6003");
                         loEx.Add(loErr);
-                        goto EndBlock;
                     }
                     if (poParam.NMIN_BOOKING_FEE == null)
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_08");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6008");
                         loEx.Add(loErr);
+                    }
+                    if (loEx.HasError)
+                    {
                         goto EndBlock;
                     }
                 }
@@ -166,30 +170,42 @@ namespace LMM06000Model.ViewModel
                 {
                     if (string.IsNullOrEmpty(poParam.CDP_PERIOD_MODE))
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_04");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6004");
                         loEx.Add(loErr);
                     }
-                    if (string.IsNullOrEmpty(poParam.CDP_CHARGE_ID))
+                    if (string.IsNullOrWhiteSpace(poParam.CDP_CHARGE_ID))
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_05");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6005");
                         loEx.Add(loErr);
                     }
-                    goto EndBlock;
+                    if (loEx.HasError)
+                    {
+                        goto EndBlock;
+                    }
                 }
                 if (poParam.LINSTALLMENT)
                 {
                     if (string.IsNullOrEmpty(poParam.CINSTALLMENT_PERIOD_MODE))
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_06");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6006");
                         loEx.Add(loErr);
                     }
 
-                    if (string.IsNullOrEmpty(poParam.CINSTALLMENT_CHARGE_ID))
+                    if (string.IsNullOrWhiteSpace(poParam.CINSTALLMENT_CHARGE_ID))
                     {
-                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "Error_07");
+                        var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6007");
                         loEx.Add(loErr);
                     }
+                    if (loEx.HasError)
+                    {
+                        goto EndBlock;
+                    }
                 }
+
+                var tempResult = poParam.IINSTALLMENT_PERCENTAGE + poParam.IDP_PERCENTAGE + poParam.IBANK_CREDIT_PERCENTAGE;
+
+                ValidationPercentage(poParam.LWITH_DP, poParam.LINSTALLMENT, poParam.LBANK_CREDIT, tempResult);
+
                 #endregion
             }
             catch (Exception ex)
@@ -197,7 +213,10 @@ namespace LMM06000Model.ViewModel
                 loEx.Add(ex);
             }
         EndBlock:
-            loEx.ThrowExceptionIfErrors();
+            if (loEx.HasError)
+            {
+                loEx.ThrowExceptionIfErrors();
+            }
         }
 
         public async Task SaveUnitType_BillingRule(LMM06000BillingRuleDetailDTO poEntity, eCRUDMode peCRUDMode)
@@ -273,5 +292,60 @@ namespace LMM06000Model.ViewModel
             }
             loException.ThrowExceptionIfErrors();
         }
+
+        #region HelperValidation
+        public void ValidationPercentage(bool lDP, bool lInstallment, bool lBankCredit, int Total)
+        {
+            R_Exception loException = new R_Exception();
+            try
+            {
+                if (Total == 0 || Total != 100)
+                {
+                    switch ((lDP, lInstallment, lBankCredit))
+                    {
+                        case (true, true, true):
+                            var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6009");
+                            loException.Add(loErr);
+                            break;
+                        case (true, true, false):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6010");
+                            loException.Add(loErr);
+                            break;
+                        case (true, false, true):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6011");
+                            loException.Add(loErr);
+                            break;
+                        case (false, true, true):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6012");
+                            loException.Add(loErr);
+                            break;
+                        case (false, false, true):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6013");
+                            loException.Add(loErr);
+                            break;
+                        case (false, true, false):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6014");
+                            loException.Add(loErr);
+                            break;
+                        case (true, false, false):
+                            loErr = R_FrontUtility.R_GetError(typeof(Resources_LMM06000_Class), "6015");
+                            loException.Add(loErr);
+                            break;
+                        case (false, false, false):
+                            break;
+                        default:
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loException.Add(ex);
+            }
+            if (loException.HasError)
+            {
+                loException.ThrowExceptionIfErrors();
+            }
+        }
+        #endregion
     }
 }

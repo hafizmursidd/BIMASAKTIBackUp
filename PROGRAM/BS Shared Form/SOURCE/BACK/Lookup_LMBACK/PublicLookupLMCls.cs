@@ -6,20 +6,24 @@ using R_BackEnd;
 using R_Common;
 using Lookup_LMCOMMON.Logs;
 using R_CommonFrontBackAPI;
+using System.Diagnostics;
 
 namespace Lookup_LMBACK
 {
     public class PublicLookupLMCls
     {
         private LoggerLookupLM _loggerLookup;
+        private readonly ActivitySource _activitySource;
         public PublicLookupLMCls()
         {
             _loggerLookup = LoggerLookupLM.R_GetInstanceLogger();
+            _activitySource = LookupLMActivity.R_GetInstanceActivitySource();
         }
 
         public List<LML00100DTO> GetAllSalesTax(LML00100ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllSalesTax);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -55,6 +59,7 @@ namespace Lookup_LMBACK
         public List<LML00200DTO> GetAllUnitCharges(LML00200ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllUnitCharges);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -95,6 +100,7 @@ namespace Lookup_LMBACK
         public List<LML00300DTO> GetAllSupervisor(LML00300ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllSupervisor);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -134,6 +140,7 @@ namespace Lookup_LMBACK
         public List<LML00400DTO> GetAllUtilityCharges(LML00400ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllUtilityCharges);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -175,6 +182,7 @@ namespace Lookup_LMBACK
         public List<LML00500DTO> GetAllSalesman(LML00500ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllSalesman);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             
             var loEx = new R_Exception();
@@ -201,6 +209,86 @@ namespace Lookup_LMBACK
 
                 var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
                 loResult = R_Utility.R_ConvertTo<LML00500DTO>(loReturnTemp).ToList();
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            _loggerLookup.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+            return loResult;
+        }
+        public List<LML00600DTO> GetTenant(LML00600ParameterDTO poEntity)
+        {
+            string lcMethodName = nameof(GetTenant);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
+            var loEx = new R_Exception();
+            List<LML00600DTO> loResult = null;
+            R_Db loDb;
+            try
+            {
+                loDb = new R_Db();
+                var loConn = loDb.GetConnection();
+                var loCmd = loDb.GetCommand();
+
+                var lcQuery = @"RSP_LM_GET_TENANT_LIST";
+                loCmd.CommandText = lcQuery;
+                loCmd.CommandType = CommandType.StoredProcedure;
+
+                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 8, poEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 20, poEntity.CPROPERTY_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CCUSTOMER_TYPE", DbType.String, 2, poEntity.CCUSTOMER_TYPE);
+
+                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerLookup.LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                loResult = R_Utility.R_ConvertTo<LML00600DTO>(loReturnTemp).ToList();
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            _loggerLookup.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
+            return loResult;
+        }
+        public List<LML00700DTO> GetDiscount(LML00700ParameterDTO poEntity)
+        {
+            string lcMethodName = nameof(GetDiscount);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
+            var loEx = new R_Exception();
+            List<LML00700DTO> loResult = null;
+            R_Db loDb;
+            try
+            {
+                loDb = new R_Db();
+                var loConn = loDb.GetConnection();
+                var loCmd = loDb.GetCommand();
+
+                var lcQuery = @"RSP_LM_GET_DISCOUNT_LIST";
+                loCmd.CommandText = lcQuery;
+                loCmd.CommandType = CommandType.StoredProcedure;
+
+                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CUSER_ID", DbType.String, 8, poEntity.CUSER_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CPROPERTY_ID", DbType.String, 20, poEntity.CPROPERTY_ID);
+                loDb.R_AddCommandParameter(loCmd, "@CCHARGES_TYPE", DbType.String, 2, poEntity.CCHARGES_TYPE);
+
+                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerLookup.LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
+
+                var loReturnTemp = loDb.SqlExecQuery(loConn, loCmd, true);
+                loResult = R_Utility.R_ConvertTo<LML00700DTO>(loReturnTemp).ToList();
             }
             catch (Exception ex)
             {

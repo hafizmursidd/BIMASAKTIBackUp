@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Transactions;
@@ -9,19 +10,25 @@ using Microsoft.SqlServer.Server;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using RSP_GL_PROCESS_REVERSING_JRNResources;
 
 namespace GLB00200Back
 {
     public class GLB00200Cls
     {
+        Resources_Dummy_Class _loRSP = new();
+
         private LoggerGLB00200 _loggerGLB00200;
+        private readonly ActivitySource _activitySource;
         public GLB00200Cls()
         {
             _loggerGLB00200 = LoggerGLB00200.R_GetInstanceLogger();
+            _activitySource = GLB00200Activity.R_GetInstanceActivitySource();
         }
         public GLB00200InitalProcessDTO InitialProcess(GLB00200DBParameter poParameter)
         {
             string lcMethodName = nameof(InitialProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -33,9 +40,6 @@ namespace GLB00200Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-
-                //for GET YEAR MIN MAX __ VALIDATION
-               // var lcQuery = "RSP_GS_GET_PERIOD_YEAR_RANGE @CCOMPANY_ID, '','' ";
                 var lcQuery = "RSP_GS_GET_PERIOD_YEAR_RANGE ";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
@@ -77,6 +81,7 @@ namespace GLB00200Back
         public List<GLB00200DTO> ReversingJournalProcessList(GLB00200DBParameter poParameter)
         {
             string lcMethodName = nameof(ReversingJournalProcessList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -121,6 +126,7 @@ namespace GLB00200Back
         public List<GLB00200JournalDetailDTO> GetDetail_ReversingJournalList(GLB00200DBParameter poParameter)
         {
             string lcMethodName = nameof(GetDetail_ReversingJournalList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
 

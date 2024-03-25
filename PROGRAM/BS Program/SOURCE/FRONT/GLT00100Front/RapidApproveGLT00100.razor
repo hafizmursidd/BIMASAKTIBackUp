@@ -1,0 +1,107 @@
+@using GLT00100Common.DTOs
+@inherits R_Page
+
+
+<R_StackLayout Row>
+    <R_ItemLayout>
+        <R_StackLayout Row>
+            <R_ItemLayout col="1">
+                <R_Label>Department</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="@_JournalListViewModel.Data.CDEPT_CODE"
+                           R_ConductorSource="_conductorRef"
+                           Enabled="false" />
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="_JournalListViewModel.Data.CDEPT_NAME"
+                           R_ConductorSource="_conductorRef"
+                           Enabled="false" />
+            </R_ItemLayout>
+
+            <R_ItemLayout col="1">
+                <R_Label>Journal Period</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_NumericTextBox @bind-Value="_JournalListViewModel.Data.ISOFT_PERIOD_YY"
+                                  R_ConductorSource="_conductorRef"
+                                  Min=_JournalListViewModel.GSMPeriodCollection.IMIN_YEAR
+                                  Max=_JournalListViewModel.GSMPeriodCollection.IMAX_YEAR
+                                  Arrows="false" 
+                                  Enabled="false"/>
+            </R_ItemLayout>
+            <R_ItemLayout col="1">
+                <R_TextBox @bind-Value="_JournalListViewModel.Data.CSOFT_PERIOD_MM"
+                           R_ConductorSource="_conductorRef"
+                           Enabled="false" />
+            </R_ItemLayout>
+
+            <R_ItemLayout col="1">
+                <R_Label>Status</R_Label>
+            </R_ItemLayout>
+            <R_ItemLayout col="2">
+                <R_TextBox @bind-Value="_JournalListViewModel.Data.CSTATUS_NAME"
+                           R_ConductorSource="_conductorRef"
+                           Enabled="false" />
+            </R_ItemLayout>
+        </R_StackLayout>
+
+        <R_StackLayout Class="mt-3 mb-3"> 
+            <R_Grid @ref="_gridRef"
+                    DataSource="@_JournalListViewModel._JournalList"
+                    R_ConductorGridSource="_conductorGridRef"
+                    R_GridType="R_eGridType.Batch"
+                    R_ServiceGetListRecord="ServiceGetListRecord"
+                    Pageable
+                    AllowAddNewRow="false"
+                    AllowDeleteRow="false"
+                    AllowEditRow="false"
+                    Height="400px">
+                <R_GridColumns>
+                     <R_GridCheckBoxSelectColumn Width="32px" FieldName="@nameof(GLT00100JournalGridDTO.LSELECTED)"
+                                                R_EnableAdd
+                                                R_EnableEdit
+                                                ShowSelectAllHeader 
+                                                Filterable="false"/>
+
+                    <R_GridTextColumn Width="180px" FieldName="@nameof(GLT00100JournalGridDTO.CREF_NO)"
+                                      HeaderText="Master Ref.No." />
+
+                    <R_GridNumericColumn Width="80px" FieldName="@nameof(GLT00100JournalGridDTO.CREF_DATE)"
+                                         HeaderText="Freq." />
+
+                    <R_GridNumericColumn Width="73px" FieldName="@nameof(GLT00100JournalGridDTO.CDOC_NO)"
+                                         HeaderText="Seq." />
+
+                    <R_GridTextColumn Width="500px" FieldName="@nameof(GLT00100JournalGridDTO.CTRANS_DESC)"
+                                      HeaderText="Description" />
+
+                    <R_GridTextColumn Width="100px" FieldName="@nameof(GLT00100JournalGridDTO.CCURRENCY_CODE)"
+                                      HeaderText="Currency" />
+
+                    <R_GridTextColumn Width="150px" FieldName="@nameof(GLT00100JournalGridDTO.NTRANS_AMOUNT)"
+                                      HeaderText="Amount" />
+                </R_GridColumns>
+            </R_Grid>
+        </R_StackLayout>
+
+        <R_StackLayout Row="true">
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.buttonRapidApprove" OnClick="OnChangeRapidApprove">Approve</R_Button>
+            </R_ItemLayout>
+            <R_ItemLayout>
+                <R_Button Enabled="_JournalListViewModel.buttonRapidApprove" OnClick="OnClose" >Cancel</R_Button>
+            </R_ItemLayout>
+        </R_StackLayout>
+
+    </R_ItemLayout>
+</R_StackLayout>
+
+<R_ConductorGrid @ref="_conductorGridRef"
+                 R_ViewModel="_JournalListViewModel"
+                 R_IsHeader
+                 R_BeforeSaveBatch="@R_BeforeSaveBatchApprove"
+                 R_AfterSaveBatch="@R_AfterSaveBatchApprove"
+                 R_ServiceSaveBatch="ServiceSaveBatchApprove"
+                 @* R_Display="Service_Display" *@
+                 />

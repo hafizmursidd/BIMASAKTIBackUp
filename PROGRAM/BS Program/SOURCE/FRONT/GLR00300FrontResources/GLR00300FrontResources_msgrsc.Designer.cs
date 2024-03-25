@@ -142,7 +142,7 @@ namespace GLR00300FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ReportOption.
+        ///   Looks up a localized string similar to Report Option.
         /// </summary>
         internal static string _ReportOption {
             get {

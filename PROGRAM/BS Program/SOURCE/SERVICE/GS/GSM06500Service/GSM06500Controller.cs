@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using System.Diagnostics;
 
 namespace GSM06500Service
 {
@@ -14,16 +15,21 @@ namespace GSM06500Service
     public class GSM06500Controller : ControllerBase, IGSM06500
     {
         private LoggerGSM06500 _loggerGSM06500;
+        private readonly ActivitySource _activitySource;
         public GSM06500Controller(ILogger<GSM06500Controller> logger)
         {
             //Initial and Get Logger
             LoggerGSM06500.R_InitializeLogger(logger);
-            _loggerGSM06500 = LoggerGSM06500.R_GetInstanceLogger();
+            _loggerGSM06500 = LoggerGSM06500.R_GetInstanceLogger(); 
+            _activitySource = GSM06500Activity.R_InitializeAndGetActivitySource(nameof(GSM06500Controller));
+          // _activitySource = GSM06500Activity.R_InitializeAndGetActivitySource("GSM06500Controller");
+
         }
 
         [HttpPost]
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<GSM06500DTO> poParameter)
         {
+            using Activity activity = _activitySource.StartActivity(nameof(R_ServiceDelete));
             _loggerGSM06500.LogInfo("START process method R_ServiceDelete on Controller");
 
             R_Exception loException = new R_Exception();
@@ -52,6 +58,7 @@ namespace GSM06500Service
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GSM06500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GSM06500DTO> poParameter)
         {
+            using Activity activity = _activitySource.StartActivity(nameof(R_ServiceGetRecord));
             _loggerGSM06500.LogInfo("START process method R_ServiceGetRecord on Controller");
             var loEx = new R_Exception();
             var loRtn = new R_ServiceGetRecordResultDTO<GSM06500DTO>();
@@ -77,6 +84,7 @@ namespace GSM06500Service
         [HttpPost]
         public R_ServiceSaveResultDTO<GSM06500DTO> R_ServiceSave(R_ServiceSaveParameterDTO<GSM06500DTO> poParameter)
         {
+            using Activity activity = _activitySource.StartActivity(nameof(R_ServiceSave));
             _loggerGSM06500.LogInfo("START process method R_ServiceSave on Controller");
             R_Exception loException = new R_Exception();
             R_ServiceSaveResultDTO<GSM06500DTO> loRtn = null;
@@ -104,6 +112,7 @@ namespace GSM06500Service
         [HttpPost]
         public GSM06500PropertyListDTO GetAllPropertyList()
         {
+            using Activity activity = _activitySource.StartActivity(nameof(GetAllPropertyList));
             _loggerGSM06500.LogInfo("START process method GetAllPropertyList on Controller");
             var loEx = new R_Exception();
             GSM06500PropertyListDTO loRtn = null;
@@ -132,6 +141,7 @@ namespace GSM06500Service
         [HttpPost]
         public IAsyncEnumerable<GSM06500DTO> GetTermOfPaymentList()
         {
+            using Activity activity = _activitySource.StartActivity(nameof(GetTermOfPaymentList));
             _loggerGSM06500.LogInfo("START process method GetTermOfPaymentList on Controller");
             var loEx = new R_Exception();
             GSM06500DBParameter loDbParameter;

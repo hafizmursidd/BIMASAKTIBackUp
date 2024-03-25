@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  otl-api:
+    image: GS-api
+    environment:
+    - R_DBSECTION__R_DBCONFIGS__0__CONNECTIONSTRING=server=host.docker.internal,57746;Initial Catalog=BIMASAKTI_11;User ID=sa;Password=993B428C56EA88C108F8AF1213EF3C7F;
+    - SERILOG__WRITETO__0__NAME=OpenTelemetry
+    - SERILOG__WRITETO__0__ARGS__ENDPOINT=http://host.docker.internal:4317
+    - SERILOG__WRITETO__0__ARGS__PROTOCOL=Grpc
+    - OPENTELEMETRY__OTLP__ENDPOINT=http://host.docker.internal:4317
+    build:
+      context: .
+      dockerfile: Dockerfile.GSAPI
+    ports: 
+      - "5001:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+#- OPENTELEMETRY__OTLP__ENDPOINT=http://host.docker.internal:4317
+
+
+
+  
+

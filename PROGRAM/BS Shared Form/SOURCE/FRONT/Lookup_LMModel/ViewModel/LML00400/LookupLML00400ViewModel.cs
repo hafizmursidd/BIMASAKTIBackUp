@@ -10,8 +10,9 @@ namespace Lookup_LMModel.ViewModel.LML00400
     public class LookupLML00400ViewModel
     {
         private PublicLookupLMModel _model = new PublicLookupLMModel();
-        public ObservableCollection< LML00400DTO> UtilityChargesList = new ObservableCollection<LML00400DTO>();
-        
+        private PublicLookupLMGetRecordModel _modelGetRecord = new PublicLookupLMGetRecordModel();
+        public ObservableCollection<LML00400DTO> UtilityChargesList = new ObservableCollection<LML00400DTO>();
+
         public async Task GetUtitlityChargesList(LML00400ParameterDTO poParam)
         {
             var loEx = new R_Exception();
@@ -31,6 +32,23 @@ namespace Lookup_LMModel.ViewModel.LML00400
                 loEx.Add(ex);
             }
             loEx.ThrowExceptionIfErrors();
+        }
+
+        public async Task<LML00400DTO> GetUtitlityCharges(LML00400ParameterDTO poParam)
+        {
+            var loEx = new R_Exception();
+            LML00400DTO loRtn = null;
+            try
+            {
+                var loResult = await _modelGetRecord.LML00400GetUtilityChargesAsync(poParam);
+                loRtn = loResult;
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+            loEx.ThrowExceptionIfErrors();
+            return loRtn;
         }
     }
 }

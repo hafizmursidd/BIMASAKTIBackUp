@@ -3,22 +3,39 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using GST00500Common;
+using GST00500Common.Logs;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using RSP_GS_MAINTAIN_APPROVALResources;
 
 namespace GST00500Back
 {
     public class GST00500ProcessApproveCls : R_IBatchProcess
     {
+        Resources_Dummy_Class _loRSP = new();
+
+        private LoggerGST00500 _loggerGST00500;
+        private readonly ActivitySource _activitySource;
+        public GST00500ProcessApproveCls()
+        {
+            //Initial and Get Logger
+            _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = R_OpenTelemetry.R_LibraryActivity.R_GetInstanceActivitySource();
+        }
         public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
+            string lcMethodName = nameof(R_BatchProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_Db loDb = new R_Db();
             try
@@ -30,6 +47,7 @@ namespace GST00500Back
 
                     //cara2
                     loException.Add("", "Approve Error When Connection to database");
+                    _loggerGST00500.LogError(loException);
                     goto EndBlock;
                 }
                 var loTask = Task.Run(() =>
@@ -47,20 +65,26 @@ namespace GST00500Back
                     loException.Add(loTask.Exception.InnerException != null ?
                         loTask.Exception.InnerException :
                         loTask.Exception);
-
+                    _loggerGST00500.LogError(loException);
                     goto EndBlock;
                 }
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGST00500.LogError(loException);
             }
         EndBlock:
             loException.ThrowExceptionIfErrors();
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
         }
 
         private async Task _BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
+            string lcMethodName = nameof(_BatchProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_Exception loExceptionDt;
             string lcQuery = "";
@@ -105,6 +129,12 @@ namespace GST00500Back
                     "Start Processing Approve");
                 loDb.R_AddCommandParameter(loCommand, "@Finish", DbType.Int32, 20, 0);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGST00500.LogInfo("Execute query : ");
+                _loggerGST00500.LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                 Var_Step = 1;
@@ -122,8 +152,7 @@ namespace GST00500Back
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
-
-
+                        
                         //CALL METHOD TO EACH PROCESS JOURNAL
                         loStatusProcess = UpdateEachApprovalStatus(lcCompany, lcUserId, item, loConnection, Var_Step, lcGuidId);
                         //loStatusProcess = false;
@@ -150,6 +179,7 @@ namespace GST00500Back
                     catch (Exception ex)
                     {
                         loExceptionDt.Add(ex);
+                        _loggerGST00500.LogError(loExceptionDt);
                     }
                     //UNHANDLED Error
                     if (loExceptionDt.Haserror)
@@ -162,15 +192,16 @@ namespace GST00500Back
 
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
+                        _loggerGST00500.LogDebug("{@ObjectQuery}", lcQueryMessage);
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
-
-
+                        
                         lcQueryMessage = string.Format(
                             "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
                             Var_Step, loExceptionDt.ErrorList.FirstOrDefault().ErrDescp);
 
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
+                        _loggerGST00500.LogDebug("{@ObjectQuery}", lcQueryMessage);
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
                     }
 
@@ -193,11 +224,14 @@ namespace GST00500Back
                     $@"EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, '{Var_Step}', '{loStatusFinish}', '{flag}'";
                 loCommand.CommandText = lcQueryFinish;
                 loCommand.CommandType = CommandType.Text;
+                _loggerGST00500.LogInfo(string.Format("Exec query to inform framework Cls"));
+                _loggerGST00500.LogDebug("{@ObjectQuery}", lcQueryFinish);
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGST00500.LogError(loException);
             }
             finally
             {
@@ -226,19 +260,28 @@ namespace GST00500Back
 
                 loCommand.CommandText = lcQueryMessage;
                 loCommand.CommandType = CommandType.Text;
+                _loggerGST00500.LogInfo(string.Format("Exec query to inform framework from outer exception on cls"));
+                _loggerGST00500.LogDebug("{@ObjectQuery}", lcQueryMessage);
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                 lcQuery = $"EXEC RSP_WriteUploadProcessStatus '{poBatchProcessPar.Key.COMPANY_ID}', " +
                           $"'{poBatchProcessPar.Key.USER_ID}', " +
                           $"'{poBatchProcessPar.Key.KEY_GUID}', " +
                           $"100, '{loException.ErrorList[0].ErrDescp}', 9";
-
+                _loggerGST00500.LogDebug("{@ObjectQuery}", lcQuery);
+                _loggerGST00500.LogInfo("Exec query to inform framework that process upload is finished");
                 loDb.SqlExecNonQuery(lcQuery);
             }
+
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
         }
 
         private bool UpdateEachApprovalStatus(string Company, string UserId, GST00500DTO item, DbConnection poConnection, int step, string guid)
         {
+            string lcMethodName = nameof(UpdateEachApprovalStatus);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+           
             var loEx = new R_Exception();
             R_Db loDb = new R_Db();
             DbConnection loConn = null;
@@ -263,6 +306,12 @@ namespace GST00500Back
                 loDb.R_AddCommandParameter(loCommand, "@CREJECT_NOTES", DbType.String, 512, "");
                 loDb.R_AddCommandParameter(loCommand, "@CACTION", DbType.String, 2, "01");
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGST00500.LogInfo("Execute query");
+                _loggerGST00500.LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -273,6 +322,7 @@ namespace GST00500Back
                 catch (Exception ex)
                 {
                     loEx.Add(ex);
+                    _loggerGST00500.LogError(loEx);
                 }
                 loEx.Add(R_ExternalException.R_SP_Get_Exception(loConn));
 
@@ -288,6 +338,7 @@ namespace GST00500Back
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGST00500.LogError(loEx);
             }
             finally
             {
@@ -299,7 +350,7 @@ namespace GST00500Back
             }
         EndBlock:
             loEx.ThrowExceptionIfErrors();
-
+            _loggerGST00500.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
             return lbRtn;
 
         }

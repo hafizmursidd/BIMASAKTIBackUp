@@ -1,0 +1,37 @@
+Buat namespace
+kubectl create namespace train-telemetric
+
+Delete namespace
+kubectl delete namespace train-telemetric
+
+Current namespace
+kubectl config get-contexts 
+
+Yang tidak terkait namespace
+===============================
+kubectl api-resources --namespaced=false
+-Persistent Volume
+
+
+Set namespace untuk inisiasi ke namespace yang diinginkan (pada hal ini namespacenya train-telemetric)
+kubectl config set-context --current --namespace=train-telemetric
+
+Sign In Docker Hub
+	docker login -u [user] -p [password]
+	
+Retag or Rename Docker images
+	docker tag otl-api dockerguntech/otl-api
+
+Push Docker Image to Docker Hub
+	docker push dockerguntech/otl-api
+
+Deployment kubernetes
+	kubectl apply -f otlapi-deploy.yml
+
+Delete Deployment
+	kubectl delete -f otlapi-deploy.yml
+
+
+
+Test
+  	http://localhost:5901/swagger

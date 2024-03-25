@@ -10,5 +10,6 @@ namespace Lookup_LMCOMMON.DTOs
         public const string CUSER_ID = "CUSER_ID";
         public const string CPROPERTY_ID = "CPROPERTY_ID";
         public const string CCHARGE_TYPE_ID = "CCHARGE_TYPE_ID";
+        public const string CCUSTOMER_TYPE = "CCUSTOMER_TYPE";
     }
 }

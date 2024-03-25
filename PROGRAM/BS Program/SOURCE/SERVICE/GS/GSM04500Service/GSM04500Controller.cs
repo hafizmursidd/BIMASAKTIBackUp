@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using System.Diagnostics;
 
 namespace GSM04500Service
 {
@@ -14,16 +15,19 @@ namespace GSM04500Service
     public class GSM04500Controller : ControllerBase, IGSM04500
     {
         private LoggerGSM04500 _loggerGSM04500;
+        private readonly ActivitySource _activitySource;
         public GSM04500Controller(ILogger<GSM04500Controller> logger)
         {
             LoggerGSM04500.R_InitializeLogger(logger);
             _loggerGSM04500 = LoggerGSM04500.R_GetInstanceLogger();
+            _activitySource = GSM04500Activity.R_InitializeAndGetActivitySource(nameof(GSM04500Controller));
         }
 
         [HttpPost]
         public GSM04500PropertyListDTO GetAllPropertyList()
         {
             string lcMethodName = nameof(GetAllPropertyList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -44,7 +48,7 @@ namespace GSM04500Service
             }
             catch (Exception ex)
             {
-                loEx.Add(ex); 
+                loEx.Add(ex);
                 _loggerGSM04500.LogError(loEx);
             }
 
@@ -58,6 +62,7 @@ namespace GSM04500Service
         public GSM04500JournalGroupTypeListDTO GetAllJournalGroupTypeList()
         {
             string lcMethodName = nameof(GetAllJournalGroupTypeList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -80,7 +85,7 @@ namespace GSM04500Service
             {
                 loEx.Add(ex);
                 _loggerGSM04500.LogError(loEx);
-                }
+            }
 
             loEx.ThrowExceptionIfErrors();
             _loggerGSM04500.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
@@ -92,6 +97,7 @@ namespace GSM04500Service
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<GSM04500DTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceDelete);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -124,6 +130,7 @@ namespace GSM04500Service
         public R_ServiceGetRecordResultDTO<GSM04500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GSM04500DTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceGetRecord);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -154,6 +161,7 @@ namespace GSM04500Service
         public R_ServiceSaveResultDTO<GSM04500DTO> R_ServiceSave(R_ServiceSaveParameterDTO<GSM04500DTO> poParameter)
         {
             string lcMethodName = nameof(R_ServiceSave);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -187,6 +195,7 @@ namespace GSM04500Service
         public IAsyncEnumerable<GSM04500DTO> GET_JOURNAL_GRP_LIST_STREAM()
         {
             string lcMethodName = nameof(GET_JOURNAL_GRP_LIST_STREAM);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM04500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -203,7 +212,7 @@ namespace GSM04500Service
                 loDbParameter.CUSER_ID = R_BackGlobalVar.USER_ID;
                 loDbParameter.CPROPERTY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstant.CPROPERTY_ID);
                 loDbParameter.CJRNGRP_TYPE = R_Utility.R_GetStreamingContext<string>(ContextConstant.CJRNGRP_TYPE);
-                
+
                 _loggerGSM04500.LogInfo("Get Parameter GET_JOURNAL_GRP_LIST_STREAM on Controller");
                 _loggerGSM04500.LogDebug("DbParameter {@Parameter} ", loDbParameter);
 

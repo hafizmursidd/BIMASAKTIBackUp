@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -12,16 +13,22 @@ using GST00500Common.Logs;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using RSP_GS_MAINTAIN_APPROVALResources;
+
 
 namespace GST00500Back
 {
     public class GST00500Cls : R_IServiceCRUDBase<GST00500DTO>
     {
+        Resources_Dummy_Class _loRSP = new();
+
         private LoggerGST00500 _loggerGST00500;
+        private readonly ActivitySource _activitySource;
         public GST00500Cls()
         {
             //Initial and Get Logger
             _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = GST00500Activity.R_GetInstanceActivitySource();
         }
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
         {
@@ -40,6 +47,7 @@ namespace GST00500Back
         public List<GST00500DTO> Approval_Inbox_List(GST00500DBParameter poEntity)
         {
             string lcMethodName = nameof(Approval_Inbox_List);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -83,6 +91,7 @@ namespace GST00500Back
         public GST00500UserNameDTO GetUserName(GST00500DBParameter poEntity)
         {
             string lcMethodName = nameof(GetUserName);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();
@@ -127,6 +136,7 @@ namespace GST00500Back
         public List<GST00500RejectDTO> GetReasonRejectList(GST00500DBParameter poParameter)
         {
             string lcMethodName = nameof(GetReasonRejectList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loEx = new R_Exception();

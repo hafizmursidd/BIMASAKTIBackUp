@@ -4,29 +4,34 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;Report</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-	 <PackageReference Include="Realta.BackCollectionNuGet" Version="1.0.0" />
+	 <PackageReference Include="Realta.BackCollectionNuGet" Version="1.0.1" />
 	 <PackageReference Include="Realta.CommonCollectionNuGet" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\..\BS Shared Form\SOURCE\SERVICES\Lookup_LMSERVICES\Lookup_LMSERVICES.csproj" />
-		<ProjectReference Include="..\..\..\SERVICE\LM\LMM01500SERVICE\LMM01500SERVICE.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMM01500Service\LMM01500Service.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMM02500SERVICE\LMM02500Service.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMM03700Service\LMM03700Service.csproj" />
 		<ProjectReference Include="..\..\..\SERVICE\LM\LMM06000Service\LMM06000Service.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMT01500Service\LMT01500Service.csproj" />
+		<ProjectReference Include="..\..\..\SERVICE\LM\LMT05500SERVICE\LMT05500SERVICE.csproj" />
   </ItemGroup>
 
 
 	<ItemGroup>
-		<Reference Include="R_APICommonDTO">
-		  <HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APICommonDTO.dll</HintPath>
-		</Reference>
 		<Reference Include="R_APIStartUp">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_APIStartUp.dll</HintPath>
 		</Reference>
 		<Reference Include="R_CrossPlatformSecurity">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_CrossPlatformSecurity.dll</HintPath>
+		</Reference>
+		<Reference Include="R_HelperController">
+			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_HelperController.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

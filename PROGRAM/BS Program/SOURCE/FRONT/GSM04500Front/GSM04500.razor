@@ -52,6 +52,12 @@
                     R_ConductorGridSource="@_conJournalGroupRef"
                     R_GridType="@R_eGridType.Original"
                     R_ServiceGetListRecord="@R_ServiceGetListRecord"
+                    R_ServiceGetRecord="@R_ServiceGetRecordAsync"
+                    R_ServiceDelete="@ServiceDelete"
+                    R_ServiceSave="@ServiceSave"
+                    R_AfterDelete="@AfterDelete"
+                    R_Validation="@ServiceValidation"
+                    R_Display="@Grid_Display"
                     AllowDeleteRow="true"
                     AllowAddNewRow="true"
                     AllowEditRow="true"
@@ -84,14 +90,7 @@
             </R_ItemLayout>
         </R_StackLayout>
         <R_ConductorGrid @ref="@_conJournalGroupRef"
-                         R_IsHeader
-                         R_ViewModel="@journalGroupViewModel"
-                         R_ServiceGetRecord="@R_ServiceGetRecordAsync"
-                         R_ServiceDelete="@ServiceDelete"
-                         R_ServiceSave="@ServiceSave"
-                         R_AfterDelete="@AfterDelete"
-                         R_Validation="@ServiceValidation"
-                         R_Display="@Grid_Display" />
+                         R_IsHeader />
 
 
     </R_TabStripTab>

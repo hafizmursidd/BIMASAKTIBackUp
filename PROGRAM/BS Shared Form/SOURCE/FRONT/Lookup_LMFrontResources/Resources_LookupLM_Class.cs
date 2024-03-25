@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lookup_LMFrontResources
+namespace LookupLMFrontResources
 {
     public class Resources_LookupLM_Class
     {

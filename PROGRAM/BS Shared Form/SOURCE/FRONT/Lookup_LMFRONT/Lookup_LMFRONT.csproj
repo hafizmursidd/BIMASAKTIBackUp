@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BACK\Lookup_LMCOMMON\Lookup_LMCOMMON.csproj" />
-    <ProjectReference Include="..\Lookup_LMFrontResources\Lookup_LMFrontResources.csproj" />
+    <ProjectReference Include="..\Lookup_LMFrontResources\LookupLMFrontResources.csproj" />
     <ProjectReference Include="..\Lookup_LMModel\Lookup_LMModel.csproj" />
   </ItemGroup>
 

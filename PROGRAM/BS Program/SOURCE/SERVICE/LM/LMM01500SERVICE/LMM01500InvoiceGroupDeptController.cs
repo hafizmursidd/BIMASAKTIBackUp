@@ -17,6 +17,7 @@ namespace LMM01500SERVICE
     [Route("api/[controller]/[action]")]
     public class LMM01500InvoiceGroupDeptController : ControllerBase, ILMM01500InvoiceGroupDept
     {
+        [HttpPost]
         public R_ServiceGetRecordResultDTO<LMM01500InvoiceGrpDeptDetailDTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<LMM01500InvoiceGrpDeptDetailDTO> poParameter)
         {
             var loEx = new R_Exception();
@@ -37,7 +38,7 @@ namespace LMM01500SERVICE
 
             return loRtn;
         }
-
+        [HttpPost]
         public R_ServiceSaveResultDTO<LMM01500InvoiceGrpDeptDetailDTO> R_ServiceSave(R_ServiceSaveParameterDTO<LMM01500InvoiceGrpDeptDetailDTO> poParameter)
         {
             R_Exception loException = new R_Exception();
@@ -61,7 +62,7 @@ namespace LMM01500SERVICE
             loException.ThrowExceptionIfErrors();
             return loRtn;
         }
-
+        [HttpPost]
         public R_ServiceDeleteResultDTO R_ServiceDelete(R_ServiceDeleteParameterDTO<LMM01500InvoiceGrpDeptDetailDTO> poParameter)
         {
             R_Exception loException = new R_Exception();
@@ -85,7 +86,7 @@ namespace LMM01500SERVICE
 
             return loRtn;
         }
-
+        [HttpPost]
         public IAsyncEnumerable<LMM01500InvoiceGrpDeptDTO> GetInvoiceGroupDeptList()
         {
             var loEx = new R_Exception();

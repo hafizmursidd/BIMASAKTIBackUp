@@ -19,6 +19,7 @@ using GLR00300Common.Logs;
 using Microsoft.Extensions.Logging;
 using GLR00300Service.DTOLogs;
 using R_CommonFrontBackAPI.Log;
+using System.Diagnostics;
 
 namespace GLR00300Service
 {
@@ -27,13 +28,14 @@ namespace GLR00300Service
         private R_ReportFastReportBackClass _ReportCls;
         private GLR00300ParamDBToGetReportDTO _Parameter;
         private LoggerGLR00300 _loggerGLR00300Report;
-
+        private readonly ActivitySource _activitySource;
         #region instantiate
         public GLR00300ReportFormatEController(ILogger<GLR00300ReportFormatEController> logger)
         {
             //Initial and Get instance
             LoggerGLR00300.R_InitializeLogger(logger);
             _loggerGLR00300Report = LoggerGLR00300.R_GetInstanceLogger();
+            _activitySource = GLR00300Activity.R_InitializeAndGetActivitySource(nameof(GLR00300ReportFormatEController));
 
             _ReportCls = new R_ReportFastReportBackClass();
             _ReportCls.R_InstantiateMainReportWithFileName += _ReportCls_R_InstantiateMainReportWithFileName;
@@ -68,6 +70,7 @@ namespace GLR00300Service
         public R_DownloadFileResultDTO AllTrialBalanceReportPost(GLR00300ParamDBToGetReportDTO poParameter)
         {
             string lcMethodName = nameof(AllTrialBalanceReportPost);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format E", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -101,6 +104,7 @@ namespace GLR00300Service
         public FileStreamResult AllTrialBalanceReportGet(string pcGuid)
         {
             string lcMethodName = nameof(AllTrialBalanceReportGet);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format E", lcMethodName));
 
             GLR00300ReportLogKeyDTO<GLR00300ParamDBToGetReportDTO> loResultGUID = null;
@@ -132,7 +136,10 @@ namespace GLR00300Service
         #region Helper
         private GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO GenerateDataPrint(GLR00300ParamDBToGetReportDTO poParam)
         {
-            _loggerGLR00300Report.LogInfo("START Method GenerateDataPrint on Controller");
+            string lcMethodName = nameof(GenerateDataPrint);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format E", lcMethodName));
+
             var loException = new R_Exception();
             GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO loRtn = new GLR00300AccountTrialBalanceResult_FormatEtoH_WithBaseHeaderDTO();
             GLR00300Cls loCls = null;
@@ -224,7 +231,10 @@ namespace GLR00300Service
 
         private List<GLRR00300DataAccountTrialBalance> FromRaw_To_Display(List<GLR00300_DataDetail_AccountTrialBalance> poCollectionDataRaw)
         {
-            _loggerGLR00300Report.LogInfo("START method for convert data to display");
+            string lcMethodName = "Convert data to display";
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGLR00300Report.LogInfo(string.Format("START method {0} on Format E", lcMethodName));
+
             var loException = new R_Exception();
             List<GLRR00300DataAccountTrialBalance> loReturn = null;
             try

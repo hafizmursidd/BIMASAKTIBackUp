@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Lookup_LMCOMMON.DTOs;
+using Lookup_LMModel.ViewModel.LML00200;
+using R_BlazorFrontEnd.Controls.Events;
+using R_BlazorFrontEnd.Controls;
+using R_BlazorFrontEnd.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lookup_LMCOMMON.DTOs;
-using Lookup_LMModel.ViewModel;
-using Lookup_LMModel.ViewModel.LML00200;
-using R_BlazorFrontEnd.Controls;
-using R_BlazorFrontEnd.Controls.Events;
-using R_BlazorFrontEnd.Exceptions;
 
 namespace Lookup_LMFRONT
 {
-    public partial class LML00200 : R_Page
+    public partial class LML00200 :R_Page
     {
         private LookupLML00200ViewModel _viewModelLML00200 = new LookupLML00200ViewModel();
         private R_Grid<LML00200DTO> GridRef;

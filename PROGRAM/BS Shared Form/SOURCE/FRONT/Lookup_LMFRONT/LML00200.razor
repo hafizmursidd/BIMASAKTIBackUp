@@ -1,4 +1,4 @@
-﻿@inherits R_Page
+@inherits R_Page
 @attribute [R_Page(Title = "Unit Charges")]
 @inject R_ILocalizer<Resources_LookupLM_Class> _localizer
 
@@ -8,17 +8,27 @@
             DataSource="_viewModelLML00200.UnitChargesList"
             R_ServiceGetListRecord="R_ServiceGetListRecordAsync"
             Pageable
-            PageSize="5"
+            PageSize="10"
             Height="300px"
-            Width="600px">
+            Width="900px">
         <R_GridColumns>
-            <R_GridTextColumn Width="200px" FieldName="CCHARGES_ID" HeaderText=@_localizer["_ChargesId"]></R_GridTextColumn>
-            <R_GridTextColumn Width="350px" FieldName="CCHARGES_NAME" HeaderText=@_localizer["_ChargesName"]></R_GridTextColumn>
+            <R_GridTextColumn Width="200px" 
+                              FieldName="@nameof(LML00200DTO.CCHARGES_ID)"  
+                              HeaderText=@_localizer["_ChargesId"]></R_GridTextColumn>
+            <R_GridTextColumn Width="250px" 
+                              FieldName="@nameof(LML00200DTO.CCHARGES_NAME)" 
+                              HeaderText=@_localizer["_ChargesName"]></R_GridTextColumn>
+            <R_GridTextColumn Width="200px"
+                              FieldName="@nameof(LML00200DTO.CCHARGES_TYPE)"
+                              HeaderText=@_localizer["_ChargeType"]></R_GridTextColumn>
+            <R_GridTextColumn Width="250px"
+                              FieldName="@nameof(LML00200DTO.CCHARGES_TYPE_DESCR)"
+                              HeaderText=@_localizer["_ChargesTypeDesc"]></R_GridTextColumn>
         </R_GridColumns>
     </R_Grid>
-    </R_StackLayout>
+</R_StackLayout>
 
-    <R_StackLayout Row Class="justify-content-end">
+<R_StackLayout Row Class="justify-content-end">
     <R_ItemLayout xs="2">
         <R_Button  OnClick="Button_OnClickOkAsync">
             OK

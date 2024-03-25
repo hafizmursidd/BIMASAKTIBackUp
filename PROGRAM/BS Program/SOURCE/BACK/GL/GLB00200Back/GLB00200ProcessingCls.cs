@@ -13,14 +13,29 @@ using System.Windows.Input;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using GLB00200Common.Logs;
+using System.IO;
+using RSP_GL_PROCESS_REVERSING_JRNResources;
+using System.Diagnostics;
 
 namespace GLB00200Back
 {
     public class GLB00200ProcessingCls : R_IBatchProcess
     {
-
+        Resources_Dummy_Class _loRSP = new();
+        private LoggerGLB00200 _loggerGLB00200;
+        private readonly ActivitySource _activitySource;
+        public GLB00200ProcessingCls()
+        {
+            _loggerGLB00200 = LoggerGLB00200.R_GetInstanceLogger();
+            _activitySource = R_OpenTelemetry.R_LibraryActivity.R_GetInstanceActivitySource();
+        }
         public void R_BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
+            string lcMethodName = nameof(R_BatchProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_Db loDb = new R_Db();
             try
@@ -32,7 +47,8 @@ namespace GLB00200Back
 
                    //cara2
                    loException.Add("", "Error where Connection to database");
-                   goto EndBlock;
+                   _loggerGLB00200.LogError(loException);
+                    goto EndBlock;
                 }
                 var loTask = Task.Run(() =>
                 {
@@ -56,12 +72,18 @@ namespace GLB00200Back
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLB00200.LogError(loException);
             }
             EndBlock:
             loException.ThrowExceptionIfErrors();
+            _loggerGLB00200.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
         }
         private async Task _BatchProcess(R_BatchProcessPar poBatchProcessPar)
         {
+            string lcMethodName = nameof(_BatchProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+
             R_Exception loException = new R_Exception();
             R_Exception loExceptionDt;
             string lcQuery = "";
@@ -106,6 +128,12 @@ namespace GLB00200Back
                     "Start Processing Reversing Journal");
                 loDb.R_AddCommandParameter(loCommand, "@Finish", DbType.Int32, 20, 0);
 
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLB00200.LogInfo("Execute query : ");
+                _loggerGLB00200.LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
+
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                 Var_Step = 1;
@@ -121,6 +149,7 @@ namespace GLB00200Back
 
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
+
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                         //CALL METHOD TO EACH PROCESS JOURNAL
@@ -150,6 +179,7 @@ namespace GLB00200Back
                     catch (Exception ex)
                     {
                         loExceptionDt.Add(ex);
+                        _loggerGLB00200.LogError(loExceptionDt);
                     }
                     
                 //UNHANDLED Error
@@ -164,8 +194,10 @@ namespace GLB00200Back
 
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
-                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
+                        _loggerGLB00200.LogDebug("{@ObjectQuery}", lcQueryMessage);
+
+                        loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                         lcQueryMessage = string.Format(
                             "EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, {0}, '{1}', 0",
@@ -173,6 +205,7 @@ namespace GLB00200Back
 
                         loCommand.CommandText = lcQueryMessage;
                         loCommand.CommandType = CommandType.Text;
+                        _loggerGLB00200.LogDebug("{@ObjectQuery}", lcQueryMessage);
                         loDb.SqlExecNonQuery(loConnection, loCommand, false);
                     }
 
@@ -196,12 +229,17 @@ namespace GLB00200Back
                     $@"EXEC RSP_WRITEUPLOADPROCESSSTATUS @CoId, @UserId, @KeyGUID, '{Var_Step}', '{loStatusFinish}', '{flag}'";
                 loCommand.CommandText = lcQueryFinish;
                 loCommand.CommandType = CommandType.Text;
+
+                _loggerGLB00200.LogInfo(string.Format("Exec query to inform framework Cls"));
+                _loggerGLB00200.LogDebug("{@ObjectQuery}", lcQueryFinish);
+
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
             }
             catch (Exception ex)
             {
                 loException.Add(ex);
+                _loggerGLB00200.LogError(loException);
             }
             finally
             {
@@ -230,18 +268,27 @@ namespace GLB00200Back
 
                 loCommand.CommandText = lcQueryMessage;
                 loCommand.CommandType = CommandType.Text;
+
+                _loggerGLB00200.LogInfo(string.Format("Exec query to inform framework from outer exception on cls"));
+                _loggerGLB00200.LogDebug("{@ObjectQuery}", lcQueryMessage);
+
                 loDb.SqlExecNonQuery(loConnection, loCommand, false);
 
                 lcQuery = $"EXEC RSP_WriteUploadProcessStatus '{poBatchProcessPar.Key.COMPANY_ID}', " +
                    $"'{poBatchProcessPar.Key.USER_ID}', " +
                    $"'{poBatchProcessPar.Key.KEY_GUID}', " +
                    $"100, '{loException.ErrorList[0].ErrDescp}', 9";
-
+                
+                _loggerGLB00200.LogDebug("{@ObjectQuery}", lcQuery);
                 loDb.SqlExecNonQuery(lcQuery);
             }
         }
         public bool ProcessEachReversing(string Company, string UserId, GLB00200DTO item, string pcGuid, DbConnection poConnection)
         {
+            string lcMethodName = nameof(ProcessEachReversing);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
+            _loggerGLB00200.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
+            
             var loEx = new R_Exception();
             R_Db loDb = new R_Db();
             DbConnection loConn = null;
@@ -264,6 +311,12 @@ namespace GLB00200Back
                 loDb.R_AddCommandParameter(loCommand, "@CREC_ID", DbType.String, 50, item.CREC_ID);
                 loDb.R_AddCommandParameter(loCommand, "@INO", DbType.Int32, 100, item.INO);
                 loDb.R_AddCommandParameter(loCommand, "@CKEY_GUID", DbType.String, 50, pcGuid);
+               
+                var loDbParam = loCommand.Parameters.Cast<DbParameter>()
+                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
+                    .ToDictionary(x => x.ParameterName, x => x.Value);
+                _loggerGLB00200.LogInfo("Execute query");
+                _loggerGLB00200.LogDebug("{@ObjectQuery(1)} {@Parameter}", loCommand.CommandText, loDbParam);
 
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
@@ -274,6 +327,7 @@ namespace GLB00200Back
                 catch (Exception ex)
                 {
                     loEx.Add(ex);
+                    _loggerGLB00200.LogError(loEx);
                 }
                 loEx.Add(R_ExternalException.R_SP_Get_Exception(loConn));
 
@@ -289,6 +343,7 @@ namespace GLB00200Back
             catch (Exception ex)
             {
                 loEx.Add(ex);
+                _loggerGLB00200.LogError(loEx);
             }
             finally
             {
@@ -300,6 +355,7 @@ namespace GLB00200Back
             }
         EndBlock:
             loEx.ThrowExceptionIfErrors();
+            _loggerGLB00200.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
 
             return lbRtn;
         }

@@ -12,6 +12,7 @@ using R_Common;
 using GST00500Common.Logs;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace GST00500Service
 {
@@ -20,11 +21,13 @@ namespace GST00500Service
     public class GST00500OutboxController : ControllerBase, IGST00500Outbox
     {
         private LoggerGST00500 _loggerGST00500;
-
+        private readonly ActivitySource _activitySource;
         public GST00500OutboxController(ILogger<GST00500OutboxController> logger)
         {
             LoggerGST00500.R_InitializeLogger(logger);
             _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = GST00500Activity.R_InitializeAndGetActivitySource(nameof(GST00500InboxController));
+
         }
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GST00500DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GST00500DTO> poParameter)
@@ -45,6 +48,7 @@ namespace GST00500Service
         public List<GST00500ApprovalStatusDTO> GetApprovalStatusList()
         {
             string lcMethodName = nameof(GetApprovalStatusList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();
@@ -84,6 +88,7 @@ namespace GST00500Service
         public IAsyncEnumerable<GST00500DTO> ApprovalOutboxListStream()
         {
             string lcMethodName = nameof(ApprovalOutboxListStream);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();

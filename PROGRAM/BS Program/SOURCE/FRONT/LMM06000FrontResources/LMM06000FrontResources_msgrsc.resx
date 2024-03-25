@@ -117,29 +117,50 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Error_01" xml:space="preserve">
+  <data name="6001" xml:space="preserve">
     <value>Billing Rule Code is required.</value>
   </data>
-  <data name="Error_02" xml:space="preserve">
+  <data name="6002" xml:space="preserve">
     <value>Billing Rule Name is required.</value>
   </data>
-  <data name="Error_03" xml:space="preserve">
+  <data name="6003" xml:space="preserve">
     <value>Charge Id Booking Fee is required.</value>
   </data>
-  <data name="Error_04" xml:space="preserve">
+  <data name="6004" xml:space="preserve">
     <value>Period Mode With Dp is required.</value>
   </data>
-  <data name="Error_05" xml:space="preserve">
+  <data name="6005" xml:space="preserve">
     <value>Charge Id With DP is required.</value>
   </data>
-  <data name="Error_06" xml:space="preserve">
+  <data name="6006" xml:space="preserve">
     <value>Period Mode Installment is required</value>
   </data>
-  <data name="Error_07" xml:space="preserve">
+  <data name="6007" xml:space="preserve">
     <value>Charge Id Installment is required.</value>
   </data>
-  <data name="Error_08" xml:space="preserve">
-    <value>Min Valueis required.</value>
+  <data name="6008" xml:space="preserve">
+    <value>Min Value is required.</value>
+  </data>
+  <data name="6009" xml:space="preserve">
+    <value>Percentage DP + Percentage Bank Credit + Percentage Installment  must be equal to 100.</value>
+  </data>
+  <data name="6010" xml:space="preserve">
+    <value>Percentage DP + Percentage Installment must be equal to 100.</value>
+  </data>
+  <data name="6011" xml:space="preserve">
+    <value>Percentage DP+ Percentage Bank Credit  must be equal to 100.</value>
+  </data>
+  <data name="6012" xml:space="preserve">
+    <value>Percentage Bank Credit + Percentage Installment must be equal to 100.</value>
+  </data>
+  <data name="6013" xml:space="preserve">
+    <value>Percentage Bank Credit must be equal to 100.</value>
+  </data>
+  <data name="6014" xml:space="preserve">
+    <value>Percentage Installment must be equal to 100.</value>
+  </data>
+  <data name="6015" xml:space="preserve">
+    <value>Percentage DP must be equal to 100.</value>
   </data>
   <data name="_Active" xml:space="preserve">
     <value>Active</value>
@@ -160,7 +181,7 @@
     <value>Billing Rule Code</value>
   </data>
   <data name="_ColumnBillingName" xml:space="preserve">
-    <value>Billing Rule Code</value>
+    <value>Billing Rule Name</value>
   </data>
   <data name="_CreatedBy" xml:space="preserve">
     <value>Created By</value>

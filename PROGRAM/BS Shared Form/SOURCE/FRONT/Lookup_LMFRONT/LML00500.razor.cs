@@ -11,7 +11,7 @@ using R_BlazorFrontEnd.Exceptions;
 
 namespace Lookup_LMFRONT
 {
-    public partial class LML00500 : R_Page
+    public partial class LML00500 :R_Page
     {
         private LookupLML00500ViewModel _viewModelLML00500 = new LookupLML00500ViewModel();
         private R_Grid<LML00500DTO> GridRef;

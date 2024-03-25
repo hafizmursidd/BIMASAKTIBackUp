@@ -61,6 +61,141 @@ namespace LMM06000FrontResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Billing Rule Code is required..
+        /// </summary>
+        internal static string _6001 {
+            get {
+                return ResourceManager.GetString("6001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Billing Rule Name is required..
+        /// </summary>
+        internal static string _6002 {
+            get {
+                return ResourceManager.GetString("6002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Charge Id Booking Fee is required..
+        /// </summary>
+        internal static string _6003 {
+            get {
+                return ResourceManager.GetString("6003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period Mode With Dp is required..
+        /// </summary>
+        internal static string _6004 {
+            get {
+                return ResourceManager.GetString("6004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Charge Id With DP is required..
+        /// </summary>
+        internal static string _6005 {
+            get {
+                return ResourceManager.GetString("6005", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period Mode Installment is required.
+        /// </summary>
+        internal static string _6006 {
+            get {
+                return ResourceManager.GetString("6006", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Charge Id Installment is required..
+        /// </summary>
+        internal static string _6007 {
+            get {
+                return ResourceManager.GetString("6007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min Value is required..
+        /// </summary>
+        internal static string _6008 {
+            get {
+                return ResourceManager.GetString("6008", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage DP + Percentage Bank Credit + Percentage Installment  must be equal to 100..
+        /// </summary>
+        internal static string _6009 {
+            get {
+                return ResourceManager.GetString("6009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage DP + Percentage Installment must be equal to 100..
+        /// </summary>
+        internal static string _6010 {
+            get {
+                return ResourceManager.GetString("6010", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage DP+ Percentage Bank Credit  must be equal to 100..
+        /// </summary>
+        internal static string _6011 {
+            get {
+                return ResourceManager.GetString("6011", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage Bank Credit + Percentage Installment must be equal to 100..
+        /// </summary>
+        internal static string _6012 {
+            get {
+                return ResourceManager.GetString("6012", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage Bank Credit must be equal to 100..
+        /// </summary>
+        internal static string _6013 {
+            get {
+                return ResourceManager.GetString("6013", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage Installment must be equal to 100..
+        /// </summary>
+        internal static string _6014 {
+            get {
+                return ResourceManager.GetString("6014", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage DP must be equal to 100..
+        /// </summary>
+        internal static string _6015 {
+            get {
+                return ResourceManager.GetString("6015", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         internal static string _Active {
@@ -115,7 +250,7 @@ namespace LMM06000FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Billing Rule Code.
+        ///   Looks up a localized string similar to Billing Rule Name.
         /// </summary>
         internal static string _ColumnBillingName {
             get {
@@ -246,78 +381,6 @@ namespace LMM06000FrontResources {
         internal static string _WithDp {
             get {
                 return ResourceManager.GetString("_WithDp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Billing Rule Code is required..
-        /// </summary>
-        internal static string Error_01 {
-            get {
-                return ResourceManager.GetString("Error_01", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Billing Rule Name is required..
-        /// </summary>
-        internal static string Error_02 {
-            get {
-                return ResourceManager.GetString("Error_02", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Charge Id Booking Fee is required..
-        /// </summary>
-        internal static string Error_03 {
-            get {
-                return ResourceManager.GetString("Error_03", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Period Mode With Dp is required..
-        /// </summary>
-        internal static string Error_04 {
-            get {
-                return ResourceManager.GetString("Error_04", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Charge Id With DP is required..
-        /// </summary>
-        internal static string Error_05 {
-            get {
-                return ResourceManager.GetString("Error_05", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Period Mode Installment is required.
-        /// </summary>
-        internal static string Error_06 {
-            get {
-                return ResourceManager.GetString("Error_06", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Charge Id Installment is required..
-        /// </summary>
-        internal static string Error_07 {
-            get {
-                return ResourceManager.GetString("Error_07", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Min Valueis required..
-        /// </summary>
-        internal static string Error_08 {
-            get {
-                return ResourceManager.GetString("Error_08", resourceCulture);
             }
         }
     }

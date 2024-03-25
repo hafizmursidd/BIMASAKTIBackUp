@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.R_RegisterServices(
-  // startup => { startup.R_DisableAuthentication(); }
+    startup => { startup.R_DisableAuthentication(); }
 );
 builder.Services.AddSingleton<R_ISymmetricProvider, R_SymmetricAESProvider>();
 

@@ -19,6 +19,7 @@ namespace GSM06500Model
         public GSM06500DTO PaymentOfTerm { get; set; } = new GSM06500DTO();
         public List<GSM06500PropertyDTO> PropertyList { get; set; } = new List<GSM06500PropertyDTO>();
         public string PropertyValueContext = "";
+        public bool _succesDelete;
 
         public async Task GetAllTermOfPaymentAsync()
         {
@@ -34,8 +35,7 @@ namespace GSM06500Model
             {
                 loException.Add(ex);
             }
-
-        EndBlock:
+            
             loException.ThrowExceptionIfErrors();
         }
 
@@ -62,6 +62,7 @@ namespace GSM06500Model
 
         public async Task DeleteTermOfPayment(GSM06500DTO poEntity)
         {
+            _succesDelete = false;
             var loEx = new R_Exception();
 
             try
@@ -76,6 +77,8 @@ namespace GSM06500Model
                     IPAY_TERM_DAYS = poEntity.IPAY_TERM_DAYS
                 };
                 await _model.R_ServiceDeleteAsync(loParam);
+                _succesDelete = true;
+
             }
             catch (Exception ex)
             {
@@ -112,7 +115,9 @@ namespace GSM06500Model
         public async Task<GSM06500DTO> SaveTermOfPayment(GSM06500DTO poNewEntity, R_eConductorMode peConductorMode)
         {
             var loEx = new R_Exception();
+#pragma warning disable CS8600
             GSM06500DTO loResult = null;
+#pragma warning restore CS8600
 
             try
             {
@@ -125,7 +130,9 @@ namespace GSM06500Model
                 loEx.Add(ex);
             }
             loEx.ThrowExceptionIfErrors();
+#pragma warning disable CS8603
             return loResult;
+#pragma warning restore CS8603
         }
 
         public void ValidationFieldEmpty(GSM06500DTO poEntity)

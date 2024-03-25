@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\FRONT\Lookup_APFRONT\Lookup_APFRONT.csproj" />
     <ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\FRONT\Lookup_GSFRONT\Lookup_GSFRONT.csproj" />
-    <ProjectReference Include="..\..\..\..\BS Shared Form\SOURCE\FRONT\Lookup_LMFRONT\Lookup_LMFRONT.csproj" />
     <ProjectReference Include="..\..\COMMON\AP\APT00100COMMON\APT00100COMMON.csproj" />
     <ProjectReference Include="..\APT00100MODEL\APT00100MODEL.csproj" />
   </ItemGroup>

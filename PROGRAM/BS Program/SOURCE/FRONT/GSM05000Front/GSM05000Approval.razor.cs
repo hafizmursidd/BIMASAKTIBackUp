@@ -43,7 +43,6 @@ namespace GSM05000Front;
 
                 await _gridRefDept.R_RefreshGrid(null);
                 await _gridRefApprover.R_RefreshGrid(null);
-                // await _gridRefApprover.AutoFitAllColumnsAsync();
                 //await _gridRefReplacement.R_RefreshGrid(null);
             }
             catch (Exception ex)
@@ -447,8 +446,7 @@ namespace GSM05000Front;
 
             loEx.ThrowExceptionIfErrors();
         }
-
-
+    
         private async Task SaveReplacement(R_ServiceSaveEventArgs eventArgs)
         {
             var loEx = new R_Exception();

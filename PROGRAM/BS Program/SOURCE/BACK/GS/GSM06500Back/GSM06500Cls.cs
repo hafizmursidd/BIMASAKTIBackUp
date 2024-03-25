@@ -6,22 +6,29 @@ using System.Data.Common;
 using System.Data;
 using GSM06500Common.Logs;
 using System;
+using RSP_GS_MAINTAIN_PAYMENT_TERMResources;
+using System.Diagnostics;
 
 namespace GSM06500Back
 {
 
     public class GSM06500Cls : R_BusinessObject<GSM06500DTO>
     {
+        Resources_Dummy_Class _loRSP = new();
+
         private LoggerGSM06500 _loggerGSM06500;
+        private readonly ActivitySource _activitySource;
         public GSM06500Cls()
         {
             //Initial and Get Logger
             _loggerGSM06500 = LoggerGSM06500.R_GetInstanceLogger();
+            _activitySource = GSM06500Activity.R_GetInstanceActivitySource();
         }
 
         protected override void R_Deleting(GSM06500DTO poEntity)
         {
             string lcMethodName = nameof(R_Deleting);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             var loException = new R_Exception();
@@ -75,6 +82,7 @@ namespace GSM06500Back
         protected override GSM06500DTO R_Display(GSM06500DTO poEntity)
         {
             string lcMethodName = nameof(R_Display);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -121,6 +129,7 @@ namespace GSM06500Back
         protected override void R_Saving(GSM06500DTO poNewEntity, eCRUDMode poCRUDMode)
         {
             string lcMethodName = nameof(R_Saving);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -201,6 +210,7 @@ namespace GSM06500Back
         public List<GSM06500DTO> TERM_OF_LIST(GSM06500DBParameter poParameter)
         {
             string lcMethodName = nameof(TERM_OF_LIST);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -246,6 +256,7 @@ namespace GSM06500Back
         public List<GSM06500PropertyDTO> GetAllPropertyList(GSM06500DBParameter poParameter)
         {
             string lcMethodName = nameof(GetAllPropertyList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGSM06500.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();

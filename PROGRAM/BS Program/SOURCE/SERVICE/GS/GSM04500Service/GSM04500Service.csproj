@@ -12,7 +12,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BACK\GS\GSM04500Back\GSM04500Back.csproj" />
+    <ProjectReference Include="..\..\..\COMMON\GS\GSM04500COMMON\GSM04500Common.csproj" />
   </ItemGroup>
+
 
 	<ItemGroup>
 		<Reference Include="R_APIBackEnd">
@@ -23,6 +25,9 @@
 		</Reference>
 		<Reference Include="R_CommonFrontBackAPI">
 			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_CommonFrontBackAPI.dll</HintPath>
+		</Reference>
+		<Reference Include="R_OpenTelemetry">
+			<HintPath>..\..\..\..\..\SYSTEM\SOURCE\LIBRARY\Back\R_OpenTelemetry.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 </Project>

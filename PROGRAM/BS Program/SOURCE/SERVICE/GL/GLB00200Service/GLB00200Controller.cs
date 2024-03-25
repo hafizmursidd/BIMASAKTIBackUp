@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using R_BackEnd;
 using R_Common;
 using R_CommonFrontBackAPI;
+using System.Diagnostics;
 
 namespace GLB00200Service
 {
@@ -14,10 +15,13 @@ namespace GLB00200Service
     public class GLB00200Controller : ControllerBase, IGLB00200
     {
         private LoggerGLB00200 _loggerGLB00200;
+        private readonly ActivitySource _activitySource;
         public GLB00200Controller(ILogger<GLB00200Controller> logger)
         {
             LoggerGLB00200.R_InitializeLogger(logger);
             _loggerGLB00200 = LoggerGLB00200.R_GetInstanceLogger();
+            _activitySource = GLB00200Activity.R_InitializeAndGetActivitySource(nameof(GLB00200Controller));
+
         }
         [HttpPost]
         public R_ServiceGetRecordResultDTO<GLB00200DTO> R_ServiceGetRecord(R_ServiceGetRecordParameterDTO<GLB00200DTO> poParameter)
@@ -38,6 +42,7 @@ namespace GLB00200Service
         public GLB00200InitalProcessDTO GetInitialProcess()
         {
             string lcMethodName = nameof(GetInitialProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
             R_Exception loException = new R_Exception();
             GLB00200DBParameter loDbParameter = new();
@@ -67,6 +72,7 @@ namespace GLB00200Service
         public GLB00200JournalDetailListDTO DetailReversingJournalProcessList(GLB00200DTO loParam)
         {
             string lcMethodName = nameof(DetailReversingJournalProcessList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
             
             R_Exception loException = new R_Exception();
@@ -102,6 +108,7 @@ namespace GLB00200Service
         public IAsyncEnumerable<GLB00200DTO> ReversingJournalProcessListStream()
         {
             string lcMethodName = nameof(ReversingJournalProcessListStream);
+              using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLB00200.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             R_Exception loException = new R_Exception();

@@ -11,6 +11,7 @@ using R_BackEnd;
 using R_Common;
 using GST00500Common.Logs;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace GST00500Service
 {
@@ -19,11 +20,13 @@ namespace GST00500Service
     public class GST00500DraftController : ControllerBase, IGST00500Draft
     {
         private LoggerGST00500 _loggerGST00500;
-
+        private readonly ActivitySource _activitySource;
         public GST00500DraftController(ILogger<GST00500DraftController> logger)
         {
             LoggerGST00500.R_InitializeLogger(logger);
             _loggerGST00500 = LoggerGST00500.R_GetInstanceLogger();
+            _activitySource = GST00500Activity.R_InitializeAndGetActivitySource(nameof(GST00500DraftController));
+
         }
 
         [HttpPost]
@@ -45,6 +48,7 @@ namespace GST00500Service
         public IAsyncEnumerable<GST00500DTO> ApprovalDraftListStream()
         {
             string lcMethodName = nameof(ApprovalDraftListStream);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGST00500.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
             var loEx = new R_Exception();

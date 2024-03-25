@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Lookup_LMBackResources": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63597;http://localhost:63598"
+    }
+  }
+}

@@ -9,16 +9,19 @@ using GLR00300Common.GLR00300Print;
 using System.Reflection.Metadata;
 using AutoMapper;
 using GLR00300Common.Logs;
+using System.Diagnostics;
 
 namespace GLR00300Back
 {
     public class GLR00300Cls
     {
         private LoggerGLR00300 _loggerGLR00300;
+        private readonly ActivitySource _activitySource;
         public GLR00300Cls()
         {
             //Initial and Get Logger
             _loggerGLR00300 = LoggerGLR00300.R_GetInstanceLogger();
+            _activitySource = GLR00300Activity.R_GetInstanceActivitySource();
         }
         //public GLR00300Cls(LoggerGLR00300 poLogger)
         //{
@@ -28,6 +31,7 @@ namespace GLR00300Back
         public GLR00300InitialProcess InitialProcess(GLR00300DBParameter poParameter)
         {
             string lcMethodName = nameof(InitialProcess);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -94,6 +98,7 @@ namespace GLR00300Back
         public List<GLR00300DTO> GetTrialBalanceTypeList(GLR00300DBParameter poParameter)
         {
             string lcMethodName = nameof(GetTrialBalanceTypeList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -135,6 +140,7 @@ namespace GLR00300Back
         public List<GLR00300DTO> GetPrintMethodTypeList(GLR00300DBParameter poParameter)
         {
             string lcMethodName = nameof(GetPrintMethodTypeList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -176,6 +182,7 @@ namespace GLR00300Back
         public List<GLR00300BudgetNoDTO> GetBudgetNoList(GLR00300DBParameter poParameter)
         {
             string lcMethodName = nameof(GetBudgetNoList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
             R_Exception loException = new R_Exception();
@@ -216,6 +223,7 @@ namespace GLR00300Back
         public List<GLR00300_DataDetail_AccountTrialBalance> GetAllTrialBalanceReportData(GLR00300ParamDBToGetReportDTO poParameter)
         {
             string lcMethodName = nameof(GetAllTrialBalanceReportData);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             List<GLR00300_DataDetail_AccountTrialBalance> loResult = null;
@@ -269,6 +277,7 @@ namespace GLR00300Back
         public List<GLR00300GetPeriod> GetPeriodList(GLR00300DBParameterDTO poParameter)
         {
             string lcMethodName = nameof(GetPeriodList);
+            using Activity activity = _activitySource.StartActivity(lcMethodName);
             _loggerGLR00300.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
             R_Exception loException = new R_Exception();
             List<GLR00300GetPeriod> loResult = null;

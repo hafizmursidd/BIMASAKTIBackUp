@@ -29,6 +29,8 @@
             Height="210px"
             R_Before_Open_Grid_Lookup="BeforeOpenLookUPGOA"
             R_After_Open_Grid_Lookup="AfterOpenLookGOA"
+            R_ServiceGetRecord="@R_ServiceGetRecordAsync"
+            R_ServiceSave="@ServiceSaveGOA"
             Enabled="@_gridEnabled">
         <R_GridColumns>
             <R_GridTextColumn Width="210px" FieldName="GROUPOFACCOUNT" 
@@ -66,12 +68,14 @@
             R_GridType="@R_eGridType.Original"
             R_ServiceGetListRecord="@GridGOADept_GetList"
             Pageable="true"
-            AllowDeleteRow="@JournalGOAViewModel.checking_ByDept"
-            AllowAddNewRow="@JournalGOAViewModel.checking_ByDept"
-            AllowEditRow="@JournalGOAViewModel.checking_ByDept"
+            AllowDeleteRow="@checking_ByDept"
+            AllowAddNewRow="@checking_ByDept"
+            AllowEditRow="@checking_ByDept"
             Height="230px"
             R_Before_Open_Grid_Lookup="BeforeOpenLookUpDeptCode"
-            R_After_Open_Grid_Lookup="AfterOpenLookUpDeptCode">
+            R_After_Open_Grid_Lookup="AfterOpenLookUpDeptCode"
+            R_ServiceGetRecord="R_ServiceGetRecordGOADeptAsync"
+            R_ServiceSave="@ServiceSaveGOADept">
 
         <R_GridColumns>
             <R_GroupBox Enabled="@JournalGOAViewModel.Data.LDEPARTMENT_MODE">
@@ -93,17 +97,9 @@
 </R_StackLayout>
 
 <R_ConductorGrid @ref="@_conJournalGOARef"
-                 R_ViewModel="@JournalGOAViewModel"
                  R_IsHeader
-                 R_Display="@Grid_Display"
-                 R_ServiceGetRecord="@R_ServiceGetRecordAsync"
-                 R_ServiceSave="@ServiceSaveGOA" 
-                />
+                 R_Display="@Grid_Display"/>
 
 <R_ConductorGrid @ref="@_conGOADeptRef"
-                 R_ViewModel="@GOADeptViewModel"
                  R_ConductorParent="_conJournalGOARef"
-                 R_ServiceGetRecord="R_ServiceGetRecordGOADeptAsync"
-                 R_ServiceSave="@ServiceSaveGOADept"
-                 R_AfterAdd="@ServiceAfterAdd" 
-                 R_SetOther="@ServiceSetOther"/>
+                 R_SetOther="@ServiceSetOther" />

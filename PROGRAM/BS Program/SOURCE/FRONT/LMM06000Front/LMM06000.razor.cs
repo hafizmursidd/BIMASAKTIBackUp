@@ -5,9 +5,11 @@ using LMM06000Common;
 using LMM06000Model.ViewModel;
 using Lookup_LMCOMMON.DTOs;
 using Lookup_LMFRONT;
+using Lookup_LMModel.ViewModel.LML00200;
 using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
+using R_BlazorFrontEnd.Controls.Enums;
 using R_BlazorFrontEnd.Controls.Events;
 using R_BlazorFrontEnd.Controls.MessageBox;
 using R_BlazorFrontEnd.Controls.Popup;
@@ -15,6 +17,7 @@ using R_BlazorFrontEnd.Enums;
 using R_BlazorFrontEnd.Exceptions;
 using R_BlazorFrontEnd.Helpers;
 using R_CommonFrontBackAPI;
+using R_LockingFront;
 
 namespace LMM06000Front
 {
@@ -88,7 +91,17 @@ namespace LMM06000Front
         private bool _gridEnabled = true;
         private void ServiceSetOther(R_SetEventArgs eventArgs)
         {
+            var temp = BillingRuleViewModel.UnitTypeList.Count();
+            if (BillingRuleViewModel.UnitTypeList.Count() < 1)
+            {
+                BillingRuleViewModel._IsButtonAddEnable = false;
+            }
+            else
+            {
+                BillingRuleViewModel._IsButtonAddEnable = (eventArgs.Enable);
+            }
             _gridEnabled = eventArgs.Enable;
+
         }
         #endregion
 
@@ -116,7 +129,7 @@ namespace LMM06000Front
                 if (!lbCheckbox)
                 {
                     BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID = "";
-                    BillingRuleViewModel.Data.CCHARGES_NAME = ""; 
+                    BillingRuleViewModel.Data.CCHARGES_NAME = "";
                     BillingRuleViewModel.Data.NMIN_BOOKING_FEE = 0;
                 }
                 //re assign value from user
@@ -143,7 +156,7 @@ namespace LMM06000Front
             bool lbCheckbox = (bool)poParam;
             try
             {
-              #region BankCredit
+                #region BankCredit
                 if ((BillingRuleViewModel.Data.IBANK_CREDIT_PERCENTAGE) != 0 ||
                     (BillingRuleViewModel.Data.IBANK_CREDIT_INTERVAL) != 0)
                 {
@@ -209,7 +222,7 @@ namespace LMM06000Front
                     BillingRuleViewModel.Data.CDP_CHARGE_NAME = "";
                 }
                 //re assign value from user
-                if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
+                else if (lbCheckbox && !BillingRuleViewModel._IsDataNull)
                 {
                     var loTempDt = BillingRuleViewModel.TemporaryBillingRuleDetail;
                     BillingRuleViewModel.Data.IDP_PERCENTAGE = loTempDt.IDP_PERCENTAGE;
@@ -234,7 +247,7 @@ namespace LMM06000Front
             bool lbCheckbox = (bool)poParam;
             try
             {
-               #region Installment
+                #region Installment
                 //when this group box have value
                 if (!string.IsNullOrEmpty(BillingRuleViewModel.Data.CINSTALLMENT_PERIOD_MODE) ||
                 !string.IsNullOrEmpty(BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID))
@@ -282,8 +295,8 @@ namespace LMM06000Front
 
         private async Task ServiceBeforeCancel(R_BeforeCancelEventArgs eventArgs)
         {
-            //disable when user click edit and edit, then user click cancel not save
-            BillingRuleViewModel._IsButtonAddEnable = true;
+            //disable when user click edit then user click cancel not save
+           ///1 BillingRuleViewModel._IsButtonAddEnable = true;
 
             BillingRuleViewModel._IsDataNull = true;
         }
@@ -299,15 +312,9 @@ namespace LMM06000Front
                 if (BillingRuleViewModel.UnitTypeList.Count() < 1)
                 {
                     //disable when, unit type didn't have data
-                    BillingRuleViewModel.UnitTypeValueContext = "";
                     BillingRuleViewModel._IsButtonAddEnable = false;
+                    BillingRuleViewModel.UnitTypeValueContext = "";
                     await _gridBillingRuleRef.R_RefreshGrid(null);
-                }
-                else
-                {
-                    BillingRuleViewModel._IsButtonAddEnable = true;
-                    //BillingRuleViewModel.UnitTypeValueContext = BillingRuleViewModel.UnitTypeList[0].CUNIT_TYPE_CATEGORY_ID;
-                    //await _gridBillingRuleRef.R_RefreshGrid(null);
                 }
             }
             catch (Exception ex)
@@ -322,9 +329,6 @@ namespace LMM06000Front
         {
             if (eventArgs.ConductorMode == R_eConductorMode.Normal)
             {
-                //Enable button add, when user click another unit type
-                BillingRuleViewModel._IsButtonAddEnable = true;
-
                 var loParam = (LMM06000UnitTypeDTO)eventArgs.Data;
                 BillingRuleViewModel.PropertyValueContext = loParam.CPROPERTY_ID;
                 BillingRuleViewModel.UnitTypeValueContext = loParam.CUNIT_TYPE_CATEGORY_ID;
@@ -427,6 +431,7 @@ namespace LMM06000Front
         #region BeforeLookup
         private R_Lookup R_Lookup_Unit_Charges_Button;
         //BEFORE LOOKUP INSTALLMENT DAN BOOKING FEE
+
         private void BeforeOpenLookUp_Unit_Charges(R_BeforeOpenLookupEventArgs eventArgs)
         {
 
@@ -439,16 +444,6 @@ namespace LMM06000Front
             };
             eventArgs.Parameter = param;
             eventArgs.TargetPageType = typeof(LML00200);
-
-            //var param = new LML00500ParameterDTO()
-            //{
-            //    CCOMPANY_ID = clientHelper.CompanyId,
-            //    CUSER_ID = clientHelper.UserId,
-            //    CPROPERTY_ID = "JBMPC"
-            //};
-            //eventArgs.Parameter = param;
-            //eventArgs.TargetPageType = typeof(LML00500);
-
         }
 
         //Before LookUp WITHDP
@@ -459,10 +454,143 @@ namespace LMM06000Front
                 CCOMPANY_ID = clientHelper.CompanyId,
                 CUSER_ID = clientHelper.UserId,
                 CPROPERTY_ID = BillingRuleViewModel.PropertyValueContext,
-                CCHARGE_TYPE_ID = "07"
+                CCHARGE_TYPE_ID = "02,06,07"
             };
             eventArgs.Parameter = param;
             eventArgs.TargetPageType = typeof(LML00200);
+        }
+
+        #endregion
+        #region OnLostFocus
+
+        private async Task LostFocusLookupBooking()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = BillingRuleViewModel.Data;
+                if (!string.IsNullOrWhiteSpace(loGetData.CBOOKING_FEE_CHARGE_ID))
+                {
+                    LookupLML00200ViewModel loLookupViewModel = new LookupLML00200ViewModel();
+                    var param = new LML00200ParameterDTO
+                    {
+                        CCOMPANY_ID = clientHelper.CompanyId,
+                        CPROPERTY_ID = BillingRuleViewModel.PropertyValueContext,
+                        CUSER_ID = clientHelper.UserId,
+                        CCHARGE_TYPE_ID = "",
+                        CSEARCH_TEXT = BillingRuleViewModel.Data.CBOOKING_FEE_CHARGE_ID!,
+                    };
+                    var loResult = await loLookupViewModel.GetUnitCharges(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(LookupLMFrontResources.Resources_LookupLM_Class),
+                                "_ErrLookup01"));
+                        loGetData.CBOOKING_FEE_CHARGE_ID = "";
+                        loGetData.CCHARGES_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CBOOKING_FEE_CHARGE_ID = loResult.CCHARGES_ID;
+                        loGetData.CCHARGES_NAME = loResult.CCHARGES_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task LostFocusLookupDP()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = BillingRuleViewModel.Data;
+
+                if (!string.IsNullOrWhiteSpace(loGetData.CDP_CHARGE_ID))
+                {
+                    LookupLML00200ViewModel loLookupViewModel = new LookupLML00200ViewModel();
+                    var param = new LML00200ParameterDTO
+                    {
+                        CCOMPANY_ID = clientHelper.CompanyId,
+                        CPROPERTY_ID = BillingRuleViewModel.PropertyValueContext,
+                        CUSER_ID = clientHelper.UserId,
+                        CCHARGE_TYPE_ID = "02,06,07",
+                        CSEARCH_TEXT = BillingRuleViewModel.Data.CDP_CHARGE_ID!,
+                    };
+                    var loResult = await loLookupViewModel.GetUnitCharges(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(LookupLMFrontResources.Resources_LookupLM_Class),
+                                "_ErrLookup01"));
+                        loGetData.CDP_CHARGE_ID = "";
+                        loGetData.CDP_CHARGE_NAME = "";
+                        //await GLAccount_TextBox.FocusAsync();
+                    }
+                    else
+                    {
+                        loGetData.CDP_CHARGE_ID = loResult.CCHARGES_ID;
+                        loGetData.CDP_CHARGE_NAME = loResult.CCHARGES_NAME;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+        private async Task LostFocusLookupInstallment()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                var loGetData = BillingRuleViewModel.Data;
+                if (!string.IsNullOrWhiteSpace(loGetData.CINSTALLMENT_CHARGE_ID))
+                {
+                    LookupLML00200ViewModel loLookupViewModel = new LookupLML00200ViewModel();
+                    var param = new LML00200ParameterDTO
+                    {
+                        CCOMPANY_ID = clientHelper.CompanyId,
+                        CPROPERTY_ID = BillingRuleViewModel.PropertyValueContext,
+                        CUSER_ID = clientHelper.UserId,
+                        CCHARGE_TYPE_ID = "",
+                        CSEARCH_TEXT = BillingRuleViewModel.Data.CINSTALLMENT_CHARGE_ID!,
+                    };
+                    var loResult = await loLookupViewModel.GetUnitCharges(param);
+
+                    if (loResult == null)
+                    {
+                        loEx.Add(R_FrontUtility.R_GetError(
+                                typeof(LookupLMFrontResources.Resources_LookupLM_Class),
+                                "_ErrLookup01"));
+                        loGetData.CINSTALLMENT_CHARGE_ID = "";
+                        loGetData.CINSTALLMENT_CHARGE_NAME = "";
+                    }
+                    else
+                    {
+                        loGetData.CINSTALLMENT_CHARGE_ID = loResult.CCHARGES_ID;
+                        loGetData.CINSTALLMENT_CHARGE_NAME = loResult.CCHARGES_NAME;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
         }
 
         #endregion
@@ -510,6 +638,8 @@ namespace LMM06000Front
         }
         #endregion
 
+
+
         #region ADD and Edit
         private async Task AfterAdd(R_AfterAddEventArgs eventArgs)
         {
@@ -531,23 +661,12 @@ namespace LMM06000Front
                 CINSTALLMENT_PERIOD_MODE = "",
                 LBANK_CREDIT = false
             };
-            //disable button add when user click add
-            BillingRuleViewModel._IsButtonAddEnable = false;
             // Focus Async
             await FocusLabelAdd.FocusAsync();
 
         }
-        private async Task ServiceBeforeEdit(R_BeforeEditEventArgs eventArgs)
-        {
 
-            //disable button add when user click edit
-            BillingRuleViewModel._IsButtonAddEnable = false;
-        }
-        private async Task ServiceAfterSave(R_AfterSaveEventArgs eventArgs)
-        {
-            //disable button add when user click edit
-            BillingRuleViewModel._IsButtonAddEnable = true;
-        }
+  
         private async Task ServiceSaving(R_SavingEventArgs eventArgs)
         {
             var loEx = new R_Exception();
@@ -611,8 +730,9 @@ namespace LMM06000Front
             LMM06000BillingRuleDetailDTO loData = null;
             try
             {
+                var loCurrentData = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
                 //Validation field from user
-                BillingRuleViewModel.ValidationFieldEmpty((LMM06000BillingRuleDetailDTO)eventArgs.Data);
+                BillingRuleViewModel.ValidationFieldEmpty(loCurrentData);
 
                 if (!loEx.HasError)
                 {
@@ -638,7 +758,7 @@ namespace LMM06000Front
                                     IAPPROVAL_CODE = "LMM06001"
                                 };
                                 loResult = await PopupService.Show(typeof(GFF00900FRONT.GFF00900), loParamPopup);
-                                
+
                                 if (loResult.Success == false || (bool)loResult.Result == false)
                                 {
                                     eventArgs.Cancel = true;
@@ -745,40 +865,57 @@ namespace LMM06000Front
             }
             loException.ThrowExceptionIfErrors();
         }
+        #endregion
 
-
-        /*
-        public async Task Conductor_BeforeAdd(R_BeforeAddEventArgs eventArgs)
+        #region UserLocking
+        private const string DEFAULT_HTTP_NAME = "R_DefaultServiceUrl";
+        private const string DEFAULT_MODULE_NAME = "LM";
+        protected async override Task<bool> R_LockUnlock(R_LockUnlockEventArgs eventArgs)
         {
             var loEx = new R_Exception();
-            GFF00900ParameterDTO loParam = null;
-            R_PopupResult loResult = null;
+            var llRtn = false;
+            R_LockingFrontResult loLockResult = null;
+
             try
             {
-                if (BillingRuleViewModel.CrateTime < DateTime.Today)
+                var loData = (LMM06000BillingRuleDetailDTO)eventArgs.Data;
+
+                var loCls = new R_LockingServiceClient(pcModuleName: DEFAULT_MODULE_NAME,
+                    plSendWithContext: true,
+                    plSendWithToken: true,
+                    pcHttpClientName: DEFAULT_HTTP_NAME);
+
+                if (eventArgs.Mode == R_eLockUnlock.Lock)
                 {
-                    var loValidateViewModel = new GFF00900Model.ViewModel.GFF00900ViewModel();
-                    loValidateViewModel.ACTIVATE_INACTIVE_ACTIVITY_CODE = "GSM05501"; //Uabh Approval Code sesuai Spec masing masing
-                    await loValidateViewModel.RSP_ACTIVITY_VALIDITYMethodAsync(); //Jika IAPPROVAL_CODE == 3, maka akan keluar RSP_ERROR disini
-
-                    //Jika Approval User ALL dan Approval Code 1, maka akan langsung menjalankan ActiveInactive
-                    if (loValidateViewModel.loRspActivityValidityList.FirstOrDefault().CAPPROVAL_USER == "ALL" && loValidateViewModel.loRspActivityValidityResult.Data.FirstOrDefault().IAPPROVAL_MODE == 1)
+                    var loLockPar = new R_ServiceLockingLockParameterDTO
                     {
-                        eventArgs.Cancel = false;
-                    }
-                    else //Disini Approval Code yang didapat adalah 2, yang berarti Active Inactive akan dijalankan jika User yang diinput ada di RSP_ACTIVITY_VALIDITY
-                    {
-                        loParam = new GFF00900ParameterDTO()
-                        {
-                            Data = loValidateViewModel.loRspActivityValidityList,
-                            IAPPROVAL_CODE = "GSM05501" //Uabh Approval Code sesuai Spec masing masing
-                        };
-                        loResult = await PopupService.Show(typeof(GFF00900FRONT.GFF00900), loParam);
-                        eventArgs.Cancel = !(bool)loResult.Result;
-                    }
 
+                        Company_Id = clientHelper.CompanyId,
+                        User_Id = clientHelper.UserId,
+                        Program_Id = "LMM06000",
+                        Table_Name = "LMM_BILLING_RULE",
+                        Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CUNIT_TYPE_CATEGORY_ID, loData.CBILLING_RULE_CODE)
+                    };
+
+                    loLockResult = await loCls.R_Lock(loLockPar);
+                }
+                else
+                {
+                    var loUnlockPar = new R_ServiceLockingUnLockParameterDTO
+                    {
+                        Company_Id = clientHelper.CompanyId,
+                        User_Id = clientHelper.UserId,
+                        Program_Id = "LMM06000",
+                        Table_Name = "LMM_BILLING_RULE",
+                        Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CUNIT_TYPE_CATEGORY_ID, loData.CBILLING_RULE_CODE)
+                    };
+
+                    loLockResult = await loCls.R_UnLock(loUnlockPar);
                 }
 
+                llRtn = loLockResult.IsSuccess;
+                if (!loLockResult.IsSuccess && loLockResult.Exception != null)
+                    throw loLockResult.Exception;
             }
             catch (Exception ex)
             {
@@ -786,8 +923,9 @@ namespace LMM06000Front
             }
 
             loEx.ThrowExceptionIfErrors();
+
+            return llRtn;
         }
-        */
         #endregion
     }
 }

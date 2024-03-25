@@ -196,7 +196,7 @@ namespace GLB00200FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Journal Period :.
+        ///   Looks up a localized string similar to Journal Period.
         /// </summary>
         internal static string _JournalPeriod {
             get {
@@ -241,7 +241,7 @@ namespace GLB00200FrontResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference No.:.
+        ///   Looks up a localized string similar to Reference No..
         /// </summary>
         internal static string _ReferenceNo {
             get {

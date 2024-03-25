@@ -228,7 +228,11 @@ namespace GSM05000Model.ViewModel
                 // var loReturn = await _Model.DepartmentChangeSequenceModel(loParams);
                 var loReturn = await _Model.DepartmentChangeSequenceModelStream(loParams);
                 // DeptSeqList = loReturn.Data;
-                DeptSeqList = loReturn;
+                if (loReturn.Count>1)
+                {
+                    DepartmentEntity = loReturn.FirstOrDefault();
+                    DeptSeqList = loReturn;
+                }
             }
             catch (Exception ex)
             {

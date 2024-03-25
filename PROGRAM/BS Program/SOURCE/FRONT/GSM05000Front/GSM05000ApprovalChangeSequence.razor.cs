@@ -27,6 +27,8 @@ public partial class GSM05000ApprovalChangeSequence : R_Page
             var loArgs = (string)poParameter;
             _viewModel.ApproverEntity.CTRANS_CODE = loArgs;
             await _viewModel.GetDeptSeqList(loArgs);
+
+            await _grid.R_RefreshGrid(_viewModel.DepartmentEntity.CDEPT_CODE);
         }
         catch (Exception ex)
         {
@@ -81,14 +83,14 @@ public partial class GSM05000ApprovalChangeSequence : R_Page
     private async Task OnClickNext()
     {
         var loData = _grid.CurrentSelectedData;
-        await _viewModel.SwapUpSeqMethod(poBtnClick: GetBtnClickUpOrDown.Up, loData);
+        await _viewModel.SwapUpSeqMethod(poBtnClick:GetBtnClickUpOrDown.Up, poSelectedData : loData);
         await _grid.R_MoveToNextRow();
     }
 
     private async Task OnClickPrevious()
     {
         var loData = _grid.CurrentSelectedData;
-        await _viewModel.SwapUpSeqMethod(poBtnClick: GetBtnClickUpOrDown.Down, loData);
+        await _viewModel.SwapUpSeqMethod(poBtnClick: GetBtnClickUpOrDown.Down, poSelectedData:loData);
         await _grid.R_MoveToPreviousRow();
     }
 
@@ -110,6 +112,7 @@ public partial class GSM05000ApprovalChangeSequence : R_Page
         try
         {
             var loData = (List<GSM05000ApprovalUserDTO>)eventArgs.Data;
+            //mendambahkan index dari list yang ada sehingga dimulai dari 1 bukan 0
             loData.Select(x => x.ISEQUENCE = (loData.IndexOf(x) + 1)).ToList();
         }
         catch (Exception ex)

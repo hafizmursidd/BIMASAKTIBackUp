@@ -20,9 +20,8 @@ namespace GSM04500Model
 
         public GSM04500DTO CurrentJournalGroup = new GSM04500DTO();
         public GSM04510GOADTO CurrentGOA  = new GSM04510GOADTO();
-        public bool ButtonAddOnGOA_Dept=true;
 
-        public bool checking_ByDept = false;
+       
 
         public async Task GetAllJournalGrupGOAAsync( string lcPropertyId, string lcJournalGRPType, string lcJournalGRPCode)
         {
