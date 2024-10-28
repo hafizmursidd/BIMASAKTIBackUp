@@ -283,7 +283,29 @@ namespace GLB00200Front
             loEx.ThrowExceptionIfErrors();
         }
         #endregion
+        #region OnLostFocus
 
+        private async Task SetToDefaultValue()
+        {
+            var loEx = new R_Exception();
+
+            try
+            {
+                //var loGetData = _viewModelGLB00200.PeriodYear;
+                if (_viewModelGLB00200.PeriodYear < _viewModelGLB00200.GetInitialProcess.IMIN_YEAR)
+                {
+                    _viewModelGLB00200.PeriodYear = _viewModelGLB00200.GetInitialProcess.IMIN_YEAR;
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayException(loEx);
+        }
+
+        #endregion
         #region Validation to Background red
         private void R_RowForBackGround(R_GridRowRenderEventArgs eventArgs)
         {

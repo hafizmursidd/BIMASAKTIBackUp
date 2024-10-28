@@ -6,8 +6,7 @@ namespace Lookup_LMCOMMON
 {
     public interface IPublicLookupLM
     {
-        IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList();
-        IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList();
+       IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList();
         IAsyncEnumerable<LML00300DTO> LML00300SupervisorList();
         IAsyncEnumerable<LML00400DTO> LML00400UtilityChargesList();
         IAsyncEnumerable<LML00500DTO> LML00500SalesmanList();

@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\COMMON\GL\GLR00300Common\GLR00300Common.csproj" />
     <ProjectReference Include="..\GLR00300FrontResources\GLR00300FrontResources.csproj" />
   </ItemGroup>
 

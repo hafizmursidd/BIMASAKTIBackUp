@@ -203,25 +203,25 @@ public partial class LMT01500UnitInfo_Utilities
     private void BeforeOpenLookUp_Tax(R_BeforeOpenLookupEventArgs eventArgs)
     {
 
-        var param = new LML00100ParameterDTO()
-        {
-            CCOMPANY_ID = _clientHelper.CompanyId,
-            CUSER_ID = _clientHelper.UserId
-        };
-        eventArgs.Parameter = param;
-        eventArgs.TargetPageType = typeof(LML00100);
+        //var param = new LML00100ParameterDTO()
+        //{
+        //    CCOMPANY_ID = _clientHelper.CompanyId,
+        //    CUSER_ID = _clientHelper.UserId
+        //};
+        //eventArgs.Parameter = param;
+        //eventArgs.TargetPageType = typeof(LML00100);
 
     }
     private void AfterOpenLookUp_Tax(R_AfterOpenLookupEventArgs eventArgs)
     {
-        var loTempResult = (LML00100DTO)eventArgs.Result;
-        if (loTempResult == null)
-            return;
+        //var loTempResult = (LML00100DTO)eventArgs.Result;
+        //if (loTempResult == null)
+        //    return;
 
-        var loGetData = (LMT01500UnitInfoUnit_UtilitiesDetailDTO)_conductorUnitInfo_Utilities.R_GetCurrentData();
+        //var loGetData = (LMT01500UnitInfoUnit_UtilitiesDetailDTO)_conductorUnitInfo_Utilities.R_GetCurrentData();
 
-        loGetData.CTAX_ID = loTempResult.CTAX_ID;
-        loGetData.CTAX_NAME = loTempResult.CTAX_NAME;
+        //loGetData.CTAX_ID = loTempResult.CTAX_ID;
+        //loGetData.CTAX_NAME = loTempResult.CTAX_NAME;
 
     }
     #endregion

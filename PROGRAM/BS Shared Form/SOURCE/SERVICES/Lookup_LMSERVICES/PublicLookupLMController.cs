@@ -24,40 +24,7 @@ namespace Lookup_LMSERVICES
             _loggerLookup = LoggerLookupLM.R_GetInstanceLogger();
             _activitySource = LookupLMActivity.R_InitializeAndGetActivitySource(nameof(PublicLookupLMController));
         }
-        [HttpPost]
-        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList()
-        {
-            string lcMethodName = nameof(LML00100GetSalesTaxList);
-            using Activity activity = _activitySource.StartActivity(lcMethodName);
-            _loggerLookup.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
-
-            var loEx = new R_Exception();
-            IAsyncEnumerable<LML00100DTO> loRtn = null;
-            List<LML00100DTO> loReturnTemp;
-            LML00100ParameterDTO poParameter = null;
-            try
-            {
-                var loCls = new PublicLookupLMCls();
-                poParameter = new LML00100ParameterDTO();
-                poParameter.CCOMPANY_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CCOMPANY_ID);
-                poParameter.CUSER_ID = R_Utility.R_GetStreamingContext<string>(ContextConstantPublicLookup.CUSER_ID);
-               
-                _loggerLookup.LogInfo(string.Format("Get Parameter {0} on Controller", lcMethodName));
-                _loggerLookup.LogDebug("DbParameter {@Parameter} ", poParameter);
-                _loggerLookup.LogInfo("Call method GetAllSalesTax");
-
-                loReturnTemp = loCls.GetAllSalesTax(poParameter);
-                loRtn = GetStreaming(loReturnTemp);
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-            loEx.ThrowExceptionIfErrors();
-            _loggerLookup.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
-            return loRtn;
-        }
- 
+        
         [HttpPost]
         public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList()
         {

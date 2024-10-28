@@ -17,7 +17,7 @@
         public string CDEPOSIT_NAME { get; set; }
         public string CDEPOSIT_DATE { get; set; }
         public string CLOCAL_CURRENCY { get; set; }
-        public decimal CDEPOSIT_AMT { get; set; }
+        public decimal NDEPOSIT_AMT { get; set; }
         public decimal NBASE_RATE_AMOUNT { get; set; }
         public decimal NCURRENCY_RATE_AMOUNT { get; set; }
         public decimal NREMAINING_AMOUNT { get; set; }

@@ -19,7 +19,7 @@ namespace LMT05500Common.DTO
         public string CDEPOSIT_NAME { get; set; }
         public DateTime DDEPOSIT_DATE { get; set; } = DateTime.Now;
         public string CLOCAL_CURRENCY { get; set; }
-        public decimal CDEPOSIT_AMT { get; set; }
+        public decimal NDEPOSIT_AMT { get; set; }
         public decimal NBASE_RATE_AMOUNT { get; set; }
         public decimal NCURRENCY_RATE_AMOUNT { get; set; }
         public decimal NREMAINING_AMOUNT { get; set; }

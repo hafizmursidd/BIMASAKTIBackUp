@@ -7,10 +7,10 @@ namespace LMT05500Common.DTO
     {
         public string CUNIT_ID { get; set; }
         public string CFLOOR_ID { get; set; }
-        public string CUNIT_TYPE { get; set; }
-        public decimal NGROSS_AREA { get; set; }
-        public decimal NNET_AREA { get; set; }
-        public decimal NCOMMON_AREA { get; set; }
+        public string CUNIT_TYPE_ID { get; set; }
+        public decimal NGROSS_AREA_SIZE { get; set; }
+        public decimal NNET_AREA_SIZE { get; set; }
+        public decimal NCOMMON_AREA_SIZE { get; set; }
 
     }
 }

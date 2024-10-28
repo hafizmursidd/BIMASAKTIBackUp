@@ -1,5 +1,7 @@
-﻿using LMT05500Common.DTO;
+﻿using BlazorClientHelper;
+using LMT05500Common.DTO;
 using LMT05500Model.ViewModel;
+using Microsoft.AspNetCore.Components;
 using R_BlazorFrontEnd.Controls;
 using R_BlazorFrontEnd.Controls.DataControls;
 using R_BlazorFrontEnd.Controls.Events;
@@ -28,18 +30,18 @@ namespace LMT05500Front
         private bool _buttonView;
         private bool _buttonOnDepositGrid;
         private bool _pageDepositOnCRUDmode;
-
+        [Inject] private IClientHelper _clientHelper { get; set; }
         protected override async Task R_Init_From_Master(object poParameter)
         {
             var loEx = new R_Exception();
             try
             {
-                //var loParam = (LMT05500AgreementDTO)poParameter;
+                var loParam = (LMT05500AgreementDTO)poParameter;
                 if ((LMT05500AgreementDTO)poParameter != null)
                 {
                     _depositViewModel._currentDataAgreement = (LMT05500AgreementDTO)poParameter;
 
-                    await R_ServiceHeaderRecord(null);
+                    await R_ServiceHeaderRecord((LMT05500AgreementDTO)poParameter);
                     _gridDepositRef.R_RefreshGrid(null);
                 }
                 else
@@ -49,6 +51,7 @@ namespace LMT05500Front
                     _depositViewModel._currentDataAgreement.CTRANS_CODE = "";
                     _depositViewModel._currentDataAgreement.CREF_NO = "";
                 }
+                var temp = _depositViewModel._headerDeposit;
 
             }
             catch (Exception ex)
@@ -60,13 +63,14 @@ namespace LMT05500Front
         }
 
         #region HeaderDeposit
-        private async Task R_ServiceHeaderRecord(R_ServiceGetListRecordEventArgs eventArgs)
+        private async Task R_ServiceHeaderRecord(LMT05500AgreementDTO poParameter)
         {
             var loEx = new R_Exception();
             try
             {
-                await _depositViewModel.GetHeaderDeposit();
-                eventArgs.ListEntityResult = _depositViewModel._headerDeposit;
+                poParameter.CCOMPANY_ID = _clientHelper.CompanyId;
+                poParameter.CUSER_ID = _clientHelper.UserId;
+                await _depositViewModel.GetHeaderDeposit(poParameter);
             }
             catch (Exception ex)
             {
@@ -90,13 +94,13 @@ namespace LMT05500Front
                 {
                     _buttonOnDepositGrid = true;
                     _depositViewModel._currentDeposit = _depositViewModel._depositList[0];
+                    await _gridDepositDetailRef.R_RefreshGrid(null);
                 }
                 else
                 {
                     _buttonOnDepositGrid = false;
-                    _depositViewModel._currentDeposit = null;
+                    _depositViewModel._depositDetailList.Clear();
                 }
-                await _gridDepositDetailRef.R_RefreshGrid(null);
             }
             catch (Exception ex)
             {
@@ -128,7 +132,6 @@ namespace LMT05500Front
                 var temp = _depositViewModel._currentDeposit;
                 await _depositViewModel.GetAllDepositDetailList();
                 eventArgs.ListEntityResult = _depositViewModel._depositDetailList;
-
                 if (_depositViewModel._depositDetailList.Count > 0)
                 {
                     _buttonView = true;
@@ -147,16 +150,6 @@ namespace LMT05500Front
 
             loEx.ThrowExceptionIfErrors();
         }
-        /*
-        private async Task Grid_DisplayDetailDeposit(R_DisplayEventArgs eventArgs)
-        {
-            if (eventArgs.ConductorMode == R_eConductorMode.Normal)
-            {
-                var loParam = (LMT05500DepositDetailListDTO)eventArgs.Data;
-                _depositViewModel._currentDepositDetail = loParam;
-            }
-        }
-*/
         #endregion
 
         #region BtnView

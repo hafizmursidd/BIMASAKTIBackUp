@@ -36,7 +36,7 @@ namespace LMM06000Back
             R_Db loDb;
             try
             {
-                var lcQuery = "RSP_LM_GET_STRATA_BILLING_RULE_DT";
+                var lcQuery = "RSP_PM_GET_STRATA_BILLING_RULE_DT";
                 loDb = new R_Db();
                 var loCommand = loDb.GetCommand();
                 var loConn = loDb.GetConnection();
@@ -100,7 +100,7 @@ namespace LMM06000Back
                     default:
                         break;
                 }
-                lcQuery = "RSP_LM_MAINTAIN_STRATA_BILLING_RULE";
+                lcQuery = "RSP_PM_MAINTAIN_STRATA_BILLING_RULE";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -192,7 +192,7 @@ namespace LMM06000Back
                 loCommand = loDb.GetCommand();
                 string lcAction = "DELETE";
 
-                var lcQuery = "RSP_LM_MAINTAIN_STRATA_BILLING_RULE";
+                var lcQuery = "RSP_PM_MAINTAIN_STRATA_BILLING_RULE";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -269,7 +269,7 @@ namespace LMM06000Back
                 loDb = new R_Db();
                 var loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                var lcQuery = @"RSP_LM_GET_STRATA_BILLING_RULE_LIST";
+                var lcQuery = @"RSP_PM_GET_STRATA_BILLING_RULE_LIST";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -453,7 +453,7 @@ namespace LMM06000Back
                 loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
 
-                lcQuery = "RSP_LM_ACTIVE_INACTIVE_UNIT_TYPE_BILLING_RULE";
+                lcQuery = "RSP_PM_ACTIVE_INACTIVE_UNIT_TYPE_BILLING_RULE";
                 loCommand.CommandType = CommandType.StoredProcedure;
                 loCommand.CommandText = lcQuery;
 

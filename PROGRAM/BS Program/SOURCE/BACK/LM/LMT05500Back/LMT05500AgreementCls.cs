@@ -38,7 +38,7 @@ namespace LMT05500Back
                 loDb = new();
                 DbConnection? loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                lcQuery = "RSP_PM_GET_AGREEMENT_DEPOSIT_LIST";
+                lcQuery = "RSP_PM_GET_AGREEMENT_LIST";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -46,15 +46,6 @@ namespace LMT05500Back
                 loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poParameter.CPROPERTY_ID);
                 loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 8, poParameter.CUSER_ID);
 
-                loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 20,"");
-                loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 20, "");
-                loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 20, "");
-
-                /*
-                @CDEPT_CODE = 'ACC',
-                @CTRANS_CODE = '802030',
-                @CREF_NO = 'REF_20022024'
-                 */
                 var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                     .Where(x => x != null && x.ParameterName.StartsWith("@"))
                     .ToDictionary(x => x.ParameterName, x => x.Value);
@@ -95,7 +86,7 @@ namespace LMT05500Back
                 loDb = new();
                 DbConnection? loConn = loDb.GetConnection();
                 loCommand = loDb.GetCommand();
-                lcQuery = "RSP_PM_GET_DEPOSIT_UNIT_LIST";
+                lcQuery = "RSP_PM_GET_AGREEMENT_UNIT_INFO_LIST";
                 loCommand.CommandText = lcQuery;
                 loCommand.CommandType = CommandType.StoredProcedure;
 

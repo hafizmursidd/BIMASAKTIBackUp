@@ -31,38 +31,7 @@ namespace Lookup_LMSERVICES
             _loggerLookup = LoggerLookupLM.R_GetInstanceLogger();
             _activitySource = LookupLMActivity.R_InitializeAndGetActivitySource(nameof(PublicLookupLMGetRecordController));
         }
-        [HttpPost]
-        public LMLGenericRecord<LML00100DTO> LML00100GetSalesTax(LML00100ParameterDTO poParam)
-        {
-            string lcMethodName = nameof(LML00100GetSalesTax);
-            using Activity activity = _activitySource.StartActivity(lcMethodName);
-            _loggerLookup.LogInfo(string.Format("START process method {0} on Controller", lcMethodName));
 
-            var loEx = new R_Exception();
-            LMLGenericRecord<LML00100DTO> loReturn = new();
-            try
-            {
-                var loCls = new PublicLookupLMCls();
-                _loggerLookup.LogInfo("Call method GetAllSalesTax");
-                var loTempList = loCls.GetAllSalesTax(poParam);
-
-                _loggerLookup.LogInfo("Filter Search by text Sales Tax");
-#pragma warning disable CS8601 // Possible null reference assignment.
-                loReturn.Data = loTempList.Find(x => x.CTAX_ID.Equals(poParam.CSEARCH_TEXT.Trim(), StringComparison.OrdinalIgnoreCase));
-                //   loReturn.Data = loTempList.Find(x => x.CTAX_ID == poParam.CSEARCH_TEXT.Trim());
-#pragma warning restore CS8601 // Possible null reference assignment.
-
-            }
-            catch (Exception ex)
-            {
-
-                loEx.Add(ex);
-                _loggerLookup.LogError(loEx);
-            }
-            loEx.ThrowExceptionIfErrors();
-            _loggerLookup.LogInfo(string.Format("END process method {0} on Controller", lcMethodName));
-            return loReturn;
-        }
         [HttpPost]
         public LMLGenericRecord<LML00200DTO> LML00200UnitCharges(LML00200ParameterDTO poParam)
         {

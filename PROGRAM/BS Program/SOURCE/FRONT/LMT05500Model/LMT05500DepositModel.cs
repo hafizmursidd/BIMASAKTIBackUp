@@ -26,7 +26,7 @@ namespace LMT05500Model
         }
 
         #region implementsLibrary
-        public LMT05500DepositHeaderDTO DepositHeader()
+        public LMT05500DepositHeaderDTO DepositHeader(LMT05500DBParameter poParam)
         {
             throw new NotImplementedException();
         }
@@ -42,16 +42,17 @@ namespace LMT05500Model
         }
         #endregion
 
-        public async Task<LMT05500DepositHeaderDTO> GetDepositHeaderAsyncModel()
+        public async Task<LMT05500DepositHeaderDTO> GetDepositHeaderAsyncModel(LMT05500DBParameter poParam)
         {
             var loEx = new R_Exception();
             LMT05500DepositHeaderDTO loResult = new LMT05500DepositHeaderDTO();
             try
             {
                 R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                loResult = await R_HTTPClientWrapper.R_APIRequestObject<LMT05500DepositHeaderDTO>(
+                loResult = await R_HTTPClientWrapper.R_APIRequestObject<LMT05500DepositHeaderDTO,LMT05500DBParameter > (
                     _RequestServiceEndPoint,
                     nameof(ILMT05500Deposit.DepositHeader),
+                    poParam,
                     DEFAULT_MODULE,
                     _SendWithContext,
                     _SendWithToken);

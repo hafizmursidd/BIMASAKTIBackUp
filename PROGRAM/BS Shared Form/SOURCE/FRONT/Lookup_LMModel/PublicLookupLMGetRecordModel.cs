@@ -26,10 +26,6 @@ namespace Lookup_LMModel
         {
         }
         #region ImplementsLibrary
-        public  LMLGenericRecord<LML00100DTO> LML00100GetSalesTax(LML00100ParameterDTO poParam)
-        {
-            throw new NotImplementedException();
-        }
 
         public LMLGenericRecord<LML00200DTO> LML00200UnitCharges(LML00200ParameterDTO poParam)
         {
@@ -62,37 +58,6 @@ namespace Lookup_LMModel
         }
         #endregion
 
-        #region LML00100GetRecord
-        public async Task<LML00100DTO> LML00100GetSalesTaxAsync(LML00100ParameterDTO poParam)
-        {
-
-            var loEx = new R_Exception();
-            LML00100DTO loResult = null;
-
-            try
-            {
-                R_HTTPClientWrapper.httpClientName = _HttpClientName;
-
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestObject<LMLGenericRecord<LML00100DTO>, LML00100ParameterDTO>(
-                    _RequestServiceEndPoint,
-                    nameof(IGetRecordLookupLM.LML00100GetSalesTax),
-                    poParam,
-                    DEFAULT_MODULE,
-                    _SendWithContext,
-                    _SendWithToken);
-
-                loResult = loTempResult.Data;
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            loEx.ThrowExceptionIfErrors();
-
-            return loResult;
-        }
-        #endregion
 
 
         #region LML00200GetRecord

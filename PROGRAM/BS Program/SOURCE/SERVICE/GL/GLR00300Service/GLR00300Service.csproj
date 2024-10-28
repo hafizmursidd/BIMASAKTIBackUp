@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\BACK\GL\GLR00300Back\GLR00300Back.csproj" />
+	  <ProjectReference Include="..\..\..\BACK\GL\GL_SPR\BaseHeaderResources\BaseHeaderResources\BaseHeaderResources.csproj" />
 	  <ProjectReference Include="..\..\..\COMMON\GL\GLR00300Common\GLR00300Common.csproj" />
 	</ItemGroup>
 

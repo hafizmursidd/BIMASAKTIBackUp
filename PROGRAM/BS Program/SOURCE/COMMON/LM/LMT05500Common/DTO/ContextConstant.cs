@@ -10,5 +10,6 @@ namespace LMT05500Common.DTO
         public const string CDEPT_CODE = "CDEPT_CODE";
         public const string CTRANS_CODE = "CTRANS_CODE";
         public const string CREF_NO = "CREF_NO";
+        public const string CSEQ_NO = "CSEQ_NO";
     }
 }

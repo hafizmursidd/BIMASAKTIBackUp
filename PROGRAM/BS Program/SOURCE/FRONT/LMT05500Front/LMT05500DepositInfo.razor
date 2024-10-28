@@ -15,8 +15,7 @@
                 <R_ItemLayout col="4">
                     <R_TextBox @bind-Value="@_depositViewModel.Data.CSEQ_NO"
                                R_ConductorSource="_conductDepositInfo"
-                               R_EnableAdd
-                               R_EnableEdit>
+                               Enabled="false">
                     </R_TextBox>
                 </R_ItemLayout>
             </R_StackLayout>
@@ -30,8 +29,7 @@
                 <R_ItemLayout col="5" Class="pe-1">
                     <R_TextBox @bind-Value="@_depositViewModel.Data.CINVOICE_NO"
                                R_ConductorSource="_conductDepositInfo"
-                               R_EnableAdd
-                               R_EnableEdit>
+                               Enabled="false">
                     </R_TextBox>
                 </R_ItemLayout>
             </R_StackLayout>
@@ -45,8 +43,9 @@
                 <R_ItemLayout col="5">
                     <R_CheckBox @bind-Value="@_depositViewModel.Data.LCONTRACTOR"
                                 R_ConductorSource="_conductDepositInfo"
-                                R_EnableAdd
-                                R_EnableEdit>
+                                R_EnableAdd="true"
+                                R_EnableEdit="true"
+                                OnChanged="@CheckboxContractor">
                     </R_CheckBox>
                     <R_Label>@_localizer["_Contractor"]</R_Label>
                 </R_ItemLayout>
@@ -55,8 +54,12 @@
                     <R_TextBox @bind-Value="@_depositViewModel.Data.CCONTRACTOR_ID"
                                OnLostFocus="@LostFocusLookupContractor"
                                R_ConductorSource="_conductDepositInfo"
-                               R_EnableAdd
-                               R_EnableEdit>
+                               Enabled="(_lControlContractor && _depositViewModel.Data.LCONTRACTOR)"
+                               @ref="@FocusLabel">
+                               @*
+                               R_EnableAdd="_lControlContractor"
+                               R_EnableEdit="_lControlContractor"
+                               *@
                     </R_TextBox>
                 </R_ItemLayout>
 
@@ -158,11 +161,12 @@
                     </R_TextBox>
                 </R_ItemLayout>
                 <R_ItemLayout col="5">
-                    <R_NumericTextBox @bind-Value="@_depositViewModel.Data.CDEPOSIT_AMT"
+                    <R_NumericTextBox @bind-Value="@_depositViewModel.Data.NDEPOSIT_AMT"
                                       R_ConductorSource="_conductDepositInfo"
                                             R_EnableAdd
                                             R_EnableEdit
-                                      Arrows="false">
+                                      Arrows="false"
+                                      Min="0">
                     </R_NumericTextBox>
                     </R_ItemLayout>
                     </R_StackLayout>
@@ -205,19 +209,18 @@
                 <R_ItemLayout col="5">
                     <R_NumericTextBox @bind-Value="@_depositViewModel.Data.NBASE_RATE_AMOUNT"
                                       R_ConductorSource="_conductDepositInfo"
-                                            R_EnableAdd
-                                            R_EnableEdit
+                                      Enabled="false"
                                       Arrows="false">
                     </R_NumericTextBox>
-                    </R_ItemLayout>
-                    <R_ItemLayout Class="ms-3">
+                </R_ItemLayout>
+                <R_ItemLayout Class="ms-3">
                     <R_Label>=</R_Label>
-                    </R_ItemLayout>
-                    </R_StackLayout>
+                </R_ItemLayout>
+            </R_StackLayout>
 
-                    </R_ItemLayout>
-                    <R_ItemLayout col="5" Class="ms-3">
-                    <R_StackLayout Row>
+        </R_ItemLayout>
+        <R_ItemLayout col="5" Class="ms-3">
+            <R_StackLayout Row>
                 <R_ItemLayout col="2">
                     <R_TextBox @bind-Value="@_depositViewModel.Data.CLOCAL_CURRENCY"
                                Enabled="false">
@@ -226,17 +229,16 @@
                 <R_ItemLayout col="5">
                     <R_NumericTextBox @bind-Value="@_depositViewModel.Data.NCURRENCY_RATE_AMOUNT"
                                       R_ConductorSource="_conductDepositInfo"
-                                            R_EnableAdd
-                                            R_EnableEdit
+                                      Enabled="false"
                                       Arrows="false">
                     </R_NumericTextBox>
-                    </R_ItemLayout>
-                    </R_StackLayout>
-                    </R_ItemLayout>
-                    </R_StackLayout>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_ItemLayout>
+    </R_StackLayout>
 
-                    @*row8*@
-                    <R_StackLayout Row>
+    @*row8*@
+    <R_StackLayout Row>
         <R_ItemLayout col="5">
             <R_StackLayout Row>
                 <R_ItemLayout col="4">
@@ -251,17 +253,16 @@
                 <R_ItemLayout col="5">
                     <R_NumericTextBox @bind-Value="@_depositViewModel.Data.NREMAINING_AMOUNT"
                                       R_ConductorSource="_conductDepositInfo"
-                                            R_EnableAdd
-                                            R_EnableEdit
+                                      Enabled="false"
                                       Arrows="false">
                     </R_NumericTextBox>
-                    </R_ItemLayout>
-                    </R_StackLayout>
-                    </R_ItemLayout>
-                    </R_StackLayout>
+                </R_ItemLayout>
+            </R_StackLayout>
+        </R_ItemLayout>
+    </R_StackLayout>
 
-                    @*row9*@
-                    <R_StackLayout Row>
+    @*row9*@
+    <R_StackLayout Row>
         <R_ItemLayout col="4">
             <R_StackLayout Row>
                 <R_ItemLayout col="5">
@@ -271,8 +272,7 @@
                 <R_ItemLayout col="7">
                     <R_CheckBox @bind-Value="@_depositViewModel.Data.LPAYMENT"
                                 R_ConductorSource="_conductDepositInfo"
-                                R_EnableAdd
-                                R_EnableEdit>
+                                Enabled="false">
                     </R_CheckBox>
                 </R_ItemLayout>
             </R_StackLayout>
@@ -331,7 +331,11 @@
              R_ServiceGetRecord="@ServiceGetRecord"
              R_ServiceSave="@ServiceSave"
              R_ServiceDelete="@ServiceDelete"
-             R_SetOther="@SetOther" />
+             R_SetOther="@SetOther"
+             R_AfterAdd="@AfterAdd"
+             R_Display="@ServiceDisplay"
+             R_Validation="@R_Validation" 
+             R_Saving="@ServiceSaving" />
 
 
 

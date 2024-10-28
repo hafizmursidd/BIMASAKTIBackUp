@@ -89,13 +89,14 @@ namespace LMT05500Front
                 if (_agreementViewModel.AgreementList.Count > 0)
                 {
                     _agreementViewModel._currentAgreement = _agreementViewModel.AgreementList[0];
+                    await _gridDepositUnitRef.R_RefreshGrid(null);
                 }
                 else
                 {
                     _agreementViewModel._currentAgreement = null;
+                    _agreementViewModel.DepositUnitList.Clear();
                 }
 
-                await _gridDepositUnitRef.R_RefreshGrid(null);
 
             }
             catch (Exception ex)
@@ -145,6 +146,8 @@ namespace LMT05500Front
         {
             eventArgs.TargetPageType = typeof(LMT05500Deposit);
             //you can use  _agreementViewModel._currentAgreement ==null, to assign on parameter;
+
+            var temp = _gridAgreementRef.GetCurrentData();
             if (_agreementViewModel.AgreementList.Count > 0)
             {
                 eventArgs.Parameter = _gridAgreementRef.GetCurrentData();
@@ -169,7 +172,7 @@ namespace LMT05500Front
             loEx.ThrowExceptionIfErrors();
 
         }
-    
+
         #endregion
     }
 }

@@ -1,0 +1,199 @@
+@using UtilityModel;
+@inherits R_Page;
+
+<R_TabStrip @ref="@_tabStripRef">
+
+    <R_TabStripTab Title="Service"
+    Id="Service"
+    >
+
+        <!-- Deposit -->
+        <R_StackLayout Row>
+
+            <R_Grid @ref="@_gridService"
+                    DataSource="_viewModel.loList"
+                    R_ConductorSource="@_conductorService"
+                    R_GridType="@R_eGridType.Navigator"
+                    R_ServiceGetListRecord="@R_ServiceGetListRecord"
+                    Pageable
+                    Height="275px"
+                    PageSize="10"
+                    AllowDeleteRow
+                    AllowAddNewRow
+                    AllowEditRow>
+                <R_GridColumns>
+
+                    <R_GridTextColumn Width="150px"
+                                      FieldName="@nameof(PMT06000OvtServiceGridDTO.CSEQ_NO)"
+                                      HeaderText="Seq No" />
+
+                    <R_GridTextColumn Width="200px"
+                                      FieldName="@nameof(PMT06000OvtServiceGridDTO.CSERVICE_DISPLAY)"
+                                      HeaderText="Service" />
+                    <R_GridDateTimePickerColumn FieldName="@nameof(PMT06000OvtServiceGridDTO.DDATE_IN)"
+                                                HeaderText="Date In"
+                                                Width="225px" />
+                    <R_GridDateTimePickerColumn FieldName="@nameof(PMT06000OvtServiceGridDTO.DDATE_OUT)"
+                                                HeaderText="Date Out"
+                                                Width="225px" />
+                    <R_GridTextColumn Width="150px"
+                                      FieldName="@nameof(PMT06000OvtServiceGridDTO.CSERVICE_DESCR)"
+                                      HeaderText="Description" />
+                </R_GridColumns>
+
+            </R_Grid>
+
+        </R_StackLayout>
+
+
+        <!-- Service Navigator -->
+        <R_StackLayout Class="mt-2">
+
+            <!-- SERVICE -->
+            <R_ItemLayout Class="d-flex">
+                <R_ItemLayout col="1">
+                    <R_Label>
+                        Service
+                    </R_Label>
+                </R_ItemLayout>
+
+                <R_ItemLayout col="3">
+
+                    <R_TextBox @bind-Value="@_viewModel.Data.CSERVICE_ID"
+                               R_ConductorSource="@_conductorService"
+                               R_EnableAdd
+                               R_EnableEdit />
+
+                </R_ItemLayout>
+
+                <R_ItemLayout col="7" Class="d-flex">
+
+                    <R_ItemLayout>
+
+                        <R_Lookup R_ConductorSource="@_conductorService"
+                                  @ref="@R_LookupServiceLookup"
+                                  R_EnableAdd
+                                  R_EnableEdit
+                                  R_Before_Open_Lookup="@BeforeOpenLookUpUtilityLookup"
+                                  R_After_Open_Lookup="@AfterOpenLookUputilityLookup">
+                            ...
+                        </R_Lookup>
+                        </R_ItemLayout>
+
+                        <R_ItemLayout col="7" Class="pe-5">
+
+                        <R_TextBox @bind-Value="@_viewModel.Data.CSERVICE_ID"
+                                   R_ConductorSource="@_conductorService"
+                                   Enabled="false" />
+
+                        </R_ItemLayout>
+
+                        </R_ItemLayout>
+
+                        </R_ItemLayout>
+
+                        <!-- Date In -->
+                        <R_ItemLayout Class="d-flex">
+
+                        <R_ItemLayout col="1">
+                        <R_Label>  Date In*  </R_Label>
+                        </R_ItemLayout>
+                        <R_ItemLayout col="3">
+                        <R_DateTimePicker @bind-Value="@_viewModel.Data.DDATE_IN"
+                                      R_ConductorSource="@_conductorService"
+                                            R_EnableAdd
+                                            R_EnableEdit />
+
+                </R_ItemLayout>
+                <R_ItemLayout col="1" Class="text-center">
+                    <R_Label>  Date In*  </R_Label>
+                </R_ItemLayout>
+                <R_ItemLayout col="3">
+                    <R_DateTimePicker @bind-Value="@_viewModel.Data.DDATE_OUT"
+                                      R_ConductorSource="@_conductorService"
+                                            R_EnableAdd
+                                            R_EnableEdit />
+                </R_ItemLayout>
+
+            </R_ItemLayout>
+
+            <!-- Description -->
+            <R_ItemLayout Class="d-flex">
+
+                <R_ItemLayout col="1">
+                    <R_Label>
+                        Description
+                    </R_Label>
+                </R_ItemLayout>
+
+                <R_ItemLayout col="10">
+
+                    <R_TextArea @bind-Value="@_viewModel.Data.CDESCRIPTION"
+                                R_ConductorSource="@_conductorService"
+                                MaxLength="int.MaxValue"
+                                R_EnableAdd
+                                R_EnableEdit />
+
+                </R_ItemLayout>
+
+            </R_ItemLayout>
+
+
+        </R_StackLayout>
+
+
+        @* Button CRUD *@
+        <R_StackLayout Row Class="d-flex justify-content-between mt-2">
+
+            <R_StackLayout Row>
+
+                <R_ItemLayout>
+                    <R_AddButton R_Conductor="@_conductorService" />
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_EditButton R_Conductor="@_conductorService" />
+                </R_ItemLayout>
+
+                <R_ItemLayout>
+                    <R_DeleteButton R_Conductor="@_conductorService" />
+                </R_ItemLayout>
+
+            </R_StackLayout>
+
+            <R_StackLayout Row Class="d-flex justify-content-end">
+
+                <R_StackLayout Row>
+
+                    <R_ItemLayout>
+                        <R_CancelButton R_Conductor="@_conductorService" />
+                    </R_ItemLayout>
+
+                    <R_ItemLayout>
+                        <R_SaveButton R_Conductor="@_conductorService" />
+                    </R_ItemLayout>
+
+                </R_StackLayout>
+
+            </R_StackLayout>
+
+        </R_StackLayout>
+
+    </R_TabStripTab>
+
+    <!-- Unit -->
+    <R_TabStripTab Title="Unit" Id="Unit" >
+        <R_TabPage  R_Before_Open_TabPage="General_Before_Open_Charges_TabPage"
+            ref="_tabUnit" />
+    </R_TabStripTab>
+</R_TabStrip>
+
+<R_StackLayout Row>
+    <R_Popup R_Before_Open_Popup="@BeforeOpenPopup">
+
+    </R_Popup>
+</R_StackLayout>
+
+<R_Conductor @ref="@_conductorService"
+             R_ViewModel="@_viewModel"
+              R_IsHeader />

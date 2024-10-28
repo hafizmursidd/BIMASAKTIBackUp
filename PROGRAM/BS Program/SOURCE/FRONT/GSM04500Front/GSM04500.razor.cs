@@ -301,6 +301,7 @@ namespace GSM04500Front
 
         #region UserLocking
         private const string DEFAULT_HTTP_NAME = "R_DefaultServiceUrl";
+        private const string DEFAULT_MODULE_NAME = "GS";
 
         protected override async Task<bool> R_LockUnlock(R_LockUnlockEventArgs eventArgs)
         {
@@ -310,6 +311,10 @@ namespace GSM04500Front
             try
             {
                 var loData = (GSM04500DTO)eventArgs.Data;
+                var loCls = new R_LockingServiceClient(pcModuleName: DEFAULT_MODULE_NAME,
+                  plSendWithContext: true,
+                  plSendWithToken: true,
+                  pcHttpClientName: DEFAULT_HTTP_NAME);
 
                 if (eventArgs.Mode == R_eLockUnlock.Lock)
                 {
@@ -321,8 +326,6 @@ namespace GSM04500Front
                         Table_Name = "GSM_JRNGRP",
                         Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CJRNGRP_TYPE, loData.CJRNGRP_CODE)
                     };
-
-                    var loCls = new R_LockingServiceClient(DEFAULT_HTTP_NAME);
 
                     loLockResult = await loCls.R_Lock(loLockPar);
                 }
@@ -336,8 +339,6 @@ namespace GSM04500Front
                         Table_Name = "GSM_JRNGRP",
                         Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CJRNGRP_TYPE, loData.CJRNGRP_CODE)
                     };
-
-                    var loCls = new R_LockingServiceClient(DEFAULT_HTTP_NAME);
 
                     loLockResult = await loCls.R_UnLock(loUnlockPar);
                 }

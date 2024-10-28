@@ -20,42 +20,7 @@ namespace Lookup_LMBACK
             _activitySource = LookupLMActivity.R_GetInstanceActivitySource();
         }
 
-        public List<LML00100DTO> GetAllSalesTax(LML00100ParameterDTO poEntity)
-        {
-            string lcMethodName = nameof(GetAllSalesTax);
-            using Activity activity = _activitySource.StartActivity(lcMethodName);
-            _loggerLookup.LogInfo(string.Format("START process method {0} on Cls", lcMethodName));
 
-            var loEx = new R_Exception();
-            List<LML00100DTO> loResult = null;
-            R_Db loDb;
-            try
-            {
-                loDb = new R_Db();
-                var loCmd = loDb.GetCommand();
-                var loConn = loDb.GetConnection();
-                var lcQuery = "RSP_GS_GET_SALES_TAX_LIST";
-                loCmd.CommandText = lcQuery;
-                loCmd.CommandType = CommandType.StoredProcedure;
-                loDb.R_AddCommandParameter(loCmd, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
-                loDb.R_AddCommandParameter(loCmd, "@CUSER_LOGIN_ID", DbType.String, 8, poEntity.CUSER_ID);
-
-                var loDbParam = loCmd.Parameters.Cast<DbParameter>()
-                    .Where(x => x != null && x.ParameterName.StartsWith("@"))
-                    .ToDictionary(x => x.ParameterName, x => x.Value);
-                _loggerLookup.LogDebug("{@ObjectQuery} {@Parameter}", loCmd.CommandText, loDbParam);
-                
-                loResult = loDb.SqlExecObjectQuery<LML00100DTO>(lcQuery, loConn, true);
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            loEx.ThrowExceptionIfErrors();
-            _loggerLookup.LogInfo(string.Format("END process method {0} on Cls", lcMethodName));
-            return loResult;
-        }
         public List<LML00200DTO> GetAllUnitCharges(LML00200ParameterDTO poEntity)
         {
             string lcMethodName = nameof(GetAllUnitCharges);
@@ -71,7 +36,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_CHARGES_TYPE_LIST";
+                var lcQuery = @"RSP_PM_GET_CHARGES_TYPE_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 
@@ -112,7 +77,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_SUPERVISOR_LOOKUP_LIST";
+                var lcQuery = @"RSP_PM_GET_SUPERVISOR_LOOKUP_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 
@@ -152,7 +117,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_CHARGES_UTILITY_LIST";
+                var lcQuery = @"RSP_PM_GET_CHARGES_UTILITY_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 
@@ -194,7 +159,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_SALESMAN_LIST";
+                var lcQuery = @"RSP_PM_GET_SALESMAN_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 
@@ -233,7 +198,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_TENANT_LIST";
+                var lcQuery = @"RSP_PM_GET_TENANT_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 
@@ -273,7 +238,7 @@ namespace Lookup_LMBACK
                 var loConn = loDb.GetConnection();
                 var loCmd = loDb.GetCommand();
 
-                var lcQuery = @"RSP_LM_GET_DISCOUNT_LIST";
+                var lcQuery = @"RSP_PM_GET_DISCOUNT_LIST";
                 loCmd.CommandText = lcQuery;
                 loCmd.CommandType = CommandType.StoredProcedure;
 

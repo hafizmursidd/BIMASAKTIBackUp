@@ -70,7 +70,7 @@ namespace LMT05500Model.ViewModel
 
                 if (_currentAgreement != null)
                 {
-                    UnitDescValue = temp.CDESCRIPTION;
+                    UnitDescValue = temp.CUNIT_DESCRIPTION;
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CPROPERTY_ID, _currentAgreement.CPROPERTY_ID);
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CDEPT_CODE, _currentAgreement.CDEPT_CODE);
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CTRANS_CODE, _currentAgreement.CTRANS_CODE);

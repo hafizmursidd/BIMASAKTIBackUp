@@ -30,7 +30,7 @@
                     </R_TextBox>
                 </R_ItemLayout>
                 <R_ItemLayout col="6">
-                    <R_TextBox @bind-Value="@_depositViewModel._headerDeposit.CTENANT_ID"
+                    <R_TextBox @bind-Value="@_depositViewModel._headerDeposit.CTENANT_NAME"
                                Enabled="false">
                     </R_TextBox>
                 </R_ItemLayout>
@@ -94,7 +94,7 @@
                     <R_Label>@_localizer["_Currency"]</R_Label>
                 </R_ItemLayout>
                 <R_ItemLayout col="3">
-                    <R_TextBox @bind-Value="@_depositViewModel._headerDeposit.CCURRENCY"
+                    <R_TextBox @bind-Value="@_depositViewModel._headerDeposit.CCURRENCY_CODE"
                                Enabled="false">
                     </R_TextBox>
                 </R_ItemLayout>
@@ -217,11 +217,12 @@
                                           FieldName="@nameof(LMT05500DepositDetailListDTO.CREF_DATE)"
                                           HeaderText=@_localizer["_RefDate"] />
 
-                        <R_GridNumericColumn Width="125px"
+                        <R_GridTextColumn Width="125px"
                                              FieldName="@nameof(LMT05500DepositDetailListDTO.CDEPOSIT_TYPE)"
                                              HeaderText=@_localizer["_Type"] />
                         <R_GridNumericColumn Width="150px"
                                              FieldName="@nameof(LMT05500DepositDetailListDTO.NDEPOSIT_AMOUNT)"
+                                             Min="0"
                                              HeaderText=@_localizer["_Amount"] />
                         <R_GridTextColumn Width="125px"
                                           FieldName="@nameof(LMT05500DepositDetailListDTO.CTRX_CODE)"

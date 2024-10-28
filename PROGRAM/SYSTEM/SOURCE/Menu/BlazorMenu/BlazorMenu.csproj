@@ -22,7 +22,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\GLB00200Front\GLB00200Front.csproj" />
-		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\GLR00300Front\GLR00300Front.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\GLT00100Front\GLT00100Front.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\GSM02000FRONT\GSM02000Front.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\GSM04500Front\GSM04500Front.csproj" />
@@ -35,6 +34,8 @@
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\LMM06000Front\LMM06000Front.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\LMT01500Front\LMT01500Front.csproj" />
 		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\LMT05500Front\LMT05500Front.csproj" />
+		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\PMM06000Front\PMM06000Front.csproj" />
+		<ProjectReference Include="..\..\..\..\BS Program\SOURCE\FRONT\PMT05500Front\PMT05500Front.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="R_APIClient">

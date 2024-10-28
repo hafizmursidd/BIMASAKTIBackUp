@@ -93,7 +93,25 @@ namespace GLR00300Front
             }
             R_DisplayException(loEx);
         }
-        private async Task OnChange(object poParam)
+
+        private async Task OnChangeYear(object poParam)
+        {
+            var loEx = new R_Exception();
+            int lsParam = (int)poParam;
+            try
+            {
+                _viewModelGLR00300.PeriodYear = lsParam;
+                await ServiceGetBudgetNo();
+                await ServiceGetPeriod();
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+
+            R_DisplayExceptionAsync(loEx);
+        }
+        private async Task OnChangeCurrencyType(object poParam)
         {
             var loEx = new R_Exception();
             try

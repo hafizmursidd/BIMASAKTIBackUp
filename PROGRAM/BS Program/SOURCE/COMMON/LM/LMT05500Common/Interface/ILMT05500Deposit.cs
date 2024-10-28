@@ -6,7 +6,7 @@ namespace LMT05500Common.Interface
 {
     public interface ILMT05500Deposit : R_IServiceCRUDBase<LMT05500DepositInfoDTO>
     {
-        LMT05500DepositHeaderDTO DepositHeader();
+        LMT05500DepositHeaderDTO DepositHeader(LMT05500DBParameter poParam);
         IAsyncEnumerable<LMT05500DepositListDTO> DepositListStream();
         IAsyncEnumerable<LMT05500DepositDetailListDTO> DepositDetailListStream();
     }

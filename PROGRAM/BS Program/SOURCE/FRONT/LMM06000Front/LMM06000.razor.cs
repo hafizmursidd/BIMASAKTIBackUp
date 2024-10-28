@@ -344,6 +344,7 @@ namespace LMM06000Front
             try
             {
                 await BillingRuleViewModel.GetAllBillingRule();
+                await PropertyDropdown_GetPeriodeList(null);
                 eventArgs.ListEntityResult = BillingRuleViewModel.BillingRuleList;
 
             }
@@ -366,7 +367,6 @@ namespace LMM06000Front
 
                 eventArgs.Result = BillingRuleViewModel.BillingRuleDetail;
                 var temp = (LMM06000BillingRuleDetailDTO)eventArgs.Result;
-                await PropertyDropdown_GetPeriodeList(null);
 
                 //Set ActiveInactive Value
                 BillingRuleViewModel.ActiveInactiveEntity.PROPERTY_ID = temp.CPROPERTY_ID;
@@ -892,8 +892,8 @@ namespace LMM06000Front
 
                         Company_Id = clientHelper.CompanyId,
                         User_Id = clientHelper.UserId,
-                        Program_Id = "LMM06000",
-                        Table_Name = "LMM_BILLING_RULE",
+                        Program_Id = "PMM06000",
+                        Table_Name = "PMM_BILLING_RULE",
                         Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CUNIT_TYPE_CATEGORY_ID, loData.CBILLING_RULE_CODE)
                     };
 
@@ -905,8 +905,8 @@ namespace LMM06000Front
                     {
                         Company_Id = clientHelper.CompanyId,
                         User_Id = clientHelper.UserId,
-                        Program_Id = "LMM06000",
-                        Table_Name = "LMM_BILLING_RULE",
+                        Program_Id = "PMM06000",
+                        Table_Name = "PMM_BILLING_RULE",
                         Key_Value = string.Join("|", clientHelper.CompanyId, loData.CPROPERTY_ID, loData.CUNIT_TYPE_CATEGORY_ID, loData.CBILLING_RULE_CODE)
                     };
 

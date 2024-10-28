@@ -61,6 +61,42 @@ namespace LMT05500FrontResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contractor Code is required..
+        /// </summary>
+        internal static string _5501 {
+            get {
+                return ResourceManager.GetString("5501", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deposit Id is required..
+        /// </summary>
+        internal static string _5502 {
+            get {
+                return ResourceManager.GetString("5502", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deposit Date is required.
+        /// </summary>
+        internal static string _5503 {
+            get {
+                return ResourceManager.GetString("5503", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deposit Amount is required.
+        /// </summary>
+        internal static string _5504 {
+            get {
+                return ResourceManager.GetString("5504", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adjustment.
         /// </summary>
         internal static string _Adj {

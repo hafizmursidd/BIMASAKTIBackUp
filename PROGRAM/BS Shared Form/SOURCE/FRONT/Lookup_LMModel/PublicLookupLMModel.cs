@@ -26,10 +26,6 @@ namespace Lookup_LMModel
         }
 
         #region implements INTERFACE
-        public IAsyncEnumerable<LML00100DTO> LML00100GetSalesTaxList()
-        {
-            throw new NotImplementedException();
-        }
         public IAsyncEnumerable<LML00200DTO> LML00200UnitChargesList()
         {
             throw new NotImplementedException();
@@ -59,33 +55,7 @@ namespace Lookup_LMModel
 
         #endregion
 
-        #region LML00100
-        public async Task<LMLGenericList<LML00100DTO>> LML00100GetSalesTaxListAsync()
-        {
-            var loEx = new R_Exception();
-            LMLGenericList<LML00100DTO> loResult = new LMLGenericList<LML00100DTO>();
-            try
-            {
-                R_HTTPClientWrapper.httpClientName = _HttpClientName;
-                var loTempResult = await R_HTTPClientWrapper.R_APIRequestStreamingObject<LML00100DTO>(
-                    _RequestServiceEndPoint,
-                    nameof(IPublicLookupLM.LML00100GetSalesTaxList),
-                    DEFAULT_MODULE,
-                    _SendWithContext,
-                    _SendWithToken);
 
-                loResult.Data = loTempResult;
-            }
-            catch (Exception ex)
-            {
-                loEx.Add(ex);
-            }
-
-            loEx.ThrowExceptionIfErrors();
-            return loResult;
-        }
-
-        #endregion
         #region LML00200 
 
         public async Task<LMLGenericList<LML00200DTO>> LML00200GetUnitChargesListAsync ()

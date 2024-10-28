@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using R_CommonFrontBackAPI;
 using System.Globalization;
+using R_BlazorFrontEnd.Helpers;
+using LMT05500FrontResources;
 
 namespace LMT05500Model.ViewModel
 {
@@ -24,17 +26,24 @@ namespace LMT05500Model.ViewModel
         public LMT05500DepositDetailListDTO _currentDepositDetail = null;
 
         public LMT05500DepositInfoFrontDTO _depositInfoData = new LMT05500DepositInfoFrontDTO();
-
-        public async Task GetHeaderDeposit()
+        public LMT05500DepositInfoFrontDTO TemporaryData = new LMT05500DepositInfoFrontDTO();
+        public bool _IsDataNull = true;
+        public async Task GetHeaderDeposit(LMT05500AgreementDTO poParameter)
         {
             R_Exception loException = new R_Exception();
             try
             {
-                R_FrontContext.R_SetStreamingContext(ContextConstant.CPROPERTY_ID, _currentDataAgreement.CPROPERTY_ID);
-                R_FrontContext.R_SetStreamingContext(ContextConstant.CDEPT_CODE, _currentDataAgreement.CDEPT_CODE);
-                R_FrontContext.R_SetStreamingContext(ContextConstant.CTRANS_CODE, _currentDataAgreement.CTRANS_CODE);
-                R_FrontContext.R_SetStreamingContext(ContextConstant.CREF_NO, _currentDataAgreement.CREF_NO);
-                _headerDeposit = await _model.GetDepositHeaderAsyncModel();
+                var loParam = new LMT05500DBParameter()
+                {
+                    CCOMPANY_ID = poParameter.CCOMPANY_ID,
+                    CUSER_ID = poParameter.CUSER_ID,
+                    CPROPERTY_ID = poParameter.CPROPERTY_ID,
+                    CDEPT_CODE = poParameter.CDEPT_CODE,
+                    CTRANS_CODE = poParameter.CTRANS_CODE,
+                    CREF_NO = poParameter.CREF_NO
+                };
+
+                _headerDeposit = await _model.GetDepositHeaderAsyncModel(loParam);
             }
             catch (Exception ex)
             {
@@ -87,6 +96,7 @@ namespace LMT05500Model.ViewModel
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CDEPT_CODE, _currentDeposit.CDEPT_CODE);
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CTRANS_CODE, _currentDeposit.CTRANS_CODE);
                     R_FrontContext.R_SetStreamingContext(ContextConstant.CREF_NO, _currentDeposit.CREF_NO);
+                    R_FrontContext.R_SetStreamingContext(ContextConstant.CSEQ_NO, _currentDeposit.CSEQ_NO);
                 }
                 var loResult = await _model.DepositDetailListAsyncModel();
                 _depositDetailList = new ObservableCollection<LMT05500DepositDetailListDTO>(loResult.Data);
@@ -140,11 +150,12 @@ namespace LMT05500Model.ViewModel
 
             try
             {
+                poNewEntity.CCOMPANY_ID = _currentDeposit.CCOMPANY_ID;
+                poNewEntity.CUSER_ID = _currentDeposit.CUSER_ID;
                 poNewEntity.CPROPERTY_ID = _currentDeposit.CPROPERTY_ID;
                 poNewEntity.CDEPT_CODE = _currentDeposit.CDEPT_CODE;
                 poNewEntity.CREF_NO = _currentDeposit.CREF_NO;
                 poNewEntity.CTRANS_CODE = _currentDeposit.CTRANS_CODE;
-                poNewEntity.CDEPOSIT_ID = _currentDeposit.CDEPOSIT_ID;
 
                 var loResult = await _model.R_ServiceSaveAsync(ConvertToEntityBack(poNewEntity), peCRUDMode);
                 _depositInfoData = ConvertToEntityFront(loResult);
@@ -158,6 +169,45 @@ namespace LMT05500Model.ViewModel
         }
         #endregion
 
+        #region Validation
+        public void ValidationFieldEmpty(LMT05500DepositInfoFrontDTO poEntity)
+        {
+            var loEx = new R_Exception();
+            try
+            {
+                if (poEntity.LCONTRACTOR && string.IsNullOrWhiteSpace(poEntity.CCONTRACTOR_ID))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMT05500_Class), "5501");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(poEntity.CDEPOSIT_ID))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMT05500_Class), "5502");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (string.IsNullOrEmpty(poEntity.DDEPOSIT_DATE.ToString()))
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMT05500_Class), "5503");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+                if (poEntity.NDEPOSIT_AMT < 1)
+                {
+                    var loErr = R_FrontUtility.R_GetError(typeof(Resources_LMT05500_Class), "5504");
+                    loEx.Add(loErr);
+                    goto EndBlock;
+                }
+            }
+            catch (Exception ex)
+            {
+                loEx.Add(ex);
+            }
+        EndBlock:
+            loEx.ThrowExceptionIfErrors();
+        }
+        #endregion
 
         #region ConvertDTO
         public LMT05500DepositInfoDTO ConvertToEntityBack(LMT05500DepositInfoFrontDTO poEntity)
@@ -166,29 +216,8 @@ namespace LMT05500Model.ViewModel
             LMT05500DepositInfoDTO? loReturn = null;
             try
             {
-                loReturn = new LMT05500DepositInfoDTO()
-                {
-                    CPROPERTY_ID = poEntity.CPROPERTY_ID,
-                    CDEPT_CODE = poEntity.CDEPT_CODE,
-                    CTRANS_CODE = poEntity.CTRANS_CODE,
-                    CREF_NO = poEntity.CREF_NO,
-                    CSEQ_NO = poEntity.CSEQ_NO,
-                    CINVOICE_NO = poEntity.CINVOICE_NO,
-                    LCONTRACTOR = poEntity.LCONTRACTOR,
-                    CUNIT_TYPE = poEntity.CUNIT_TYPE,
-                    CCONTRACTOR_ID = poEntity.CCONTRACTOR_ID,
-                    CCONTRACTOR_NAME = poEntity.CCONTRACTOR_NAME,
-                    CDEPOSIT_ID = poEntity.CDEPOSIT_ID,
-                    CDEPOSIT_NAME = poEntity.CDEPOSIT_NAME,
-                    CDEPOSIT_DATE = ConvertDateTimeToStringFormat(poEntity.DDEPOSIT_DATE),
-                    CLOCAL_CURRENCY = poEntity.CLOCAL_CURRENCY,
-                    CDEPOSIT_AMT = poEntity.CDEPOSIT_AMT,
-                    NBASE_RATE_AMOUNT = poEntity.NBASE_RATE_AMOUNT,
-                    NCURRENCY_RATE_AMOUNT = poEntity.NCURRENCY_RATE_AMOUNT,
-                    NREMAINING_AMOUNT = poEntity.NREMAINING_AMOUNT,
-                    LPAYMENT = poEntity.LPAYMENT,
-                    CDESCRIPTION = poEntity.CDESCRIPTION
-                };
+                loReturn = R_FrontUtility.ConvertObjectToObject<LMT05500DepositInfoDTO>(poEntity);
+                loReturn.CDEPOSIT_DATE = ConvertDateTimeToStringFormat(poEntity.DDEPOSIT_DATE);
 
             }
             catch (Exception ex)
@@ -204,30 +233,8 @@ namespace LMT05500Model.ViewModel
             LMT05500DepositInfoFrontDTO? loReturn = null;
             try
             {
-                loReturn = new LMT05500DepositInfoFrontDTO()
-                {
-                    CCOMPANY_ID = poEntity.CCOMPANY_ID,
-                    CPROPERTY_ID = poEntity.CPROPERTY_ID,
-                    CDEPT_CODE = poEntity.CDEPT_CODE,
-                    CTRANS_CODE = poEntity.CTRANS_CODE,
-                    CREF_NO = poEntity.CREF_NO,
-                    CSEQ_NO = poEntity.CSEQ_NO,
-                    CINVOICE_NO = poEntity.CINVOICE_NO,
-                    LCONTRACTOR = poEntity.LCONTRACTOR,
-                    CUNIT_TYPE = poEntity.CUNIT_TYPE,
-                    CCONTRACTOR_ID = poEntity.CCONTRACTOR_ID,
-                    CCONTRACTOR_NAME = poEntity.CCONTRACTOR_NAME,
-                    CDEPOSIT_ID = poEntity.CDEPOSIT_ID,
-                    CDEPOSIT_NAME = poEntity.CDEPOSIT_NAME,
-                    DDEPOSIT_DATE = ConvertStringToDateTimeFormat(poEntity.CDEPOSIT_DATE),
-                    CLOCAL_CURRENCY = poEntity.CLOCAL_CURRENCY,
-                    CDEPOSIT_AMT = poEntity.CDEPOSIT_AMT,
-                    NBASE_RATE_AMOUNT = poEntity.NBASE_RATE_AMOUNT,
-                    NCURRENCY_RATE_AMOUNT = poEntity.NCURRENCY_RATE_AMOUNT,
-                    NREMAINING_AMOUNT = poEntity.NREMAINING_AMOUNT,
-                    LPAYMENT = poEntity.LPAYMENT,
-                    CDESCRIPTION = poEntity.CDESCRIPTION
-                };
+                loReturn = R_FrontUtility.ConvertObjectToObject<LMT05500DepositInfoFrontDTO>(poEntity);
+                loReturn.DDEPOSIT_DATE = ConvertStringToDateTimeFormat(poEntity.CDEPOSIT_DATE);
 
             }
             catch (Exception ex)

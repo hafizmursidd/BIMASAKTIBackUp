@@ -16,7 +16,7 @@
         public string? CDEPOSIT_JRNGRP_CODE { get; set; }
         public string? CDEPOSIT_JRNGRP_NAME { get; set; }
         public string? CDEPOSIT_DATE { get; set; }
-        public string? CDEPOSIT_AMT { get; set; }
+        public string? NDEPOSIT_AMT { get; set; }
         public string? CDESCRIPTION { get; set; }
     }
 }

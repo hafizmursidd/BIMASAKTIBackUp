@@ -38,7 +38,7 @@
                                   @bind-Value="_viewModelGLR00300.CurrencyTypeValue"
                                   ValueField="@nameof(GLR00300DTO.CCODE)"
                                   TextField="@nameof(GLR00300DTO.CNAME)"
-                                  OnChanged="@OnChange">
+                                  OnChanged="@OnChangeCurrencyType">
                     </R_RadioGroup>
                 </R_ItemLayout>
             </R_StackLayout>
@@ -76,9 +76,9 @@
             <R_ItemLayout col="1">
                 <R_NumericTextBox Min="@_viewModelGLR00300.InitialProcess.IMIN_YEAR"
                                   Max="@_viewModelGLR00300.InitialProcess.IMAX_YEAR"
-                                  @bind-Value="_viewModelGLR00300.PeriodYear"
+                                  Value="_viewModelGLR00300.PeriodYear"
                                   ThousandSeparator="false"
-                                  OnChanged="@OnChange">
+                                  ValueChanged="@((int value) => OnChangeYear(value))">
                 </R_NumericTextBox>
             </R_ItemLayout>
             <R_ItemLayout col="1">

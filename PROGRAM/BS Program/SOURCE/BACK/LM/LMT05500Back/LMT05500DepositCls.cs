@@ -101,17 +101,17 @@ public class LMT05500DepositCls : R_BusinessObject<LMT05500DepositInfoDTO>
             loCommand.CommandType = CommandType.StoredProcedure;
             loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poNewEntity.CCOMPANY_ID);
             loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poNewEntity.CPROPERTY_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 10, poNewEntity.CDEPT_CODE);
-            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 8, poNewEntity.CTRANS_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 20, poNewEntity.CDEPT_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 10, poNewEntity.CTRANS_CODE);
             loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 30, poNewEntity.CREF_NO);
-            loDb.R_AddCommandParameter(loCommand, "@CSEQ_NO", DbType.String, 30, poNewEntity.CSEQ_NO);
+            loDb.R_AddCommandParameter(loCommand, "@CSEQ_NO", DbType.String, 3, poNewEntity.CSEQ_NO);
 
-            loDb.R_AddCommandParameter(loCommand, "@LCONTRACTOR", DbType.Boolean, 10, poNewEntity.LCONTRACTOR);
-            loDb.R_AddCommandParameter(loCommand, "@CCONTRACTOR_ID", DbType.String, 8, poNewEntity.CCONTRACTOR_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_JRNGRP_CODE ", DbType.String, 30, poNewEntity.CDEPOSIT_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_DATE ", DbType.String, 30, poNewEntity.CDEPOSIT_DATE);
+            loDb.R_AddCommandParameter(loCommand, "@LCONTRACTOR", DbType.Boolean, 3, poNewEntity.LCONTRACTOR);
+            loDb.R_AddCommandParameter(loCommand, "@CCONTRACTOR_ID", DbType.String, 20, poNewEntity.CCONTRACTOR_ID);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_ID ", DbType.String, 20, poNewEntity.CDEPOSIT_ID);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_DATE ", DbType.String, 8, poNewEntity.CDEPOSIT_DATE);
 
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_AMT", DbType.Decimal, int.MaxValue, poNewEntity.CDEPOSIT_AMT);
+            loDb.R_AddCommandParameter(loCommand, "@NDEPOSIT_AMT", DbType.Decimal, int.MaxValue, poNewEntity.NDEPOSIT_AMT);
             loDb.R_AddCommandParameter(loCommand, "@CDESCRIPTION ", DbType.String, int.MaxValue, poNewEntity.CDESCRIPTION);
 
             loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 8, poNewEntity.CUSER_ID);
@@ -171,7 +171,7 @@ public class LMT05500DepositCls : R_BusinessObject<LMT05500DepositInfoDTO>
         string lcAction = null;
         try
         {
-             loDb = new R_Db();
+            loDb = new R_Db();
             loConn = loDb.GetConnection();
             R_ExternalException.R_SP_Init_Exception(loConn);
             loCommand = loDb.GetCommand();
@@ -183,17 +183,17 @@ public class LMT05500DepositCls : R_BusinessObject<LMT05500DepositInfoDTO>
 
             loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poEntity.CCOMPANY_ID);
             loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poEntity.CPROPERTY_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 10, poEntity.CDEPT_CODE);
-            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 8, poEntity.CTRANS_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 20, poEntity.CDEPT_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 10, poEntity.CTRANS_CODE);
             loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 30, poEntity.CREF_NO);
-            loDb.R_AddCommandParameter(loCommand, "@CSEQ_NO", DbType.String, 30, poEntity.CSEQ_NO);
+            loDb.R_AddCommandParameter(loCommand, "@CSEQ_NO", DbType.String, 3, poEntity.CSEQ_NO);
 
-            loDb.R_AddCommandParameter(loCommand, "@LCONTRACTOR", DbType.Boolean, 10, poEntity.LCONTRACTOR);
-            loDb.R_AddCommandParameter(loCommand, "@CCONTRACTOR_ID", DbType.String, 8, poEntity.CCONTRACTOR_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_JRNGRP_CODE ", DbType.String, 30, poEntity.CDEPOSIT_ID);
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_DATE ", DbType.String, 30, poEntity.CDEPOSIT_DATE);
+            loDb.R_AddCommandParameter(loCommand, "@LCONTRACTOR", DbType.Boolean,3, poEntity.LCONTRACTOR);
+            loDb.R_AddCommandParameter(loCommand, "@CCONTRACTOR_ID", DbType.String, 20, poEntity.CCONTRACTOR_ID);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_ID ", DbType.String, 20, poEntity.CDEPOSIT_ID);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_DATE ", DbType.String, 8, poEntity.CDEPOSIT_DATE);
 
-            loDb.R_AddCommandParameter(loCommand, "@CDEPOSIT_AMT", DbType.Decimal, int.MaxValue, poEntity.CDEPOSIT_AMT);
+            loDb.R_AddCommandParameter(loCommand, "@NDEPOSIT_AMT", DbType.Decimal, int.MaxValue, poEntity.NDEPOSIT_AMT);
             loDb.R_AddCommandParameter(loCommand, "@CDESCRIPTION ", DbType.String, int.MaxValue, poEntity.CDESCRIPTION);
 
             loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 8, poEntity.CUSER_ID);
@@ -254,7 +254,7 @@ public class LMT05500DepositCls : R_BusinessObject<LMT05500DepositInfoDTO>
             loDb = new();
             DbConnection? loConn = loDb.GetConnection();
             loCommand = loDb.GetCommand();
-            lcQuery = "RSP_PM_GET_DEPOSIT_HEADER";
+            lcQuery = "RSP_PM_GET_AGREEMENT_DETAIL";
             loCommand.CommandText = lcQuery;
             loCommand.CommandType = CommandType.StoredProcedure;
 
@@ -369,10 +369,10 @@ public class LMT05500DepositCls : R_BusinessObject<LMT05500DepositInfoDTO>
             loDb.R_AddCommandParameter(loCommand, "@CCOMPANY_ID", DbType.String, 20, poParameter.CCOMPANY_ID);
             loDb.R_AddCommandParameter(loCommand, "@CPROPERTY_ID", DbType.String, 20, poParameter.CPROPERTY_ID);
             loDb.R_AddCommandParameter(loCommand, "@CUSER_ID", DbType.String, 8, poParameter.CUSER_ID);
-            
-            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 8, poParameter.CDEPT_CODE);
-            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 30, poParameter.CTRANS_CODE);
-            loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 8, poParameter.CREF_NO);
+            loDb.R_AddCommandParameter(loCommand, "@CDEPT_CODE", DbType.String, 10, poParameter.CDEPT_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CTRANS_CODE", DbType.String, 8, poParameter.CTRANS_CODE);
+            loDb.R_AddCommandParameter(loCommand, "@CREF_NO", DbType.String, 30, poParameter.CREF_NO);
+            loDb.R_AddCommandParameter(loCommand, "@CSEQ_NO", DbType.String, 3, poParameter.CSEQ_NO);
 
             var loDbParam = loCommand.Parameters.Cast<DbParameter>()
                 .Where(x => x != null && x.ParameterName.StartsWith("@"))
